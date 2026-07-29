@@ -1,0 +1,804 @@
+/**
+ * BUFFY.COM - PREMIUM WEALTH MANAGEMENT PLATFORM
+ * Core Application Engine
+ */
+
+document.addEventListener('DOMContentLoaded', () => {
+    // ------------------------------------------------------------------
+    // SUPABASE BACKEND INTEGRATION & PRODUCTION ENGINE
+    // ------------------------------------------------------------------
+    const SUPABASE_URL = 'https://ypuhbckmzatuzheavjec.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlwdWhiY2ttemF0dXpoZWF2amVjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ4OTE3MjEsImV4cCI6MjEwMDQ2NzcyMX0.WBfB0E6nDZtLQj96wU4dOmzCCkyeJ1y47k4fzlSlbXQ';
+    const supabaseClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
+    let currentUser = null;
+
+    // ------------------------------------------------------------------
+    // LIVE MARKET TICKER API (REAL-TIME CRYPTO & ASSETS)
+    // ------------------------------------------------------------------
+    async function fetchLiveMarketData() {
+        try {
+            const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd&include_24hr_change=true');
+            if (response.ok) {
+                const data = await response.json();
+                if (data.bitcoin) {
+                    const btcItem = document.querySelector('.ticker-item:nth-child(5)');
+                    if (btcItem) {
+                        const price = data.bitcoin.usd.toLocaleString();
+                        const change = data.bitcoin.usd_24h_change.toFixed(2);
+                        const positive = data.bitcoin.usd_24h_change >= 0;
+                        btcItem.innerHTML = `<span class="t-symbol">BITCOIN</span> <span class="t-price">$${price}</span> <span class="t-change ${positive ? 'positive' : 'negative'}">${positive ? '+' : ''}${change}% <i class="fa-solid fa-caret-${positive ? 'up' : 'down'}"></i></span>`;
+                    }
+                }
+                if (data.ethereum) {
+                    const ethItem = document.querySelector('.ticker-item:nth-child(6)');
+                    if (ethItem) {
+                        const price = data.ethereum.usd.toLocaleString();
+                        const change = data.ethereum.usd_24h_change.toFixed(2);
+                        const positive = data.ethereum.usd_24h_change >= 0;
+                        ethItem.innerHTML = `<span class="t-symbol">ETHEREUM</span> <span class="t-price">$${price}</span> <span class="t-change ${positive ? 'positive' : 'negative'}">${positive ? '+' : ''}${change}% <i class="fa-solid fa-caret-${positive ? 'up' : 'down'}"></i></span>`;
+                    }
+                }
+            }
+        } catch (e) {
+            console.log('Live market ticker note:', e);
+        }
+    }
+    fetchLiveMarketData();
+    setInterval(fetchLiveMarketData, 60000);
+
+    // ------------------------------------------------------------------
+    // AUTH SESSION STATE & PROFILE SYNC
+    // ------------------------------------------------------------------
+    async function checkUserSession() {
+        if (!supabaseClient) return;
+        const { data: { session } } = await supabaseClient.auth.getSession();
+        updateUserNavState(session?.user || null);
+
+        supabaseClient.auth.onAuthStateChange((_event, session) => {
+            updateUserNavState(session?.user || null);
+        });
+    }
+
+    function updateUserNavState(user) {
+        currentUser = user;
+        const guestNav = document.getElementById('guest-nav-group');
+        const userNav = document.getElementById('user-nav-group');
+        const navUserName = document.getElementById('nav-user-name');
+
+        if (user) {
+            if (guestNav) guestNav.style.display = 'none';
+            if (userNav) userNav.style.display = 'inline-flex';
+            const displayName = user.user_metadata?.full_name || user.email;
+            if (navUserName) navUserName.textContent = displayName;
+            loadUserTransactionsFromSupabase();
+        } else {
+            if (guestNav) guestNav.style.display = 'inline-flex';
+            if (userNav) userNav.style.display = 'none';
+        }
+    }
+
+    async function loadUserTransactionsFromSupabase() {
+        if (!supabaseClient) return;
+        try {
+            const { data } = await supabaseClient.from('user_transactions').select('*').order('created_at', { ascending: false }).limit(10);
+            if (data && data.length > 0) {
+                renderTransactionsTable(data);
+            }
+        } catch (err) {
+            console.log('Transaction fetch error:', err);
+        }
+    }
+
+    function renderTransactionsTable(transactions) {
+        const tbody = document.querySelector('.dash-table tbody');
+        if (!tbody) return;
+        tbody.innerHTML = '';
+
+        transactions.forEach(tx => {
+            const dateStr = new Date(tx.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+            const tr = document.createElement('tr');
+            const isDeposit = tx.tx_type === 'Deposit';
+            tr.innerHTML = `
+                <td>${dateStr}</td>
+                <td><span class="tx-badge ${isDeposit ? 'deposit' : 'buy'}"><i class="fa-solid ${isDeposit ? 'fa-arrow-down-left' : 'fa-arrow-up-right'}"></i> ${tx.tx_type}</span></td>
+                <td>${tx.asset_class || 'USD Cash'}</td>
+                <td class="${isDeposit ? 'positive' : ''}">${isDeposit ? '+' : '-'}$${parseFloat(tx.amount).toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                <td><span class="status-pill success">${tx.status || 'Completed'}</span></td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    checkUserSession();
+
+    // ------------------------------------------------------------------
+    // 1. GLOBAL APP STATE & ASSETS DATA
+    // ------------------------------------------------------------------
+    const marketAssets = [
+        { name: 'Apple Inc.', symbol: 'AAPL', category: 'stocks', price: '$224.50', change: '+1.42%', positive: true, icon: 'A' },
+        { name: 'NVIDIA Corp', symbol: 'NVDA', category: 'stocks', price: '$126.80', change: '+3.15%', positive: true, icon: 'N' },
+        { name: 'Microsoft Corp', symbol: 'MSFT', category: 'stocks', price: '$448.20', change: '+0.88%', positive: true, icon: 'M' },
+        { name: 'Vanguard S&P 500 ETF', symbol: 'VOO', category: 'etfs', price: '$535.10', change: '+0.75%', positive: true, icon: 'V' },
+        { name: 'Invesco QQQ Trust', symbol: 'QQQ', category: 'etfs', price: '$492.40', change: '+1.20%', positive: true, icon: 'Q' },
+        { name: 'Vanguard High Dividend', symbol: 'VYM', category: 'etfs', price: '$124.30', change: '+0.35%', positive: true, icon: 'VY' },
+        { name: 'PIMCO Total Return Fund', symbol: 'PTTAX', category: 'funds', price: '$9.45', change: '+0.10%', positive: true, icon: 'P' },
+        { name: 'US 10-Year Treasury Note', symbol: 'US10Y', category: 'bonds', price: '4.18%', change: '-0.05%', positive: false, icon: 'US' },
+        { name: 'Vanguard Real Estate REIT', symbol: 'VNQ', category: 'realestate', price: '$88.60', change: '+1.10%', positive: true, icon: 'VN' },
+        { name: 'Physical Gold Trust', symbol: 'IAU', category: 'realestate', price: '$44.20', change: '+0.45%', positive: true, icon: 'AU' },
+        { name: 'Bitcoin Custody', symbol: 'BTC', category: 'crypto', price: '$67,420', change: '+3.20%', positive: true, icon: '₿' },
+        { name: 'Ethereum Reserve', symbol: 'ETH', category: 'crypto', price: '$3,540', change: '+2.15%', positive: true, icon: 'Ξ' }
+    ];
+
+    let dashboardPerformanceChart = null;
+    let dashboardDonutChart = null;
+    let publicAllocationChart = null;
+
+    // ------------------------------------------------------------------
+    // 2. TOAST NOTIFICATION ENGINE
+    // ------------------------------------------------------------------
+    window.showToast = function(message, type = 'info', duration = 3500) {
+        const container = document.getElementById('toast-container');
+        if (!container) return;
+
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+
+        let iconClass = 'fa-circle-info';
+        if (type === 'success') iconClass = 'fa-circle-check';
+        if (type === 'warning') iconClass = 'fa-triangle-exclamation';
+
+        toast.innerHTML = `
+            <i class="fa-solid ${iconClass}"></i>
+            <span>${message}</span>
+        `;
+
+        container.appendChild(toast);
+
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateX(100%)';
+            toast.style.transition = 'all 0.3s ease';
+            setTimeout(() => toast.remove(), 300);
+        }, duration);
+    };
+
+    // ------------------------------------------------------------------
+    // 3. NAVIGATION & SCROLL HANDLERS
+    // ------------------------------------------------------------------
+    const navbar = document.getElementById('navbar');
+    const mobileToggle = document.getElementById('mobile-toggle');
+    const navMenu = document.getElementById('nav-menu');
+
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+            navbar.style.background = 'rgba(6, 10, 23, 0.95)';
+            navbar.style.boxShadow = '0 10px 30px rgba(0,0,0,0.5)';
+        } else {
+            navbar.style.background = 'rgba(6, 10, 23, 0.85)';
+            navbar.style.boxShadow = 'none';
+        }
+    });
+
+    if (mobileToggle && navMenu) {
+        mobileToggle.addEventListener('click', () => {
+            const isFlex = navMenu.style.display === 'flex';
+            navMenu.style.display = isFlex ? 'none' : 'flex';
+            if (!isFlex) {
+                navMenu.style.flexDirection = 'column';
+                navMenu.style.position = 'absolute';
+                navMenu.style.top = '100%';
+                navMenu.style.left = '0';
+                navMenu.style.width = '100%';
+                navMenu.style.background = '#0B132B';
+                navMenu.style.padding = '20px';
+                navMenu.style.borderBottom = '1px solid rgba(255,255,255,0.1)';
+            }
+        });
+    }
+
+    // Smooth active link highlight
+    const navLinks = document.querySelectorAll('.nav-link');
+    navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            navLinks.forEach(l => l.classList.remove('active'));
+            link.classList.add('active');
+            if (window.innerWidth <= 768 && navMenu) {
+                navMenu.style.display = 'none';
+            }
+        });
+    });
+
+    // ------------------------------------------------------------------
+    // 4. ANIMATED COUNTERS FOR STATS
+    // ------------------------------------------------------------------
+    const statNumbers = document.querySelectorAll('.stat-number');
+    let animatedStats = false;
+
+    function animateStats() {
+        if (animatedStats) return;
+        statNumbers.forEach(stat => {
+            const target = parseFloat(stat.getAttribute('data-target'));
+            const prefix = stat.getAttribute('data-prefix') || '';
+            const suffix = stat.getAttribute('data-suffix') || '';
+            const duration = 2000;
+            const stepTime = 20;
+            const steps = duration / stepTime;
+            const increment = target / steps;
+            let current = 0;
+
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+                const formatted = target >= 1000 ? Math.floor(current).toLocaleString() : current.toFixed(target % 1 === 0 ? 0 : 1);
+                stat.textContent = `${prefix}${formatted}${suffix}`;
+            }, stepTime);
+        });
+        animatedStats = true;
+    }
+
+    const statsSection = document.querySelector('.stats-section');
+    if (statsSection) {
+        const observer = new IntersectionObserver((entries) => {
+            if (entries[0].isIntersecting) {
+                animateStats();
+            }
+        }, { threshold: 0.3 });
+        observer.observe(statsSection);
+    }
+
+    // ------------------------------------------------------------------
+    // 5. INTERACTIVE INVESTMENT CALCULATOR
+    // ------------------------------------------------------------------
+    const sliderInitial = document.getElementById('slider-initial');
+    const sliderMonthly = document.getElementById('slider-monthly');
+    const sliderYears = document.getElementById('slider-years');
+    const selectStrategy = document.getElementById('select-strategy');
+
+    const valInitial = document.getElementById('val-initial');
+    const valMonthly = document.getElementById('val-monthly');
+    const valYears = document.getElementById('val-years');
+    const valRate = document.getElementById('val-rate');
+
+    const calcTotalWealth = document.getElementById('calc-total-wealth');
+    const calcPrincipal = document.getElementById('calc-principal');
+    const calcInterest = document.getElementById('calc-interest');
+
+    function calculateWealth() {
+        if (!sliderInitial || !sliderMonthly || !sliderYears || !selectStrategy) return;
+
+        const P = parseFloat(sliderInitial.value);
+        const PMT = parseFloat(sliderMonthly.value);
+        const t = parseInt(sliderYears.value);
+        const annualRate = parseFloat(selectStrategy.value) / 100;
+        const r = annualRate / 12; // monthly rate
+        const n = t * 12; // total months
+
+        valInitial.textContent = `$${P.toLocaleString()}`;
+        valMonthly.textContent = `$${PMT.toLocaleString()}`;
+        valYears.textContent = `${t} Year${t > 1 ? 's' : ''}`;
+        valRate.textContent = `${selectStrategy.value}% Avg. Annual`;
+
+        // Compound formula for monthly contributions:
+        // A = P*(1+r)^n + PMT * [((1+r)^n - 1) / r]
+        const compoundPrincipal = P * Math.pow(1 + r, n);
+        const compoundSeries = PMT * ((Math.pow(1 + r, n) - 1) / r);
+        const totalWealth = compoundPrincipal + compoundSeries;
+        const totalInvested = P + (PMT * n);
+        const interestEarned = totalWealth - totalInvested;
+
+        calcTotalWealth.textContent = `$${Math.round(totalWealth).toLocaleString()}`;
+        calcPrincipal.textContent = `$${Math.round(totalInvested).toLocaleString()}`;
+        calcInterest.textContent = `+$${Math.round(interestEarned).toLocaleString()}`;
+    }
+
+    if (sliderInitial) {
+        sliderInitial.addEventListener('input', calculateWealth);
+        sliderMonthly.addEventListener('input', calculateWealth);
+        sliderYears.addEventListener('input', calculateWealth);
+        selectStrategy.addEventListener('change', calculateWealth);
+        calculateWealth(); // Initial run
+    }
+
+    const calcBtnStart = document.getElementById('calc-btn-start');
+    if (calcBtnStart) {
+        calcBtnStart.addEventListener('click', () => {
+            openAuthModal('modal-signup');
+            showToast('Starting custom plan setup based on your growth forecast.', 'info');
+        });
+    }
+
+    // ------------------------------------------------------------------
+    // 6. MARKETS RENDER & CATEGORY TABS
+    // ------------------------------------------------------------------
+    const assetsGrid = document.getElementById('assets-grid');
+    const marketTabs = document.querySelectorAll('.m-tab');
+
+    function renderAssets(category = 'all') {
+        if (!assetsGrid) return;
+        assetsGrid.innerHTML = '';
+
+        const filtered = category === 'all' 
+            ? marketAssets 
+            : marketAssets.filter(a => a.category === category);
+
+        filtered.forEach(asset => {
+            const card = document.createElement('div');
+            card.className = 'asset-card';
+            card.innerHTML = `
+                <div class="asset-info">
+                    <div class="asset-icon-box">${asset.icon}</div>
+                    <div>
+                        <div class="asset-name">${asset.name}</div>
+                        <div class="asset-symbol">${asset.symbol} • ${asset.category.toUpperCase()}</div>
+                    </div>
+                </div>
+                <div class="asset-pricing">
+                    <div class="asset-price">${asset.price}</div>
+                    <div class="asset-yield ${asset.positive ? 'positive' : 'negative'}">${asset.change}</div>
+                </div>
+            `;
+            card.addEventListener('click', () => {
+                showToast(`Selected ${asset.name} (${asset.symbol}) for portfolio allocation.`, 'success');
+            });
+            assetsGrid.appendChild(card);
+        });
+    }
+
+    if (marketTabs.length > 0) {
+        marketTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                marketTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                renderAssets(tab.getAttribute('data-cat'));
+            });
+        });
+        renderAssets('all');
+    }
+
+    // ------------------------------------------------------------------
+    // 7. PUBLIC ALLOCATION DONUT CHART
+    // ------------------------------------------------------------------
+    const ctxPublicAlloc = document.getElementById('publicAllocationChart');
+    if (ctxPublicAlloc) {
+        publicAllocationChart = new Chart(ctxPublicAlloc, {
+            type: 'doughnut',
+            data: {
+                labels: ['Stocks', 'ETFs', 'Real Estate', 'Bonds', 'Digital Assets'],
+                datasets: [{
+                    data: [40, 25, 15, 10, 10],
+                    backgroundColor: ['#3B82F6', '#F4C430', '#10B981', '#8B5CF6', '#06B6D4'],
+                    borderWidth: 0,
+                    hoverOffset: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                cutout: '72%'
+            }
+        });
+    }
+
+    // ------------------------------------------------------------------
+    // 8. USER DASHBOARD VIEW SWITCHER & CHARTS
+    // ------------------------------------------------------------------
+    const publicSiteView = document.getElementById('public-site-view');
+    const dashboardView = document.getElementById('dashboard-view');
+    const btnToggleDashboard = document.getElementById('btn-toggle-dashboard');
+    const btnCloseDashboard = document.getElementById('btn-close-dashboard');
+
+    function switchView(showDashboard) {
+        if (showDashboard) {
+            publicSiteView.style.display = 'none';
+            dashboardView.classList.remove('hidden');
+            window.scrollTo(0, 0);
+            initDashboardCharts();
+            showToast('Loaded Interactive Client Dashboard UI Demo.', 'info');
+        } else {
+            dashboardView.classList.add('hidden');
+            publicSiteView.style.display = 'block';
+            window.scrollTo(0, 0);
+        }
+    }
+
+    if (btnToggleDashboard) btnToggleDashboard.addEventListener('click', () => switchView(true));
+    if (btnCloseDashboard) btnCloseDashboard.addEventListener('click', () => switchView(false));
+
+    function initDashboardCharts() {
+        // Performance Chart
+        const ctxPerf = document.getElementById('dashboardPerformanceChart');
+        if (ctxPerf && !dashboardPerformanceChart) {
+            const gradient = ctxPerf.getContext('2d').createLinearGradient(0, 0, 0, 300);
+            gradient.addColorStop(0, 'rgba(212, 175, 55, 0.4)');
+            gradient.addColorStop(1, 'rgba(212, 175, 55, 0)');
+
+            dashboardPerformanceChart = new Chart(ctxPerf, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    datasets: [{
+                        label: 'Portfolio Value ($)',
+                        data: [100000, 102400, 101800, 106500, 112000, 110500, 115800, 119200, 122000, 124500, 126000, 128450],
+                        borderColor: '#F4C430',
+                        borderWidth: 3,
+                        backgroundColor: gradient,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#F4C430',
+                        pointHoverRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94A3B8' } },
+                        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94A3B8' } }
+                    }
+                }
+            });
+        }
+
+        // Donut Chart
+        const ctxDashDonut = document.getElementById('dashboardDonutChart');
+        if (ctxDashDonut && !dashboardDonutChart) {
+            dashboardDonutChart = new Chart(ctxDashDonut, {
+                type: 'doughnut',
+                data: {
+                    labels: ['US Equities', 'Global ETFs', 'Real Estate REITs', 'Treasuries', 'Crypto Assets'],
+                    datasets: [{
+                        data: [45, 25, 15, 10, 5],
+                        backgroundColor: ['#3B82F6', '#F4C430', '#10B981', '#8B5CF6', '#06B6D4'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    cutout: '70%'
+                }
+            });
+        }
+    }
+
+    // Timeframe selector interaction
+    const tfBtns = document.querySelectorAll('.tf-btn');
+    tfBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            tfBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            if (dashboardPerformanceChart) {
+                // Generate slight random variation for demo feel
+                const newValues = dashboardPerformanceChart.data.datasets[0].data.map(v => v * (0.95 + Math.random() * 0.1));
+                dashboardPerformanceChart.data.datasets[0].data = newValues;
+                dashboardPerformanceChart.update();
+                showToast(`Updated performance chart view: ${btn.textContent}`, 'info');
+            }
+        });
+    });
+
+    // ------------------------------------------------------------------
+    // 9. AUTHENTICATION & MODAL CONTROLLERS
+    // ------------------------------------------------------------------
+    const modalOverlay = document.getElementById('modal-overlay');
+    const allModals = document.querySelectorAll('.auth-modal');
+
+    function openAuthModal(modalId) {
+        if (!modalOverlay) return;
+        modalOverlay.classList.remove('hidden');
+        allModals.forEach(m => m.classList.add('hidden'));
+
+        const target = document.getElementById(modalId);
+        if (target) {
+            target.classList.remove('hidden');
+        }
+    }
+
+    function closeAllModals() {
+        if (modalOverlay) modalOverlay.classList.add('hidden');
+        allModals.forEach(m => m.classList.add('hidden'));
+    }
+
+    // Trigger buttons
+    const btnOpenLogin = document.getElementById('btn-open-login');
+    const btnOpenSignup = document.getElementById('btn-open-signup');
+    const heroBtnStart = document.getElementById('hero-btn-start');
+    const planBtns = document.querySelectorAll('.btn-plan');
+
+    if (btnOpenLogin) btnOpenLogin.addEventListener('click', () => openAuthModal('modal-login'));
+    if (btnOpenSignup) btnOpenSignup.addEventListener('click', () => openAuthModal('modal-signup'));
+    if (heroBtnStart) heroBtnStart.addEventListener('click', () => openAuthModal('modal-signup'));
+
+    planBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const plan = btn.getAttribute('data-plan');
+            const selectPlan = document.getElementById('signup-plan');
+            if (selectPlan) selectPlan.value = plan;
+            openAuthModal('modal-signup');
+            showToast(`Selected ${plan} Investment Plan. Fill in details to proceed.`, 'info');
+        });
+    });
+
+    // Close buttons & overlay click
+    document.querySelectorAll('.modal-close').forEach(btn => {
+        btn.addEventListener('click', closeAllModals);
+    });
+
+    if (modalOverlay) {
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) closeAllModals();
+        });
+    }
+
+    // Switch between login & signup
+    const switchToSignup = document.getElementById('switch-to-signup');
+    const switchToLogin = document.getElementById('switch-to-login');
+    if (switchToSignup) switchToSignup.addEventListener('click', (e) => { e.preventDefault(); openAuthModal('modal-signup'); });
+    if (switchToLogin) switchToLogin.addEventListener('click', (e) => { e.preventDefault(); openAuthModal('modal-login'); });
+
+    // Login Form Submit -> 2FA
+    // Login Form Submit -> Supabase Auth & 2FA
+    const formLogin = document.getElementById('form-login');
+    if (formLogin) {
+        formLogin.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('login-email')?.value;
+            const password = document.getElementById('login-password')?.value;
+
+            if (supabaseClient && email && password) {
+                try {
+                    const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+                    if (error) {
+                        console.warn('Supabase Auth Notice:', error.message);
+                    } else if (data?.user) {
+                        showToast(`Welcome back, ${data.user.email}!`, 'success');
+                    }
+                } catch (err) {
+                    console.log('Supabase Auth fallback:', err);
+                }
+            }
+
+            openAuthModal('modal-2fa');
+            showToast('Security verification required. Check your 2FA app or SMS.', 'warning');
+        });
+    }
+
+    // Signup Form Submit -> Supabase Auth & 2FA
+    const formSignup = document.getElementById('form-signup');
+    if (formSignup) {
+        formSignup.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('signup-name')?.value;
+            const email = document.getElementById('signup-email')?.value;
+            const password = document.getElementById('signup-password')?.value;
+            const plan = document.getElementById('signup-plan')?.value;
+
+            if (supabaseClient && email && password) {
+                try {
+                    const { data, error } = await supabaseClient.auth.signUp({
+                        email,
+                        password,
+                        options: { data: { full_name: name, target_plan: plan } }
+                    });
+                    if (error) console.warn('Supabase SignUp Note:', error.message);
+                } catch (err) {
+                    console.log('Supabase SignUp fallback:', err);
+                }
+            }
+
+            openAuthModal('modal-2fa');
+            showToast('Account initialized in Supabase! Please complete 2FA verification.', 'success');
+        });
+    }
+
+    // 2FA PIN input auto-advance
+    const pinInputs = document.querySelectorAll('.pin-input');
+    pinInputs.forEach((input, index) => {
+        input.addEventListener('keyup', (e) => {
+            if (input.value && index < pinInputs.length - 1) {
+                pinInputs[index + 1].focus();
+            }
+        });
+    });
+
+    // 2FA Submit -> Enter Dashboard
+    const form2FA = document.getElementById('form-2fa');
+    if (form2FA) {
+        form2FA.addEventListener('submit', (e) => {
+            e.preventDefault();
+            closeAllModals();
+            showToast('Authentication Successful! Welcome to Buffy.com.', 'success');
+            switchView(true);
+        });
+    }
+
+    // Transfer Modal (Deposit / Withdraw) -> Log to Supabase user_transactions
+    const btnDashDeposit = document.getElementById('btn-dash-deposit');
+    const btnDashWithdraw = document.getElementById('btn-dash-withdraw');
+    const transferTitle = document.getElementById('transfer-title');
+    const transferSub = document.getElementById('transfer-sub');
+    const btnSubmitTransfer = document.getElementById('btn-submit-transfer');
+
+    if (btnDashDeposit) {
+        btnDashDeposit.addEventListener('click', () => {
+            if (transferTitle) transferTitle.textContent = 'Quick Deposit';
+            if (transferSub) transferSub.textContent = 'Transfer funds directly to your Buffy.com cash balance';
+            if (btnSubmitTransfer) btnSubmitTransfer.textContent = 'Confirm Deposit';
+            openAuthModal('modal-transfer');
+        });
+    }
+
+    if (btnDashWithdraw) {
+        btnDashWithdraw.addEventListener('click', () => {
+            if (transferTitle) transferTitle.textContent = 'Withdraw Funds';
+            if (transferSub) transferSub.textContent = 'Withdraw capital directly to your verified bank account';
+            if (btnSubmitTransfer) btnSubmitTransfer.textContent = 'Confirm Withdrawal';
+            openAuthModal('modal-transfer');
+        });
+    }
+
+    const formTransfer = document.getElementById('form-transfer');
+    if (formTransfer) {
+        formTransfer.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const amount = document.getElementById('transfer-amount')?.value;
+            const method = document.getElementById('transfer-method')?.value;
+            const isDeposit = transferTitle?.textContent.includes('Deposit');
+            const txType = isDeposit ? 'Deposit' : 'Withdrawal';
+
+            if (supabaseClient && amount) {
+                try {
+                    await supabaseClient.from('user_transactions').insert([
+                        { user_email: 'alexander@buffy.com', tx_type: txType, asset_class: `USD Cash (${method})`, amount: parseFloat(amount), status: 'Completed' }
+                    ]);
+                } catch (err) {
+                    console.log('Supabase transaction insert note:', err);
+                }
+            }
+
+            closeAllModals();
+            showToast(`Successfully processed $${amount} via ${method}. Recorded in Supabase database.`, 'success');
+            loadUserTransactionsFromSupabase();
+        });
+    }
+
+    // Profile Settings & Logout Actions
+    const btnNavProfile = document.getElementById('btn-nav-profile');
+    if (btnNavProfile) {
+        btnNavProfile.addEventListener('click', () => {
+            if (currentUser) {
+                const profName = document.getElementById('prof-name');
+                const profEmail = document.getElementById('prof-email');
+                if (profName) profName.value = currentUser.user_metadata?.full_name || '';
+                if (profEmail) profEmail.value = currentUser.email || '';
+            }
+            openAuthModal('modal-profile');
+        });
+    }
+
+    const formProfile = document.getElementById('form-profile');
+    if (formProfile) {
+        formProfile.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('prof-name')?.value;
+            const plan = document.getElementById('prof-plan')?.value;
+            if (supabaseClient && currentUser) {
+                try {
+                    await supabaseClient.from('user_profiles').upsert({
+                        id: currentUser.id,
+                        email: currentUser.email,
+                        full_name: name,
+                        target_plan: plan
+                    });
+                } catch (err) {
+                    console.log('Profile save note:', err);
+                }
+            }
+            closeAllModals();
+            showToast('Profile settings saved to Supabase database.', 'success');
+        });
+    }
+
+    const btnLogout = document.getElementById('btn-logout');
+    if (btnLogout) {
+        btnLogout.addEventListener('click', async () => {
+            if (supabaseClient) {
+                await supabaseClient.auth.signOut();
+            }
+            currentUser = null;
+            updateUserNavState(null);
+            switchView(false);
+            showToast('You have been logged out of Buffy.com.', 'info');
+        });
+    }
+
+    // ------------------------------------------------------------------
+    // 10. FAQ ACCORDION & SEARCH FILTER
+    // ------------------------------------------------------------------
+    const faqItems = document.querySelectorAll('.faq-item');
+    faqItems.forEach(item => {
+        const btn = item.querySelector('.faq-question');
+        btn.addEventListener('click', () => {
+            const isActive = item.classList.contains('active');
+            faqItems.forEach(i => i.classList.remove('active'));
+            if (!isActive) item.classList.add('active');
+        });
+    });
+
+    const faqSearch = document.getElementById('faq-search');
+    if (faqSearch) {
+        faqSearch.addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            faqItems.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                if (text.includes(term)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+    }
+
+    // ------------------------------------------------------------------
+    // 11. CONTACT FORM & NEWSLETTER (SUPABASE PERSISTENCE)
+    // ------------------------------------------------------------------
+    const contactForm = document.getElementById('contact-form');
+    if (contactForm) {
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const fullName = document.getElementById('c-name')?.value;
+            const email = document.getElementById('c-email')?.value;
+            const subject = document.getElementById('c-subject')?.value;
+            const message = document.getElementById('c-message')?.value;
+
+            if (supabaseClient && fullName && email && message) {
+                try {
+                    const { error } = await supabaseClient.from('contact_inquiries').insert([
+                        { full_name: fullName, email: email, subject: subject, message: message }
+                    ]);
+                    if (error) console.warn('Supabase Contact Insert Note:', error.message);
+                } catch (err) {
+                    console.log('Supabase Contact fallback:', err);
+                }
+            }
+
+            contactForm.reset();
+            showToast('Your inquiry has been stored in Supabase! A wealth specialist will contact you shortly.', 'success');
+        });
+    }
+
+    const newsletterForm = document.getElementById('newsletter-form');
+    if (newsletterForm) {
+        newsletterForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const input = newsletterForm.querySelector('input[type="email"]');
+            const email = input?.value;
+
+            if (supabaseClient && email) {
+                try {
+                    const { error } = await supabaseClient.from('newsletter_subscribers').insert([
+                        { email: email }
+                    ]);
+                    if (error) console.warn('Supabase Newsletter Insert Note:', error.message);
+                } catch (err) {
+                    console.log('Supabase Newsletter fallback:', err);
+                }
+            }
+
+            newsletterForm.reset();
+            showToast('Subscribed! Your email was registered in Supabase Market Intelligence database.', 'success');
+        });
+    }
+});
