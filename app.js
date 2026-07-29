@@ -547,8 +547,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (switchToSignup) switchToSignup.addEventListener('click', (e) => { e.preventDefault(); openAuthModal('modal-signup'); });
     if (switchToLogin) switchToLogin.addEventListener('click', (e) => { e.preventDefault(); openAuthModal('modal-login'); });
 
-    // Login Form Submit -> 2FA
-    // Login Form Submit -> Supabase Auth & 2FA
+    // Login Form Submit -> Direct Supabase Auth & Dashboard Access (2FA Removed)
     const formLogin = document.getElementById('form-login');
     if (formLogin) {
         formLogin.addEventListener('submit', async (e) => {
@@ -569,8 +568,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-            openAuthModal('modal-2fa');
-            showToast('Security verification required. Check your 2FA app or SMS.', 'warning');
+            closeAllModals();
+            showToast(`Welcome back! Accessing your Buffy.com portfolio.`, 'success');
+            switchView(true);
         });
     }
 
