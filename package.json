@@ -1,0 +1,19 @@
+{
+  "name": "buffy-investment",
+  "version": "1.0.0",
+  "description": "Buffy.com - Premium Production-Grade Wealth Management and Investment Platform",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "fintech",
+    "wealth-management",
+    "investment-platform",
+    "supabase",
+    "buffy"
+  ],
+  "author": "Buffy Financial Technologies Inc.",
+  "license": "MIT"
+}
