@@ -574,7 +574,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Signup Form Submit -> Supabase Auth & 2FA
+    // Signup Form Submit -> Direct Supabase Auth & Dashboard Access (2FA Removed)
     const formSignup = document.getElementById('form-signup');
     if (formSignup) {
         formSignup.addEventListener('submit', async (e) => {
@@ -591,14 +591,24 @@ document.addEventListener('DOMContentLoaded', () => {
                         password,
                         options: { data: { full_name: name, target_plan: plan } }
                     });
-                    if (error) console.warn('Supabase SignUp Note:', error.message);
+                    if (error) {
+                        console.warn('Supabase SignUp Note:', error.message);
+                    } else if (data?.user) {
+                        await supabaseClient.from('user_profiles').upsert({
+                            id: data.user.id,
+                            email: email,
+                            full_name: name,
+                            target_plan: plan
+                        });
+                    }
                 } catch (err) {
                     console.log('Supabase SignUp fallback:', err);
                 }
             }
 
-            openAuthModal('modal-2fa');
-            showToast('Account initialized in Supabase! Please complete 2FA verification.', 'success');
+            closeAllModals();
+            showToast(`Welcome ${name || email}! Your Buffy.com account has been created.`, 'success');
+            switchView(true);
         });
     }
 
