@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buffy.com | Grow Your Wealth. Secure Your Future.</title>
+    <meta name="description" content="Buffy.com is a modern institutional-grade investment platform designed to help individuals and businesses build lasting wealth through secure, diversified portfolio solutions.">
+    <meta name="keywords" content="investment platform, wealth management, portfolio diversification, financial planning, ETFs, stocks, bonds, crypto assets">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js for Interactive Financial Charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Supabase JS Client SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Navigation Header -->
+    <header class="navbar-header" id="navbar">
+        <div class="nav-container">
+            <a href="#home" class="brand-logo">
+                <div class="logo-icon">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span class="logo-spark"></span>
+                </div>
+                <div class="logo-text">
+                    <span class="brand-name">Buffy<span class="gold-accent">.com</span></span>
+                    <span class="brand-sub">WEALTH MANAGEMENT</span>
+                </div>
+            </a>
+
+            <!-- Desktop Navigation Links -->
+            <nav class="nav-menu" id="nav-menu">
+                <a href="#home" class="nav-link active">Home</a>
+                <a href="#about" class="nav-link">About Us</a>
+                <a href="#plans" class="nav-link">Plans</a>
+                <a href="#markets" class="nav-link">Markets</a>
+                <a href="#portfolio" class="nav-link">Portfolio</a>
+                <a href="#testimonials" class="nav-link">Testimonials</a>
+                <a href="#blog" class="nav-link">Blog</a>
+                <a href="#faq" class="nav-link">FAQ</a>
+                <a href="#contact" class="nav-link">Contact</a>
+            </nav>
+
+            <!-- Nav Actions & Dashboard Switch -->
+            <div class="nav-actions">
+                <button class="btn-demo-toggle" id="btn-toggle-dashboard" title="Switch to Interactive Dashboard View">
+                    <i class="fa-solid fa-gauge-high"></i> Dashboard Demo
+                </button>
+
+                <div id="guest-nav-group" class="guest-nav-group" style="display: inline-flex; gap: 8px; align-items: center;">
+                    <button class="btn-secondary" id="btn-open-login">Log In</button>
+                    <button class="btn-primary" id="btn-open-signup">Sign Up <i class="fa-solid fa-arrow-right"></i></button>
+                </div>
+
+                <div id="user-nav-group" class="user-nav-group hidden" style="display: none; gap: 8px; align-items: center;">
+                    <button class="btn-secondary btn-sm" id="btn-nav-profile" title="View Profile Settings"><i class="fa-solid fa-user-gear"></i> <span id="nav-user-name">Alexander Vance</span></button>
+                    <button class="btn-outline btn-sm" id="btn-logout" title="Sign Out of Session"><i class="fa-solid fa-right-from-bracket"></i> Log Out</button>
+                </div>
+                
+                <!-- Mobile Hamburger Toggle -->
+                <button class="mobile-toggle" id="mobile-toggle" aria-label="Toggle navigation menu">
+                    <i class="fa-solid fa-bars-staggered"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN MARKETING SITE CONTENT -->
+    <main id="public-site-view">
+
+        <!-- Live Ticker Bar -->
+        <div class="market-ticker-bar">
+            <div class="ticker-track" id="ticker-track">
+                <div class="ticker-item"><span class="t-symbol">S&P 500</span> <span class="t-price">5,842.10</span> <span class="t-change positive">+0.85% <i class="fa-solid fa-caret-up"></i></span></div>
+                <div class="ticker-item"><span class="t-symbol">NASDAQ</span> <span class="t-price">18,510.40</span> <span class="t-change positive">+1.12% <i class="fa-solid fa-caret-up"></i></span></div>
+                <div class="ticker-item"><span class="t-symbol">GOLD (XAU)</span> <span class="t-price">$2,415.80</span> <span class="t-change positive">+0.44% <i class="fa-solid fa-caret-up"></i></span></div>
+                <div class="ticker-item"><span class="t-symbol">US 10Y BOND</span> <span class="t-price">4.18%</span> <span class="t-change negative">-0.05% <i class="fa-solid fa-caret-down"></i></span></div>
+                <div class="ticker-item"><span class="t-symbol">BITCOIN</span> <span class="t-price">$67,420.00</span> <span class="t-change positive">+3.20% <i class="fa-solid fa-caret-up"></i></span></div>
+                <div class="ticker-item"><span class="t-symbol">ETHEREUM</span> <span class="t-price">$3,540.25</span> <span class="t-change positive">+2.15% <i class="fa-solid fa-caret-up"></i></span></div>
+                <div class="ticker-item"><span class="t-symbol">GLOBAL TECH ETF</span> <span class="t-price">$142.90</span> <span class="t-change positive">+0.95% <i class="fa-solid fa-caret-up"></i></span></div>
+            </div>
+        </div>
+
+        <!-- HERO SECTION -->
+        <section class="hero-section" id="home">
+            <div class="hero-bg-glow"></div>
+            <div class="hero-bg-grid"></div>
+            <div class="container hero-grid">
+                <div class="hero-content">
+                    <div class="trust-pill">
+                        <span class="pill-dot"></span> SEC & FINRA Regulated Partner Ecosystem
+                    </div>
+                    <h1 class="hero-title">
+                        Invest Smarter. <br>
+                        <span class="gold-gradient-text">Build Lasting Wealth.</span>
+                    </h1>
+                    <p class="hero-subheadline">
+                        Professional investment solutions designed to help individuals, professionals, and institutions achieve their highest financial goals with security and total clarity.
+                    </p>
+
+                    <div class="hero-cta-group">
+                        <button class="btn-primary btn-large" id="hero-btn-start">
+                            Start Investing <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        </button>
+                        <a href="#plans" class="btn-outline btn-large">
+                            Explore Plans <i class="fa-solid fa-sliders"></i>
+                        </a>
+                    </div>
+
+                    <div class="hero-badges">
+                        <div class="badge-item"><i class="fa-solid fa-shield-halved"></i> 256-Bit Bank-Grade Encryption</div>
+                        <div class="badge-item"><i class="fa-solid fa-building-columns"></i> SIPC Insured Securities</div>
+                        <div class="badge-item"><i class="fa-solid fa-user-check"></i> Certified Advisory Team</div>
+                    </div>
+                </div>
+
+                <div class="hero-visual">
+                    <div class="visual-card-wrapper">
+                        <img src="assets/hero_dashboard.jpg" alt="Buffy.com Wealth Analytics Dashboard" class="hero-dashboard-img">
+                        <div class="floating-badge badge-top-right">
+                            <div class="f-icon green"><i class="fa-solid fa-chart-line"></i></div>
+                            <div>
+                                <span class="f-label">Avg. Annual Return</span>
+                                <span class="f-val positive">+14.8% YTD</span>
+                            </div>
+                        </div>
+                        <div class="floating-badge badge-bottom-left">
+                            <div class="f-icon gold"><i class="fa-solid fa-vault"></i></div>
+                            <div>
+                                <span class="f-label">Protected Assets</span>
+                                <span class="f-val">$14.2 Billion</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ANIMATED STATS SECTION -->
+        <section class="stats-section">
+            <div class="container stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-sack-dollar"></i></div>
+                    <div class="stat-number" data-target="14.2" data-prefix="$" data-suffix="B+">0</div>
+                    <div class="stat-label">Total Assets Managed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-users-viewfinder"></i></div>
+                    <div class="stat-number" data-target="250000" data-suffix="+">0</div>
+                    <div class="stat-label">Active Global Investors</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-award"></i></div>
+                    <div class="stat-number" data-target="15" data-suffix=" Yrs">0</div>
+                    <div class="stat-label">Years of Industry Excellence</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-face-smile-beam"></i></div>
+                    <div class="stat-number" data-target="99.4" data-suffix="%">0</div>
+                    <div class="stat-label">Client Satisfaction Score</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FEATURES SECTION -->
+        <section class="features-section" id="features">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-tag">WHY BUFFY.COM</span>
+                    <h2 class="section-title">Institutional Wealth Management For Everyone</h2>
+                    <p class="section-subtitle">Combining cutting-edge fintech innovation with time-tested financial discipline.</p>
+                </div>
+
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fa-solid fa-vault"></i></div>
+                        <h3>Secure Investments</h3>
+                        <p>Multi-layered vault infrastructure, cold storage protocols, and institutional custodians keep your wealth shielded 24/7.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fa-solid fa-chart-pie"></i></div>
+                        <h3>Portfolio Diversification</h3>
+                        <p>Intelligent asset allocation across global equities, fixed income, commodities, real estate, and digital assets.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fa-solid fa-brain"></i></div>
+                        <h3>Expert Financial Analysis</h3>
+                        <p>Powered by chartered financial analysts and algorithmic market scanning for optimized entry and risk management.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fa-solid fa-shield-cat"></i></div>
+                        <h3>Risk Management</h3>
+                        <p>Dynamic tail-risk hedging and automated rebalancing guard your portfolio during unexpected market shocks.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fa-solid fa-file-invoice-dollar"></i></div>
+                        <h3>Transparent Reporting</h3>
+                        <p>Zero hidden commissions or surprise fees. Access real-time audit logs, tax reports, and performance statements instantly.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fa-solid fa-headset"></i></div>
+                        <h3>24/7 Dedicated Support</h3>
+                        <p>Direct priority line to dedicated wealth officers and instant technical assistance whenever you need it.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- INVESTMENT PLANS SECTION & CALCULATOR -->
+        <section class="plans-section" id="plans">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-tag">TAILORED STRATEGIES</span>
+                    <h2 class="section-title">Select Your Investment Tier</h2>
+                    <p class="section-subtitle">Choose an investment plan calibrated to your financial timeline and capital objectives.</p>
+                </div>
+
+                <div class="plans-grid">
+                    <!-- Starter Plan -->
+                    <div class="plan-card">
+                        <div class="plan-header">
+                            <span class="plan-tier">STARTER</span>
+                            <div class="plan-min">$100 <span class="min-sub">Minimum</span></div>
+                            <p class="plan-desc">Ideal for beginners building their foundational wealth buffer.</p>
+                        </div>
+                        <ul class="plan-features">
+                            <li><i class="fa-solid fa-check"></i> Flexible investment option</li>
+                            <li><i class="fa-solid fa-check"></i> Automated index fund allocation</li>
+                            <li><i class="fa-solid fa-check"></i> Monthly performance summary</li>
+                            <li><i class="fa-solid fa-check"></i> Standard email support</li>
+                        </ul>
+                        <button class="btn-plan btn-starter" data-plan="Starter">Select Starter Plan</button>
+                    </div>
+
+                    <!-- Growth Plan (Featured) -->
+                    <div class="plan-card featured">
+                        <div class="plan-badge">MOST POPULAR</div>
+                        <div class="plan-header">
+                            <span class="plan-tier">GROWTH</span>
+                            <div class="plan-min">$1,000 <span class="min-sub">Minimum</span></div>
+                            <p class="plan-desc">Balanced growth strategy for active wealth building.</p>
+                        </div>
+                        <ul class="plan-features">
+                            <li><i class="fa-solid fa-check"></i> Balanced investment strategy</li>
+                            <li><i class="fa-solid fa-check"></i> Automatic portfolio rebalancing</li>
+                            <li><i class="fa-solid fa-check"></i> Global equities & dividend ETFs</li>
+                            <li><i class="fa-solid fa-check"></i> Dividend auto-reinvestment (DRIP)</li>
+                            <li><i class="fa-solid fa-check"></i> Priority chat & phone support</li>
+                        </ul>
+                        <button class="btn-plan btn-growth" data-plan="Growth">Select Growth Plan</button>
+                    </div>
+
+                    <!-- Professional Plan -->
+                    <div class="plan-card">
+                        <div class="plan-header">
+                            <span class="plan-tier">PROFESSIONAL</span>
+                            <div class="plan-min">$10,000 <span class="min-sub">Minimum</span></div>
+                            <p class="plan-desc">Advanced portfolio management and tax optimization.</p>
+                        </div>
+                        <ul class="plan-features">
+                            <li><i class="fa-solid fa-check"></i> Advanced portfolio management</li>
+                            <li><i class="fa-solid fa-check"></i> Automated tax-loss harvesting</li>
+                            <li><i class="fa-solid fa-check"></i> Private equity & real estate access</li>
+                            <li><i class="fa-solid fa-check"></i> Customized risk profiling</li>
+                            <li><i class="fa-solid fa-check"></i> Dedicated wealth advisor</li>
+                        </ul>
+                        <button class="btn-plan btn-pro" data-plan="Professional">Select Professional</button>
+                    </div>
+
+                    <!-- Institutional Plan -->
+                    <div class="plan-card">
+                        <div class="plan-header">
+                            <span class="plan-tier">INSTITUTIONAL</span>
+                            <div class="plan-min">Custom <span class="min-sub">Bespoke Terms</span></div>
+                            <p class="plan-desc">For high-net-worth individuals, family offices, & companies.</p>
+                        </div>
+                        <ul class="plan-features">
+                            <li><i class="fa-solid fa-check"></i> Bespoke investment solutions</li>
+                            <li><i class="fa-solid fa-check"></i> Senior private wealth manager</li>
+                            <li><i class="fa-solid fa-check"></i> Direct API & institutional liquidity</li>
+                            <li><i class="fa-solid fa-check"></i> Tailored risk & hedging models</li>
+                            <li><i class="fa-solid fa-check"></i> 24/7 VIP concierge desk</li>
+                        </ul>
+                        <button class="btn-plan btn-inst" data-plan="Institutional">Contact Wealth Team</button>
+                    </div>
+                </div>
+
+                <!-- Dynamic Wealth Projection Calculator -->
+                <div class="calculator-wrapper">
+                    <div class="calc-header">
+                        <div class="calc-title-box">
+                            <i class="fa-solid fa-calculator gold-icon"></i>
+                            <div>
+                                <h3>Interactive Wealth Growth Forecast</h3>
+                                <p>Estimate potential long-term compound growth based on historical market models.</p>
+                            </div>
+                        </div>
+                        <div class="calc-badge">Compound Growth Model</div>
+                    </div>
+
+                    <div class="calc-body">
+                        <div class="calc-controls">
+                            <!-- Control 1: Initial -->
+                            <div class="calc-group">
+                                <div class="calc-label">
+                                    <span>Initial Investment</span>
+                                    <strong id="val-initial">$5,000</strong>
+                                </div>
+                                <input type="range" id="slider-initial" min="100" max="50000" step="500" value="5000">
+                            </div>
+
+                            <!-- Control 2: Monthly -->
+                            <div class="calc-group">
+                                <div class="calc-label">
+                                    <span>Monthly Contribution</span>
+                                    <strong id="val-monthly">$500</strong>
+                                </div>
+                                <input type="range" id="slider-monthly" min="0" max="5000" step="50" value="500">
+                            </div>
+
+                            <!-- Control 3: Time Horizon -->
+                            <div class="calc-group">
+                                <div class="calc-label">
+                                    <span>Time Horizon (Years)</span>
+                                    <strong id="val-years">10 Years</strong>
+                                </div>
+                                <input type="range" id="slider-years" min="1" max="30" step="1" value="10">
+                            </div>
+
+                            <!-- Control 4: Strategy -->
+                            <div class="calc-group">
+                                <div class="calc-label">
+                                    <span>Estimated Growth Rate</span>
+                                    <strong id="val-rate">9.5% Avg. Annual</strong>
+                                </div>
+                                <select id="select-strategy" class="calc-select">
+                                    <option value="6.5">Conservative (6.5% Est.)</option>
+                                    <option value="9.5" selected>Balanced Growth (9.5% Est.)</option>
+                                    <option value="12.5">Aggressive Growth (12.5% Est.)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Calc Result Display -->
+                        <div class="calc-results">
+                            <div class="result-box main">
+                                <span class="res-label">Projected Future Wealth</span>
+                                <span class="res-val" id="calc-total-wealth">$148,920</span>
+                            </div>
+                            <div class="result-subgrid">
+                                <div class="result-box">
+                                    <span class="res-label">Total Out-of-Pocket</span>
+                                    <span class="res-subval" id="calc-principal">$65,000</span>
+                                </div>
+                                <div class="result-box">
+                                    <span class="res-label">Est. Compound Earnings</span>
+                                    <span class="res-subval positive" id="calc-interest">+$83,920</span>
+                                </div>
+                            </div>
+                            <button class="btn-primary btn-block" id="calc-btn-start">Start Building This Plan</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Legal Regulatory Risk Disclaimer -->
+                <div class="compliance-disclaimer">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    <p><strong>Regulatory & Risk Disclosure:</strong> Investment plans and forecasts shown are for sample, educational, and planning purposes only. Buffy.com does not offer guaranteed returns or fixed profit promises. Value of investments can fluctuate, and investors may get back less than originally invested. Past performance is no indicator of future results.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- MARKETS & PORTFOLIO SECTION -->
+        <section class="markets-section" id="markets">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-tag">GLOBAL COVERAGE</span>
+                    <h2 class="section-title">Explore Multi-Asset Markets</h2>
+                    <p class="section-subtitle">Institutional access across 7 primary asset categories with real-time liquidity.</p>
+                </div>
+
+                <!-- Market Category Filter Tabs -->
+                <div class="market-tabs" id="market-tabs">
+                    <button class="m-tab active" data-cat="all">All Assets</button>
+                    <button class="m-tab" data-cat="stocks">Stocks</button>
+                    <button class="m-tab" data-cat="etfs">ETFs</button>
+                    <button class="m-tab" data-cat="funds">Mutual Funds</button>
+                    <button class="m-tab" data-cat="bonds">Bonds</button>
+                    <button class="m-tab" data-cat="realestate">Real Estate</button>
+                    <button class="m-tab" data-cat="crypto">Cryptocurrency</button>
+                </div>
+
+                <!-- Market Assets Grid -->
+                <div class="assets-grid" id="assets-grid">
+                    <!-- Asset cards populated dynamically via JS -->
+                </div>
+
+                <!-- Crypto & Risk Disclosure -->
+                <div class="crypto-disclosure">
+                    <div class="cd-icon"><i class="fa-brands fa-bitcoin"></i></div>
+                    <div class="cd-text">
+                        <strong>Cryptocurrency & Volatile Assets Notice:</strong> Digital asset investments involve heightened market volatility and liquidity risk. Buffy.com employs segregated cold-storage custody and strict risk allocation limits to protect client portfolios.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PORTFOLIO ARCHITECTURE SECTION -->
+        <section class="portfolio-section" id="portfolio">
+            <div class="container portfolio-grid">
+                <div class="portfolio-content">
+                    <span class="section-tag">SMART ASSET ALLOCATION</span>
+                    <h2 class="section-title">Designed for Resiliency Across All Market Cycles</h2>
+                    <p>Our quantitative portfolio engine balances high-growth innovation with capital preservation anchors, creating a robust financial shield regardless of macroeconomic headwinds.</p>
+                    
+                    <div class="pillar-list">
+                        <div class="pillar-item">
+                            <div class="p-num">01</div>
+                            <div>
+                                <h4>Global Stock & ETF Coverage</h4>
+                                <p>Direct exposure to top global tech, healthcare, infrastructure, and high-yield dividend aristocrats.</p>
+                            </div>
+                        </div>
+
+                        <div class="pillar-item">
+                            <div class="p-num">02</div>
+                            <div>
+                                <h4>Institutional Real Estate & Commodities</h4>
+                                <p>Fractional ownership in commercial properties, logistics hubs, and inflation-hedged physical commodities.</p>
+                            </div>
+                        </div>
+
+                        <div class="pillar-item">
+                            <div class="p-num">03</div>
+                            <div>
+                                <h4>Dynamic Rebalancing & Yield Harvesting</h4>
+                                <p>Algorithmic rebalancing automatically sells high and buys undervalued assets without manual stress.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="portfolio-visual">
+                    <div class="allocation-card">
+                        <h3>Sample Growth Allocation</h3>
+                        <div class="donut-chart-box">
+                            <canvas id="publicAllocationChart"></canvas>
+                        </div>
+                        <div class="legend-grid">
+                            <div class="leg-item"><span class="leg-dot c-blue"></span> Stocks (40%)</div>
+                            <div class="leg-item"><span class="leg-dot c-gold"></span> ETFs (25%)</div>
+                            <div class="leg-item"><span class="leg-dot c-green"></span> Real Estate (15%)</div>
+                            <div class="leg-item"><span class="leg-dot c-purple"></span> Bonds (10%)</div>
+                            <div class="leg-item"><span class="leg-dot c-cyan"></span> Digital Assets (10%)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ABOUT US SECTION -->
+        <section class="about-section" id="about">
+            <div class="container">
+                <div class="about-grid">
+                    <div class="about-image-wrapper">
+                        <img src="assets/advisor.jpg" alt="Buffy.com Wealth Advisor" class="about-img">
+                        <div class="advisor-card">
+                            <h4>Elena Rostova, CFA</h4>
+                            <p>Head of Global Portfolio Strategy</p>
+                            <span class="adv-badge"><i class="fa-solid fa-certificate"></i> Certified Financial Analyst</span>
+                        </div>
+                    </div>
+
+                    <div class="about-content">
+                        <span class="section-tag">ABOUT BUFFY.COM</span>
+                        <h2 class="section-title">Architects of Modern Wealth Management</h2>
+                        <p class="lead-p">Buffy.com was founded on a simple principle: high-grade financial tools and institutional-level risk management should be accessible to all ambitious investors.</p>
+                        <p>We combine deep Wall Street research expertise with modern cloud security and transparent zero-hidden-fee pricing. Whether you are aiming to fund retirement, build generational wealth, or protect corporate treasury reserves, Buffy.com provides the clarity and execution you need.</p>
+
+                        <div class="values-grid">
+                            <div class="val-box">
+                                <i class="fa-solid fa-lock gold-icon"></i>
+                                <h4>Uncompromising Security</h4>
+                                <p>Bank-grade encryption, SOC-2 certified data centers, and multi-factor authentication shield every transaction.</p>
+                            </div>
+
+                            <div class="val-box">
+                                <i class="fa-solid fa-scale-balanced gold-icon"></i>
+                                <h4>Fiduciary Standard</h4>
+                                <p>We operate with a clear fiduciary commitment. Your long-term success is our sole objective.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TESTIMONIALS SECTION -->
+        <section class="testimonials-section" id="testimonials">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-tag">CLIENT SUCCESS STORIES</span>
+                    <h2 class="section-title">Trusted by Thousands Worldwide</h2>
+                    <p class="section-subtitle">Hear how Buffy.com empowers professionals and business leaders to achieve financial freedom.</p>
+                </div>
+
+                <div class="testimonials-grid">
+                    <div class="testimonial-card">
+                        <div class="t-stars">
+                            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        </div>
+                        <p class="t-text">"Buffy.com completely transformed how I handle my company's excess reserves. The automated rebalancing and clear risk metrics give me total confidence."</p>
+                        <div class="t-author">
+                            <img src="assets/client.jpg" alt="Marcus Vance" class="t-avatar">
+                            <div>
+                                <h4>Marcus Vance</h4>
+                                <span>Tech Entrepreneur & Investor</span>
+                                <span class="verified-badge"><i class="fa-solid fa-circle-check"></i> Verified Growth Tier</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="testimonial-card">
+                        <div class="t-stars">
+                            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        </div>
+                        <p class="t-text">"The transparency is unmatched. No hidden monthly fees, real-time reporting, and whenever I have a complex tax question, my advisor responds within hours."</p>
+                        <div class="t-author">
+                            <img src="assets/advisor.jpg" alt="Dr. Sophia Thorne" class="t-avatar">
+                            <div>
+                                <h4>Dr. Sophia Thorne</h4>
+                                <span>Surgeon & Private Wealth Client</span>
+                                <span class="verified-badge"><i class="fa-solid fa-circle-check"></i> Verified Professional Tier</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="testimonial-card">
+                        <div class="t-stars">
+                            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                        </div>
+                        <p class="t-text">"Started with the $100 Starter Plan 2 years ago and gradually scaled up. The compound return forecast tool was spot on. Highly recommended!"</p>
+                        <div class="t-author">
+                            <div class="t-avatar-initials">DK</div>
+                            <div>
+                                <h4>David K.</h4>
+                                <span>Senior Software Architect</span>
+                                <span class="verified-badge"><i class="fa-solid fa-circle-check"></i> Verified Investor</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- BLOG & MARKET INSIGHTS SECTION -->
+        <section class="blog-section" id="blog">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-tag">MARKET INSIGHTS</span>
+                    <h2 class="section-title">Latest Intelligence & Analysis</h2>
+                    <p class="section-subtitle">Stay informed with timely commentary from our economic research team.</p>
+                </div>
+
+                <div class="blog-grid">
+                    <article class="blog-card">
+                        <div class="blog-img-holder blog-img-1">
+                            <span class="blog-category">Macroeconomics</span>
+                        </div>
+                        <div class="blog-content">
+                            <div class="blog-meta"><i class="fa-regular fa-calendar"></i> July 20, 2026 • 5 min read</div>
+                            <h3>Navigating Interest Rate Shifts in 2026</h3>
+                            <p>How central bank policy recalibrations impact fixed income yields and stock equity valuations.</p>
+                            <button class="btn-read-more" data-article="1">Read Insights <i class="fa-solid fa-arrow-right"></i></button>
+                        </div>
+                    </article>
+
+                    <article class="blog-card">
+                        <div class="blog-img-holder blog-img-2">
+                            <span class="blog-category">Portfolio Strategy</span>
+                        </div>
+                        <div class="blog-content">
+                            <div class="blog-meta"><i class="fa-regular fa-calendar"></i> July 15, 2026 • 7 min read</div>
+                            <h3>Why Diversification is Your Best Volatility Defense</h3>
+                            <p>Analyzing mathematical correlation models between real estate, equities, and inflation-hedged assets.</p>
+                            <button class="btn-read-more" data-article="2">Read Insights <i class="fa-solid fa-arrow-right"></i></button>
+                        </div>
+                    </article>
+
+                    <article class="blog-card">
+                        <div class="blog-img-holder blog-img-3">
+                            <span class="blog-category">Technology & FinTech</span>
+                        </div>
+                        <div class="blog-content">
+                            <div class="blog-meta"><i class="fa-regular fa-calendar"></i> July 10, 2026 • 4 min read</div>
+                            <h3>Algorithmic Rebalancing vs Manual Trading</h3>
+                            <p>Why automated tax-loss harvesting and disciplined rebalancing beat emotion-driven retail trading.</p>
+                            <button class="btn-read-more" data-article="3">Read Insights <i class="fa-solid fa-arrow-right"></i></button>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ SECTION -->
+        <section class="faq-section" id="faq">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-tag">FREQUENTLY ASKED QUESTIONS</span>
+                    <h2 class="section-title">Clear Answers to Your Questions</h2>
+                    <p class="section-subtitle">Everything you need to know about investing with Buffy.com.</p>
+                </div>
+
+                <!-- FAQ Search Bar -->
+                <div class="faq-search-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="faq-search" placeholder="Search questions (e.g. withdrawals, security, minimums)...">
+                </div>
+
+                <!-- FAQ Accordion -->
+                <div class="faq-accordion" id="faq-accordion">
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            <span>How do I start investing with Buffy.com?</span>
+                            <i class="fa-solid fa-chevron-down faq-icon"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Getting started takes less than 3 minutes. Click "Sign Up", complete your identity verification, select your preferred investment plan (starting from $100), and link your bank account or fund via wire/crypto transfer.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            <span>What are the risks involved with investing?</span>
+                            <i class="fa-solid fa-chevron-down faq-icon"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p>All financial market investments carry risk of capital loss. Asset prices fluctuate based on macroeconomic conditions, corporate earnings, interest rates, and market sentiment. Buffy.com utilizes automated diversification and risk management algorithms to help mitigate down-market exposure, but past performance is not a guarantee of future returns.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            <span>How secure is Buffy.com with my funds and data?</span>
+                            <i class="fa-solid fa-chevron-down faq-icon"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p>We deploy bank-grade 256-bit AES encryption for all data in transit and at rest. Client securities are held with regulated custodian institutions and protected by SIPC coverage up to $500,000 (including $250,000 for cash claims). Cash reserves are maintained in FDIC-insured partner bank accounts.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            <span>What investment options and asset classes are available?</span>
+                            <i class="fa-solid fa-chevron-down faq-icon"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Buffy.com offers access to global Equities, Exchange-Traded Funds (ETFs), Government & Corporate Bonds, Real Estate Trusts (REITs), Precious Metals & Commodities, and high-cap Digital Assets.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            <span>How do deposits and withdrawals work?</span>
+                            <i class="fa-solid fa-chevron-down faq-icon"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Deposits can be made via ACH, Wire Transfer, SEPA, Debit/Credit Card, or approved cryptocurrency wallets. Withdrawals can be requested anytime directly from your User Dashboard and are processed within 24 business hours with zero penalty fees.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTACT SECTION -->
+        <section class="contact-section" id="contact">
+            <div class="container">
+                <div class="contact-grid">
+                    <div class="contact-info">
+                        <span class="section-tag">GET IN TOUCH</span>
+                        <h2 class="section-title">Speak With Our Wealth Specialists</h2>
+                        <p>Have questions about setting up an institutional account or selecting a customized plan? Our team is available 24/7.</p>
+
+                        <div class="c-info-list">
+                            <div class="c-info-item">
+                                <div class="c-icon"><i class="fa-solid fa-envelope"></i></div>
+                                <div>
+                                    <h5>Email Advisory</h5>
+                                    <p>support@buffy.com | wealth@buffy.com</p>
+                                </div>
+                            </div>
+
+                            <div class="c-info-item">
+                                <div class="c-icon"><i class="fa-solid fa-phone"></i></div>
+                                <div>
+                                    <h5>Global Support Line</h5>
+                                    <p>+1 (800) 555-BUFFY (28339)</p>
+                                </div>
+                            </div>
+
+                            <div class="c-info-item">
+                                <div class="c-icon"><i class="fa-solid fa-location-dot"></i></div>
+                                <div>
+                                    <h5>Headquarters</h5>
+                                    <p>7 World Trade Center, 42nd Floor, Wall St District, New York, NY 10007</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Map Preview Card -->
+                        <div class="map-placeholder">
+                            <div class="map-overlay">
+                                <i class="fa-solid fa-location-pin pin-gold"></i>
+                                <span>Wall Street HQ • London • Singapore</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contact Form -->
+                    <div class="contact-form-card">
+                        <h3>Send Us a Message</h3>
+                        <form id="contact-form">
+                            <div class="form-group">
+                                <label for="c-name">Full Name</label>
+                                <input type="text" id="c-name" placeholder="John Doe" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="c-email">Work / Personal Email</label>
+                                <input type="email" id="c-email" placeholder="john@example.com" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="c-subject">Inquiry Type</label>
+                                <select id="c-subject" class="calc-select">
+                                    <option value="General">General Inquiry</option>
+                                    <option value="Investment Plans">Investment Plans & Tiers</option>
+                                    <option value="Institutional Account">Institutional & Family Office</option>
+                                    <option value="Technical Support">Technical Support</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="c-message">Your Message</label>
+                                <textarea id="c-message" rows="4" placeholder="How can our wealth advisory team assist you today?" required></textarea>
+                            </div>
+
+                            <button type="submit" class="btn-primary btn-block">Submit Inquiry <i class="fa-solid fa-paper-plane"></i></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- INTERACTIVE USER DASHBOARD VIEW (CAN BE TOGGLED OR VIEWED) -->
+    <div id="dashboard-view" class="dashboard-view hidden">
+        <div class="dashboard-header-bar">
+            <div class="dash-welcome">
+                <h2>Welcome Back, <span class="gold-gradient-text">Alexander Vance</span></h2>
+                <p>Growth Tier Member • Account #BF-894201</p>
+            </div>
+
+            <div class="dash-quick-actions">
+                <button class="btn-primary btn-sm" id="btn-dash-deposit"><i class="fa-solid fa-arrow-down-left"></i> Quick Deposit</button>
+                <button class="btn-outline btn-sm" id="btn-dash-withdraw"><i class="fa-solid fa-arrow-up-right"></i> Withdraw</button>
+                <button class="btn-secondary btn-sm" id="btn-close-dashboard"><i class="fa-solid fa-globe"></i> Return to Site</button>
+            </div>
+        </div>
+
+        <!-- Dashboard Metrics Grid -->
+        <div class="container-fluid dashboard-content">
+            <div class="dash-metrics-grid">
+                <div class="dash-metric-card">
+                    <div class="m-title">Total Portfolio Value</div>
+                    <div class="m-val">$128,450.80</div>
+                    <div class="m-change positive"><i class="fa-solid fa-arrow-trend-up"></i> +$3,420.50 (2.73% YTD)</div>
+                </div>
+
+                <div class="dash-metric-card">
+                    <div class="m-title">Cash & Liquidity</div>
+                    <div class="m-val">$14,200.00</div>
+                    <div class="m-sub">Available for Instant Allocation</div>
+                </div>
+
+                <div class="dash-metric-card">
+                    <div class="m-title">Cumulative Returns</div>
+                    <div class="m-val positive">+$28,450.80</div>
+                    <div class="m-sub">Total All-Time Profits</div>
+                </div>
+
+                <div class="dash-metric-card">
+                    <div class="m-title">Risk Profile Score</div>
+                    <div class="m-val gold-accent">68 / 100</div>
+                    <div class="m-sub">Moderate Growth Shielded</div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="dash-charts-grid">
+                <div class="dash-chart-card main-chart">
+                    <div class="chart-header">
+                        <div>
+                            <h3>Portfolio Growth History</h3>
+                            <p>Real-time valuation track</p>
+                        </div>
+                        <div class="chart-timeframe" id="timeframe-selector">
+                            <button class="tf-btn" data-tf="1d">1D</button>
+                            <button class="tf-btn" data-tf="1w">1W</button>
+                            <button class="tf-btn" data-tf="1m">1M</button>
+                            <button class="tf-btn active" data-tf="1y">1Y</button>
+                            <button class="tf-btn" data-tf="all">ALL</button>
+                        </div>
+                    </div>
+                    <div class="chart-canvas-holder">
+                        <canvas id="dashboardPerformanceChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="dash-chart-card side-chart">
+                    <div class="chart-header">
+                        <h3>Asset Allocation</h3>
+                    </div>
+                    <div class="chart-canvas-holder donut-holder">
+                        <canvas id="dashboardDonutChart"></canvas>
+                    </div>
+                    <div class="allocation-list">
+                        <div class="alloc-row"><span><i class="fa-solid fa-circle c-blue"></i> US Equities</span> <strong>45%</strong></div>
+                        <div class="alloc-row"><span><i class="fa-solid fa-circle c-gold"></i> Global ETFs</span> <strong>25%</strong></div>
+                        <div class="alloc-row"><span><i class="fa-solid fa-circle c-green"></i> Real Estate REITs</span> <strong>15%</strong></div>
+                        <div class="alloc-row"><span><i class="fa-solid fa-circle c-purple"></i> Treasuries</span> <strong>10%</strong></div>
+                        <div class="alloc-row"><span><i class="fa-solid fa-circle c-cyan"></i> Crypto Assets</span> <strong>5%</strong></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Transactions Table -->
+            <div class="dash-table-card">
+                <div class="table-header">
+                    <h3>Recent Transactions & Dividends</h3>
+                    <button class="btn-text">Export CSV <i class="fa-solid fa-download"></i></button>
+                </div>
+                <div class="table-responsive">
+                    <table class="dash-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Transaction Type</th>
+                                <th>Asset Class</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>July 24, 2026</td>
+                                <td><span class="tx-badge deposit"><i class="fa-solid fa-arrow-down-left"></i> Monthly Deposit</span></td>
+                                <td>USD Cash Reserve</td>
+                                <td>+$1,000.00</td>
+                                <td><span class="status-pill success">Completed</span></td>
+                            </tr>
+                            <tr>
+                                <td>July 21, 2026</td>
+                                <td><span class="tx-badge dividend"><i class="fa-solid fa-coins"></i> Q2 Dividend Yield</span></td>
+                                <td>Vanguard Dividend ETF (VYM)</td>
+                                <td>+$342.50</td>
+                                <td><span class="status-pill success">Completed</span></td>
+                            </tr>
+                            <tr>
+                                <td>July 15, 2026</td>
+                                <td><span class="tx-badge rebalance"><i class="fa-solid fa-arrows-rotate"></i> Auto-Rebalance</span></td>
+                                <td>S&P 500 Index / Real Estate</td>
+                                <td>$4,500.00</td>
+                                <td><span class="status-pill success">Completed</span></td>
+                            </tr>
+                            <tr>
+                                <td>July 01, 2026</td>
+                                <td><span class="tx-badge buy"><i class="fa-solid fa-cart-shopping"></i> Asset Purchase</span></td>
+                                <td>Global Tech Leaders ETF</td>
+                                <td>$2,500.00</td>
+                                <td><span class="status-pill success">Completed</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AUTHENTICATION MODALS SYSTEM -->
+
+    <!-- Modal Backdrop -->
+    <div class="modal-overlay hidden" id="modal-overlay">
+
+        <!-- Login Modal -->
+        <div class="auth-modal hidden" id="modal-login">
+            <button class="modal-close" id="close-login-btn"><i class="fa-solid fa-xmark"></i></button>
+            <div class="auth-header">
+                <div class="logo-icon small"><i class="fa-solid fa-chart-line"></i></div>
+                <h3>Log In to Buffy.com</h3>
+                <p>Access your secure wealth portfolio</p>
+            </div>
+            <form id="form-login">
+                <div class="form-group">
+                    <label for="login-email">Email Address</label>
+                    <input type="email" id="login-email" placeholder="name@example.com" required>
+                </div>
+                <div class="form-group">
+                    <div class="flex-between">
+                        <label for="login-password">Password</label>
+                        <a href="#" id="link-forgot-pass" class="small-link">Forgot Password?</a>
+                    </div>
+                    <input type="password" id="login-password" placeholder="••••••••••••" required>
+                </div>
+                <button type="submit" class="btn-primary btn-block">Log In Securely <i class="fa-solid fa-lock"></i></button>
+            </form>
+            <div class="auth-footer">
+                Don't have an account? <a href="#" id="switch-to-signup" class="gold-link">Create Account</a>
+            </div>
+        </div>
+
+        <!-- Signup Modal -->
+        <div class="auth-modal hidden" id="modal-signup">
+            <button class="modal-close" id="close-signup-btn"><i class="fa-solid fa-xmark"></i></button>
+            <div class="auth-header">
+                <div class="logo-icon small"><i class="fa-solid fa-chart-line"></i></div>
+                <h3>Create Your Account</h3>
+                <p>Start your wealth building journey</p>
+            </div>
+            <form id="form-signup">
+                <div class="form-group">
+                    <label for="signup-name">Full Name</label>
+                    <input type="text" id="signup-name" placeholder="Alexander Vance" required>
+                </div>
+                <div class="form-group">
+                    <label for="signup-email">Work or Personal Email</label>
+                    <input type="email" id="signup-email" placeholder="alexander@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="signup-password">Create Password</label>
+                    <input type="password" id="signup-password" placeholder="Minimum 8 characters" required>
+                </div>
+                <div class="form-group">
+                    <label for="signup-plan">Target Investment Plan</label>
+                    <select id="signup-plan" class="calc-select">
+                        <option value="Starter">Starter Plan ($100 Min)</option>
+                        <option value="Growth" selected>Growth Plan ($1,000 Min)</option>
+                        <option value="Professional">Professional Tier ($10,000 Min)</option>
+                        <option value="Institutional">Institutional Bespoke</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-primary btn-block">Continue to Verification <i class="fa-solid fa-arrow-right"></i></button>
+            </form>
+            <div class="auth-footer">
+                Already registered? <a href="#" id="switch-to-login" class="gold-link">Log In</a>
+            </div>
+        </div>
+
+        <!-- 2FA Modal -->
+        <div class="auth-modal hidden" id="modal-2fa">
+            <button class="modal-close" id="close-2fa-btn"><i class="fa-solid fa-xmark"></i></button>
+            <div class="auth-header">
+                <div class="logo-icon small gold"><i class="fa-solid fa-key"></i></div>
+                <h3>Two-Factor Verification</h3>
+                <p>Enter the 6-digit code sent to your authenticated device.</p>
+            </div>
+            <form id="form-2fa">
+                <div class="pin-code-group">
+                    <input type="text" maxlength="1" class="pin-input" autofocus>
+                    <input type="text" maxlength="1" class="pin-input">
+                    <input type="text" maxlength="1" class="pin-input">
+                    <input type="text" maxlength="1" class="pin-input">
+                    <input type="text" maxlength="1" class="pin-input">
+                    <input type="text" maxlength="1" class="pin-input">
+                </div>
+                <button type="submit" class="btn-primary btn-block">Verify Code & Access</button>
+            </form>
+            <div class="auth-footer">
+                Didn't receive code? <a href="#" id="btn-resend-2fa" class="gold-link">Resend Code (30s)</a>
+            </div>
+        </div>
+
+        <!-- Deposit / Withdraw Modal -->
+        <div class="auth-modal hidden" id="modal-transfer">
+            <button class="modal-close" id="close-transfer-btn"><i class="fa-solid fa-xmark"></i></button>
+            <div class="auth-header">
+                <h3 id="transfer-title">Quick Deposit</h3>
+                <p id="transfer-sub">Transfer funds directly to your Buffy.com cash balance</p>
+            </div>
+            <form id="form-transfer">
+                <div class="form-group">
+                    <label for="transfer-amount">Amount (USD)</label>
+                    <input type="number" id="transfer-amount" min="10" placeholder="1000" required>
+                </div>
+                <div class="form-group">
+                    <label for="transfer-method">Payment Source</label>
+                    <select id="transfer-method" class="calc-select">
+                        <option value="ACH">Linked Chase Bank (ACH)</option>
+                        <option value="Wire">Domestic Wire Transfer</option>
+                        <option value="Crypto">USDT / USDC Crypto Wallet</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-primary btn-block" id="btn-submit-transfer">Confirm Deposit</button>
+            </form>
+        </div>
+
+        <!-- Profile Settings Modal -->
+        <div class="auth-modal hidden" id="modal-profile">
+            <button class="modal-close" id="close-profile-btn"><i class="fa-solid fa-xmark"></i></button>
+            <div class="auth-header">
+                <div class="logo-icon small gold"><i class="fa-solid fa-user-gear"></i></div>
+                <h3>Account & Security Settings</h3>
+                <p>Manage your investor profile and preferences</p>
+            </div>
+            <form id="form-profile">
+                <div class="form-group">
+                    <label for="prof-name">Full Name</label>
+                    <input type="text" id="prof-name" value="Alexander Vance" required>
+                </div>
+                <div class="form-group">
+                    <label for="prof-email">Email Address</label>
+                    <input type="email" id="prof-email" value="alexander@buffy.com" disabled style="opacity: 0.7; cursor: not-allowed;">
+                </div>
+                <div class="form-group">
+                    <label for="prof-plan">Active Investment Tier</label>
+                    <select id="prof-plan" class="calc-select">
+                        <option value="Starter">Starter Plan ($100 Min)</option>
+                        <option value="Growth" selected>Growth Plan ($1,000 Min)</option>
+                        <option value="Professional">Professional Tier ($10,000 Min)</option>
+                        <option value="Institutional">Institutional Bespoke</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-primary btn-block">Save Profile Changes</button>
+            </form>
+        </div>
+
+    </div>
+
+    <!-- FOOTER SECTION -->
+    <footer class="site-footer">
+        <div class="container footer-grid">
+            <div class="footer-brand-col">
+                <a href="#home" class="brand-logo">
+                    <div class="logo-icon">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </div>
+                    <div class="logo-text">
+                        <span class="brand-name">Buffy<span class="gold-accent">.com</span></span>
+                    </div>
+                </a>
+                <p class="footer-tagline">Grow Your Wealth. Secure Your Future.</p>
+                <p class="footer-desc">Buffy.com Financial Technologies Inc. is a premier wealth management and capital execution firm. Dedicated to transparency, institutional risk protocols, and client security.</p>
+                
+                <div class="social-links">
+                    <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+                    <a href="#" aria-label="X Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+                    <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+                    <a href="#" aria-label="Telegram"><i class="fa-brands fa-telegram"></i></a>
+                </div>
+            </div>
+
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#home">Home Portal</a></li>
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="#plans">Investment Plans</a></li>
+                    <li><a href="#markets">Global Markets</a></li>
+                    <li><a href="#portfolio">Asset Allocation</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Legal & Safety</h4>
+                <ul>
+                    <li><a href="#" id="link-privacy">Privacy Policy</a></li>
+                    <li><a href="#" id="link-terms">Terms of Service</a></li>
+                    <li><a href="#" id="link-cookie">Cookie Policy</a></li>
+                    <li><a href="#" id="link-sec">SEC Form ADV</a></li>
+                    <li><a href="#" id="link-disclosures">Regulatory Risk Notice</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col newsletter-col">
+                <h4>Market Intelligence</h4>
+                <p>Subscribe to our weekly economic digest and portfolio allocation insights.</p>
+                <form id="newsletter-form" class="newsletter-box">
+                    <input type="email" placeholder="Enter your work email" required>
+                    <button type="submit" aria-label="Subscribe"><i class="fa-solid fa-paper-plane"></i></button>
+                </form>
+                <span class="newsletter-sub">* Zero spam. Unsubscribe anytime.</span>
+            </div>
+        </div>
+
+        <div class="footer-bottom container">
+            <div class="legal-text">
+                <p>© 2026 Buffy.com Financial Technologies Inc. All rights reserved. Securities offered through Buffy Securities LLC, member FINRA/SIPC. Investment advisory services offered through Buffy Wealth Management LLC, an SEC Registered Investment Advisor.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Main JavaScript Logic -->
+    <script src="app.js"></script>
+</body>
+</html>
