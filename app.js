@@ -60,23 +60,44 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function setDashboardUserInfo(name, plan) {
-        const dashNameEl = document.getElementById('dash-user-name');
-        const dashTierEl = document.getElementById('dash-user-tier');
-        const navUserName = document.getElementById('nav-user-name');
-        const profName = document.getElementById('prof-name');
-
-        const userNameStr = name || 'Investor';
+    function setDashboardUserInfo(name, plan, email) {
+        const userNameStr = name || (email ? email.split('@')[0] : 'Angel');
         const userPlanStr = plan || 'Growth';
 
-        if (dashNameEl) dashNameEl.textContent = userNameStr;
-        if (dashTierEl) {
-            const accNum = Math.floor(100000 + Math.random() * 900000);
-            dashTierEl.textContent = `${userPlanStr} Tier Member • Account #BF-${accNum}`;
+        const hdrUsername = document.getElementById('hdr-username');
+        const hdrLastSeen = document.getElementById('hdr-lastseen');
+        const hdrIp = document.getElementById('hdr-ip');
+        const dashRefLink = document.getElementById('dash-ref-link');
+        const navUserName = document.getElementById('nav-user-name');
+        const profName = document.getElementById('prof-name');
+        const settingName = document.getElementById('setting-fullname');
+        const settingEmail = document.getElementById('setting-email');
+
+        if (hdrUsername) hdrUsername.textContent = userNameStr;
+        if (hdrLastSeen) {
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+            const timeStr = now.toLocaleTimeString('en-US');
+            hdrLastSeen.textContent = `${dateStr} ${timeStr}`;
         }
+        if (hdrIp) hdrIp.textContent = '105.112.194.20';
+        if (dashRefLink) dashRefLink.value = `https://buffyinvestment.com/?ref=${encodeURIComponent(userNameStr.toLowerCase().replace(/\s+/g, ''))}`;
         if (navUserName) navUserName.textContent = userNameStr;
         if (profName) profName.value = userNameStr;
+        if (settingName) settingName.value = userNameStr;
+        if (settingEmail && email) settingEmail.value = email;
     }
+
+    // Live Server Clock Widget
+    function startClock() {
+        const clockEl = document.getElementById('hdr-clock');
+        if (!clockEl) return;
+        setInterval(() => {
+            const now = new Date();
+            clockEl.textContent = now.toTimeString().split(' ')[0];
+        }, 1000);
+    }
+    startClock();
 
     function updateUserNavState(user) {
         currentUser = user;
@@ -88,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (userNav) userNav.style.display = 'inline-flex';
             const displayName = user.user_metadata?.full_name || user.email;
             const targetPlan = user.user_metadata?.target_plan || 'Growth';
-            setDashboardUserInfo(displayName, targetPlan);
+            setDashboardUserInfo(displayName, targetPlan, user.email);
             loadUserTransactionsFromSupabase();
         } else {
             if (guestNav) guestNav.style.display = 'inline-flex';
