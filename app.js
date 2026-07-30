@@ -606,10 +606,31 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
+            // Dispatch Welcome Email Notification to New User
+            sendWelcomeEmailNotification(email, name, plan);
+
             closeAllModals();
-            showToast(`Welcome ${name || email}! Your Buffy.com account has been created.`, 'success');
+            showToast(`Welcome ${name || email}! Your Buffy.com account has been created. Confirmation email sent.`, 'success');
             switchView(true);
         });
+    }
+
+    // Helper: Send Welcome Email Notification to Newly Registered User
+    async function sendWelcomeEmailNotification(email, name, plan) {
+        if (!email) return;
+        try {
+            const res = await fetch('/api/send-welcome-email', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: email, full_name: name, target_plan: plan })
+            });
+            const result = await res.json();
+            if (result?.success) {
+                console.log(`📧 Welcome email successfully dispatched to ${email}`);
+            }
+        } catch (err) {
+            console.log('Welcome email dispatch note:', err);
+        }
     }
 
     // 2FA PIN input auto-advance
