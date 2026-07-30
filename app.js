@@ -808,7 +808,95 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             newsletterForm.reset();
-            showToast('Subscribed! Your email was registered in Supabase Market Intelligence database.', 'success');
+            showToast('Subscribed! Your email was registered in Buffy.com Market Intelligence database.', 'success');
+        });
+    }
+
+    // ------------------------------------------------------------------
+    // 12. ENTERPRISE LEGAL MODALS & COMPLIANCE DOCS
+    // ------------------------------------------------------------------
+    const legalDocs = {
+        privacy: {
+            title: "Privacy Policy & Data Protection Standard",
+            sub: "Buffy.com Global Data Governance & Encryption Policy",
+            content: `<h4>1. Information Collection & Usage</h4>
+            <p>Buffy.com Financial Technologies Inc. collects investor identity details, financial verification metrics, and device session metadata strictly for regulatory compliance (KYC/AML) and account administration.</p>
+            <h4>2. Data Encryption Standards</h4>
+            <p>All data in transit and at rest is secured via 256-bit AES encryption and SOC-2 compliant data centers. We never sell or transfer investor information to unverified third parties.</p>
+            <h4>3. Investor Rights & Opt-Out</h4>
+            <p>Investors retain full rights to request data access audits, account closure, or information deletion in accordance with global data protection frameworks.</p>`
+        },
+        terms: {
+            title: "Terms of Service & Investment Agreement",
+            sub: "Master Services Protocol & Fiduciary Responsibilities",
+            content: `<h4>1. Platform Advisory Scope</h4>
+            <p>Buffy.com offers quantitative wealth management, asset allocation algorithms, and brokerage execution. By opening an account, investors agree to standard custodial terms.</p>
+            <h4>2. Investment Volatility & Risk Acknowledgement</h4>
+            <p>Capital deployed across equities, ETFs, fixed income, real estate, and digital assets is subject to market fluctuation. Value can increase or decrease.</p>
+            <h4>3. Execution & Account Security</h4>
+            <p>Users are responsible for maintaining credential security. Automated rebalancing protocols execute according to chosen investment strategy settings.</p>`
+        },
+        disclosures: {
+            title: "Regulatory Risk Notice & Risk Disclosures",
+            sub: "SEC & FINRA Regulatory Compliance Statements",
+            content: `<h4>1. No Profit Guarantee</h4>
+            <p>Buffy.com explicitly makes no profit promises or guaranteed return claims. All market projections are mathematical models based on historical trends.</p>
+            <h4>2. SIPC & FDIC Custodial Protection</h4>
+            <p>Securities are held with SIPC-member custodian institutions up to $500,000 (including $250,000 for cash claims). Cash reserves reside in FDIC-insured partner banks.</p>`
+        },
+        cookie: {
+            title: "Cookie Policy & Telemetry Standard",
+            sub: "Session Security & Browser Preference Tracking",
+            content: `<h4>Essential Cookies</h4>
+            <p>We deploy strict session cookies required for authentication token validation, SSL security, and user dashboard state management.</p>`
+        },
+        aml: {
+            title: "Anti-Money Laundering (AML) & KYC Policy",
+            sub: "Global Financial Crime Prevention Standards",
+            content: `<h4>Identity Verification (KYC)</h4>
+            <p>In compliance with international financial regulations, all investor accounts undergo automated identity verification and Sanctions/PEP screening prior to capital deployment.</p>`
+        }
+    };
+
+    function openLegalModal(docKey) {
+        const doc = legalDocs[docKey];
+        if (!doc) return;
+        const titleEl = document.getElementById('legal-doc-title');
+        const subEl = document.getElementById('legal-doc-sub');
+        const contentEl = document.getElementById('legal-doc-content');
+
+        if (titleEl) titleEl.textContent = doc.title;
+        if (subEl) subEl.textContent = doc.sub;
+        if (contentEl) contentEl.innerHTML = doc.content;
+
+        openAuthModal('modal-legal-doc');
+    }
+
+    const linkPrivacy = document.getElementById('link-privacy');
+    const linkTerms = document.getElementById('link-terms');
+    const linkDisclosures = document.getElementById('link-disclosures');
+    const linkCookie = document.getElementById('link-cookie');
+    const linkAml = document.getElementById('link-aml');
+
+    if (linkPrivacy) linkPrivacy.addEventListener('click', (e) => { e.preventDefault(); openLegalModal('privacy'); });
+    if (linkTerms) linkTerms.addEventListener('click', (e) => { e.preventDefault(); openLegalModal('terms'); });
+    if (linkDisclosures) linkDisclosures.addEventListener('click', (e) => { e.preventDefault(); openLegalModal('disclosures'); });
+    if (linkCookie) linkCookie.addEventListener('click', (e) => { e.preventDefault(); openLegalModal('cookie'); });
+    if (linkAml) linkAml.addEventListener('click', (e) => { e.preventDefault(); openLegalModal('aml'); });
+
+    // Resource Downloads
+    document.querySelectorAll('.btn-download-res').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const resName = btn.getAttribute('data-res');
+            showToast(`Generating document download for ${resName}...`, 'success');
+        });
+    });
+
+    // CSV Export Button
+    const btnExportCSV = document.querySelector('.dash-table-card .btn-text');
+    if (btnExportCSV) {
+        btnExportCSV.addEventListener('click', () => {
+            showToast('Generating official transaction history CSV export...', 'success');
         });
     }
 });
