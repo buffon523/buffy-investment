@@ -1143,4 +1143,133 @@ document.addEventListener('DOMContentLoaded', () => {
             showToast('Generating official transaction history CSV export...', 'success');
         });
     }
+
+    // ------------------------------------------------------------------
+    // 14. DEPOSIT FUNDS PAGE & LIVE SUMMARY CALCULATOR
+    // ------------------------------------------------------------------
+    function updateDepositLiveSummary() {
+        const amtInput = document.getElementById('dep-amount');
+        const currSelect = document.getElementById('dep-currency');
+        const methodSelect = document.getElementById('dep-selected-method');
+
+        const sumAmt = document.getElementById('sum-amount');
+        const sumFee = document.getElementById('sum-fee');
+        const sumMethod = document.getElementById('sum-method');
+        const sumTime = document.getElementById('sum-time');
+        const sumTotal = document.getElementById('sum-total');
+
+        if (!amtInput) return;
+
+        const val = parseFloat(amtInput.value) || 0;
+        const curr = currSelect ? currSelect.value : 'USD';
+        const method = methodSelect ? methodSelect.value : 'Bank Transfer';
+
+        const currSymbol = curr === 'EUR' ? '€' : (curr === 'GBP' ? '£' : '$');
+        const formattedVal = `${currSymbol} ${val.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+        if (sumAmt) sumAmt.textContent = formattedVal;
+        if (sumFee) sumFee.textContent = `${currSymbol} 0.00 (Free)`;
+        if (sumMethod) sumMethod.textContent = method;
+
+        if (sumTime) {
+            if (method.includes('Card') || method.includes('Wallet')) sumTime.textContent = 'Instant';
+            else if (method.includes('Crypto')) sumTime.textContent = '10-15 Minutes';
+            else sumTime.textContent = '1-2 Business Days';
+        }
+
+        if (sumTotal) sumTotal.textContent = formattedVal;
+    }
+
+    const paymentCards = document.querySelectorAll('.payment-card');
+    paymentCards.forEach(card => {
+        card.addEventListener('click', () => {
+            paymentCards.forEach(c => c.classList.remove('active'));
+            card.classList.add('active');
+
+            const method = card.getAttribute('data-method');
+            const methodSelect = document.getElementById('dep-selected-method');
+            if (methodSelect) {
+                for (let i = 0; i < methodSelect.options.length; i++) {
+                    if (methodSelect.options[i].value.includes(method) || method.includes(methodSelect.options[i].value)) {
+                        methodSelect.selectedIndex = i;
+                        break;
+                    }
+                }
+            }
+            updateDepositLiveSummary();
+        });
+    });
+
+    const depAmt = document.getElementById('dep-amount');
+    const depCurr = document.getElementById('dep-currency');
+    const depMethodSel = document.getElementById('dep-selected-method');
+
+    if (depAmt) depAmt.addEventListener('input', updateDepositLiveSummary);
+    if (depCurr) depCurr.addEventListener('change', updateDepositLiveSummary);
+    if (depMethodSel) depMethodSel.addEventListener('change', updateDepositLiveSummary);
+
+    // Status Filter Tabs
+    const statusTabs = document.querySelectorAll('#deposit-status-tabs .d-tab');
+    statusTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            statusTabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+
+            const filter = tab.getAttribute('data-status');
+            const tableRows = document.querySelectorAll('#deposit-history-table tbody tr');
+
+            tableRows.forEach(row => {
+                const rowStatus = row.getAttribute('data-status');
+                if (filter === 'all' || rowStatus === filter) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+    });
+
+    // Standalone Deposit Form Handler
+    const standaloneDepositForm = document.getElementById('standalone-deposit-form');
+    if (standaloneDepositForm) {
+        standaloneDepositForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const amt = parseFloat(document.getElementById('dep-amount')?.value || 0);
+            const curr = document.getElementById('dep-currency')?.value || 'USD';
+            const method = document.getElementById('dep-selected-method')?.value || 'Bank Transfer';
+            const tier = document.getElementById('dep-account-tier')?.value || 'Growth';
+            const userEmail = currentUser ? currentUser.email : 'investor@buffyinvestment.com';
+
+            if (amt <= 0) {
+                showToast('Please enter a valid deposit amount greater than 0.', 'error');
+                return;
+            }
+
+            const btnSubmit = document.getElementById('btn-continue-deposit');
+            if (btnSubmit) {
+                btnSubmit.disabled = true;
+                btnSubmit.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing Payment Securely...';
+            }
+
+            if (supabaseClient) {
+                try {
+                    await supabaseClient.from('user_transactions').insert([
+                        { user_email: userEmail, tx_type: 'Deposit', asset_class: `${tier} Strategy (${method} - ${curr})`, amount: amt, status: 'Completed' }
+                    ]);
+                } catch (err) {
+                    console.log('Deposit submission note:', err);
+                }
+            }
+
+            setTimeout(async () => {
+                await recalculateUserBalances(userEmail);
+                loadUserTransactionsFromSupabase();
+                if (btnSubmit) {
+                    btnSubmit.disabled = false;
+                    btnSubmit.innerHTML = 'Continue Deposit <i class="fa-solid fa-arrow-right"></i>';
+                }
+                showToast(`🎉 Deposit Request Successful! $${amt.toLocaleString()} credited via ${method}. Portfolio balance updated.`, 'success');
+            }, 1200);
+        });
+    }
 });
