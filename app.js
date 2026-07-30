@@ -60,17 +60,35 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    function setDashboardUserInfo(name, plan) {
+        const dashNameEl = document.getElementById('dash-user-name');
+        const dashTierEl = document.getElementById('dash-user-tier');
+        const navUserName = document.getElementById('nav-user-name');
+        const profName = document.getElementById('prof-name');
+
+        const userNameStr = name || 'Investor';
+        const userPlanStr = plan || 'Growth';
+
+        if (dashNameEl) dashNameEl.textContent = userNameStr;
+        if (dashTierEl) {
+            const accNum = Math.floor(100000 + Math.random() * 900000);
+            dashTierEl.textContent = `${userPlanStr} Tier Member • Account #BF-${accNum}`;
+        }
+        if (navUserName) navUserName.textContent = userNameStr;
+        if (profName) profName.value = userNameStr;
+    }
+
     function updateUserNavState(user) {
         currentUser = user;
         const guestNav = document.getElementById('guest-nav-group');
         const userNav = document.getElementById('user-nav-group');
-        const navUserName = document.getElementById('nav-user-name');
 
         if (user) {
             if (guestNav) guestNav.style.display = 'none';
             if (userNav) userNav.style.display = 'inline-flex';
             const displayName = user.user_metadata?.full_name || user.email;
-            if (navUserName) navUserName.textContent = displayName;
+            const targetPlan = user.user_metadata?.target_plan || 'Growth';
+            setDashboardUserInfo(displayName, targetPlan);
             loadUserTransactionsFromSupabase();
         } else {
             if (guestNav) guestNav.style.display = 'inline-flex';
@@ -606,11 +624,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
+            // Update Dashboard and Navigation UI with Registered User's Name
+            const displayName = name || email || 'Valued Investor';
+            setDashboardUserInfo(displayName, plan || 'Growth');
+
+            const guestNav = document.getElementById('guest-nav-group');
+            const userNav = document.getElementById('user-nav-group');
+            if (guestNav) guestNav.style.display = 'none';
+            if (userNav) userNav.style.display = 'inline-flex';
+
             // Dispatch Direct Welcome Email Notification to New User
             sendWelcomeEmailNotification(email, name, plan);
 
             closeAllModals();
-            showToast(`Welcome ${name || email}! Account active. Direct welcome email sent from welcome@buffyinvestment.com.`, 'success');
+            showToast(`Welcome ${displayName}! Portfolio dashboard active. Welcome email sent from welcome@buffyinvestment.com.`, 'success');
             switchView(true);
         });
     }
