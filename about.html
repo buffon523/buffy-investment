@@ -360,77 +360,176 @@
 
     </main>
 
-    <!-- INTERACTIVE USER DASHBOARD VIEW (SHARED) -->
+    <!-- INTERACTIVE USER DASHBOARD VIEW (IMAGE LAYOUT SPECIFICATION) -->
     <div id="dashboard-view" class="dashboard-view hidden">
-        <div class="dashboard-header-bar">
-            <div class="dash-welcome">
-                <h2>Welcome Back, <span class="gold-gradient-text" id="dash-user-name">Alexander Vance</span></h2>
-                <p id="dash-user-tier">Growth Tier Member • Account #BF-894201</p>
+        <!-- 1. Top Header Bar -->
+        <div class="dash-top-header">
+            <div class="dash-hdr-left">
+                <a href="index.html" class="brand-logo small">
+                    <div class="logo-icon"><i class="fa-solid fa-chart-line"></i></div>
+                    <div class="logo-text">
+                        <span class="brand-name">Buffy<span class="gold-accent">.com</span></span>
+                    </div>
+                </a>
             </div>
 
-            <div class="dash-quick-actions">
-                <button class="btn-primary btn-sm" id="btn-dash-deposit"><i class="fa-solid fa-arrow-down-left"></i> Quick Deposit</button>
-                <button class="btn-outline btn-sm" id="btn-dash-withdraw"><i class="fa-solid fa-arrow-up-right"></i> Withdraw</button>
-                <button class="btn-secondary btn-sm" id="btn-close-dashboard"><i class="fa-solid fa-globe"></i> Return to Site</button>
+            <div class="dash-hdr-widgets">
+                <div class="hdr-widget">
+                    <i class="fa-solid fa-user gold-icon"></i>
+                    <div><span class="hdr-lbl">USERNAME:</span> <strong id="hdr-username">Angel</strong></div>
+                </div>
+
+                <div class="hdr-widget">
+                    <i class="fa-solid fa-calendar-days"></i>
+                    <div><span class="hdr-lbl">LAST SEEN:</span> <span id="hdr-lastseen">Jun-6-2026 11:33:36 AM</span></div>
+                </div>
+
+                <div class="hdr-widget">
+                    <i class="fa-solid fa-network-wired"></i>
+                    <div><span class="hdr-lbl">WITH IP ADDRESS:</span> <span id="hdr-ip">105.112.194.20</span></div>
+                </div>
+
+                <div class="hdr-widget balance-highlight">
+                    <i class="fa-solid fa-wallet"></i>
+                    <div><span class="hdr-lbl">YOUR BALANCE:</span> <strong id="hdr-total-balance">$ 14,499.00</strong></div>
+                </div>
+
+                <div class="hdr-widget">
+                    <i class="fa-solid fa-clock"></i>
+                    <div><span class="hdr-lbl">TIME:</span> <span id="hdr-clock">21:29:51</span></div>
+                </div>
+
+                <div class="hdr-widget">
+                    <i class="fa-solid fa-envelope"></i>
+                    <div><span class="hdr-lbl">SUPPORT:</span> <a href="mailto:support@buffyinvestment.com">support@buffyinvestment.com</a></div>
+                </div>
+
+                <div class="hdr-widget social">
+                    <span class="hdr-lbl">FOLLOW US:</span>
+                    <div class="hdr-social-icons">
+                        <a href="#"><i class="fa-brands fa-facebook"></i></a>
+                        <a href="#"><i class="fa-brands fa-x-twitter"></i></a>
+                        <a href="#"><i class="fa-brands fa-telegram"></i></a>
+                        <a href="#"><i class="fa-brands fa-youtube"></i></a>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="container-fluid dashboard-content">
-            <div class="dash-metrics-grid">
-                <div class="dash-metric-card">
-                    <div class="m-title">Total Portfolio Value</div>
-                    <div class="m-val">$128,450.80</div>
-                    <div class="m-change positive"><i class="fa-solid fa-arrow-trend-up"></i> +$3,420.50 (2.73% YTD)</div>
-                </div>
+        <!-- 2. Multi-Wallet Crypto/Currency Ticker Bar -->
+        <div class="wallet-ticker-bar">
+            <div class="w-ticker-item"><span class="w-badge pm">PM</span> <span class="w-lbl">AVAILABLE BALANCE:</span> <strong>$ 0.00</strong></div>
+            <div class="w-ticker-item"><span class="w-badge payeer">P</span> <span class="w-lbl">AVAILABLE BALANCE:</span> <strong>$ 0.00</strong></div>
+            <div class="w-ticker-item"><span class="w-badge btc">BTC</span> <span class="w-lbl">AVAILABLE BALANCE:</span> <strong id="wb-btc">$ 0.00</strong></div>
+            <div class="w-ticker-item"><span class="w-badge ltc">LTC</span> <span class="w-lbl">AVAILABLE BALANCE:</span> <strong>$ 0.00</strong></div>
+            <div class="w-ticker-item"><span class="w-badge eth">ETH</span> <span class="w-lbl">AVAILABLE BALANCE:</span> <strong id="wb-eth">$ 0.00</strong></div>
+            <div class="w-ticker-item"><span class="w-badge doge">DOGE</span> <span class="w-lbl">AVAILABLE BALANCE:</span> <strong>$ 0.00</strong></div>
+            <div class="w-ticker-item"><span class="w-badge bnb">BNB</span> <span class="w-lbl">AVAILABLE BALANCE:</span> <strong>$ 0.00</strong></div>
+            <div class="w-ticker-item"><span class="w-badge usdt">USDT</span> <span class="w-lbl">AVAILABLE BALANCE:</span> <strong id="wb-usdt">$ 14,499.00</strong></div>
+        </div>
 
-                <div class="dash-metric-card">
-                    <div class="m-title">Cash & Liquidity</div>
-                    <div class="m-val">$14,200.00</div>
-                    <div class="m-sub">Available for Instant Allocation</div>
-                </div>
+        <!-- 3. Sidebar + Main Content Layout -->
+        <div class="dash-layout">
+            <!-- Sidebar Navigation -->
+            <aside class="dash-sidebar">
+                <nav class="side-nav">
+                    <button class="side-link active" data-tab="account"><i class="fa-solid fa-user-gear"></i> MY ACCOUNT</button>
+                    <button class="side-link" data-tab="make-deposit"><i class="fa-solid fa-chart-line"></i> MAKE DEPOSIT</button>
+                    <button class="side-link" data-tab="deposits-list"><i class="fa-solid fa-list-check"></i> DEPOSITS LIST</button>
+                    <button class="side-link" data-tab="withdrawal"><i class="fa-solid fa-wallet"></i> WITHDRAWAL</button>
+                    <button class="side-link" data-tab="settings"><i class="fa-solid fa-gears"></i> SETTINGS</button>
+                    <button class="side-link" data-tab="security"><i class="fa-solid fa-shield-halved"></i> SECURITY</button>
+                    <button class="side-link" data-tab="history"><i class="fa-solid fa-clock-rotate-left"></i> HISTORY</button>
+                    <button class="side-link" data-tab="referrals"><i class="fa-solid fa-users"></i> REFERRALS</button>
+                    <button class="side-link" data-tab="banners"><i class="fa-solid fa-image"></i> BANNERS LINKS</button>
+                    <button class="side-link" data-tab="tell-friend"><i class="fa-solid fa-share-nodes"></i> TELL A FRIEND</button>
+                    <button class="side-link logout" id="side-logout-btn"><i class="fa-solid fa-right-from-bracket"></i> LOGOUT</button>
+                </nav>
+            </aside>
 
-                <div class="dash-metric-card">
-                    <div class="m-title">Cumulative Returns</div>
-                    <div class="m-val positive">+$28,450.80</div>
-                    <div class="m-sub">Total All-Time Profits</div>
-                </div>
+            <!-- Main Panel Content -->
+            <main class="dash-main-panel">
+                <!-- PANEL TAB 1: MY ACCOUNT (DEFAULT) -->
+                <div class="dash-tab-panel active" id="panel-account">
+                    <h2 class="panel-heading">My Account</h2>
 
-                <div class="dash-metric-card">
-                    <div class="m-title">Risk Profile Score</div>
-                    <div class="m-val gold-accent">68 / 100</div>
-                    <div class="m-sub">Moderate Growth Shielded</div>
-                </div>
-            </div>
-
-            <div class="dash-charts-grid">
-                <div class="dash-chart-card main-chart">
-                    <div class="chart-header">
-                        <div>
-                            <h3>Portfolio Growth History</h3>
-                            <p>Real-time valuation track</p>
+                    <!-- Referral & Upline Cards Row -->
+                    <div class="ref-cards-grid">
+                        <div class="ref-card">
+                            <div class="ref-icon"><i class="fa-solid fa-link"></i></div>
+                            <div class="ref-info">
+                                <span class="ref-label">Your referral link:</span>
+                                <div class="ref-input-group">
+                                    <input type="text" id="dash-ref-link" value="https://buffyinvestment.com/?ref=Angel" readonly>
+                                    <button class="btn-copy-ref" id="btn-copy-ref"><i class="fa-regular fa-copy"></i></button>
+                                </div>
+                            </div>
                         </div>
-                        <div class="chart-timeframe" id="timeframe-selector">
-                            <button class="tf-btn" data-tf="1d">1D</button>
-                            <button class="tf-btn" data-tf="1w">1W</button>
-                            <button class="tf-btn" data-tf="1m">1M</button>
-                            <button class="tf-btn active" data-tf="1y">1Y</button>
-                            <button class="tf-btn" data-tf="all">ALL</button>
+
+                        <div class="ref-card">
+                            <div class="ref-icon gold"><i class="fa-solid fa-user-plus"></i></div>
+                            <div class="ref-info">
+                                <span class="ref-label">Your Upline:</span>
+                                <strong class="upline-val" id="dash-upline">--- / Direct Investor</strong>
+                            </div>
                         </div>
                     </div>
-                    <div class="chart-canvas-holder">
-                        <canvas id="dashboardPerformanceChart"></canvas>
-                    </div>
-                </div>
 
-                <div class="dash-chart-card side-chart">
-                    <div class="chart-header">
-                        <h3>Asset Allocation</h3>
+                    <!-- Statistics Two-Column Grid -->
+                    <div class="stats-two-col">
+                        <!-- Investment Statistics -->
+                        <div class="stats-box">
+                            <h3 class="stats-box-title gold-title">Investment Statistics:</h3>
+                            <div class="stat-row">
+                                <div class="stat-lbl-box"><i class="fa-solid fa-arrow-down-left"></i> LAST DEPOSIT:</div>
+                                <strong class="stat-val" id="dash-last-dep">$ 15,000.00</strong>
+                            </div>
+                            <div class="stat-row">
+                                <div class="stat-lbl-box"><i class="fa-solid fa-chart-pie"></i> ACTIVE DEPOSITS:</div>
+                                <strong class="stat-val" id="dash-active-dep">$ 15,000.00</strong>
+                            </div>
+                            <div class="stat-row">
+                                <div class="stat-lbl-box"><i class="fa-solid fa-vault"></i> TOTAL DEPOSITS:</div>
+                                <strong class="stat-val" id="dash-total-dep">$ 44,000.00</strong>
+                            </div>
+                        </div>
+
+                        <!-- Statistic Withdrawals -->
+                        <div class="stats-box">
+                            <h3 class="stats-box-title pink-title">Statistic Withdrawals:</h3>
+                            <div class="stat-row">
+                                <div class="stat-lbl-box pink"><i class="fa-solid fa-coins"></i> EARNED TOTAL:</div>
+                                <strong class="stat-val pink" id="dash-earned-total">$ 48,500.00</strong>
+                            </div>
+                            <div class="stat-row">
+                                <div class="stat-lbl-box pink"><i class="fa-solid fa-hourglass-half"></i> PENDING WITHDRAWALS:</div>
+                                <strong class="stat-val pink" id="dash-pending-with">$ 0.00</strong>
+                            </div>
+                            <div class="stat-row">
+                                <div class="stat-lbl-box pink"><i class="fa-solid fa-arrow-up-right"></i> TOTAL WITHDRAWALS:</div>
+                                <strong class="stat-val pink" id="dash-total-with">$ 4,850.00</strong>
+                            </div>
+                        </div>
                     </div>
-                    <div class="chart-canvas-holder donut-holder">
-                        <canvas id="dashboardDonutChart"></canvas>
+
+                    <!-- Return to Public Site Navigation Button -->
+                    <div style="margin-top: 25px; text-align: right;">
+                        <button class="btn-secondary btn-sm" id="btn-close-dashboard"><i class="fa-solid fa-globe"></i> Return to Site Portal</button>
                     </div>
                 </div>
+            </main>
+        </div>
+
+        <!-- Dashboard Sub-Footer -->
+        <div class="dash-footer">
+            <div class="dash-footer-links">
+                <a href="index.html">HOME</a> • 
+                <a href="about.html">ABOUT US</a> • 
+                <a href="index.html#plans">INVESTMENT PLAN</a> • 
+                <a href="index.html#faq">FAQ</a> • 
+                <a href="index.html#contact">CONTACT US</a>
             </div>
+            <p>© 2026 Buffy.com Financial Technologies Inc. All rights reserved.</p>
         </div>
     </div>
 
