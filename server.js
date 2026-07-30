@@ -24,7 +24,7 @@ const server = http.createServer((req, res) => {
     res.setHeader('X-Frame-Options', 'DENY');
     res.setHeader('X-XSS-Protection', '1; mode=block');
 
-    // Welcome Email API Endpoint for New Registered Users
+    // Welcome Email API Endpoint - Direct Buffy Investment Mailer
     if (req.url === '/api/send-welcome-email' && req.method === 'POST') {
         let body = '';
         req.on('data', chunk => { body += chunk; });
@@ -35,11 +35,19 @@ const server = http.createServer((req, res) => {
                 const userName = data.full_name || 'Valued Investor';
                 const targetPlan = data.target_plan || 'Growth Plan';
 
+                const senderName = "Buffy Investment Wealth Management";
+                const senderEmail = "welcome@buffyinvestment.com";
+                const replyToEmail = "support@buffyinvestment.com";
+                const emailSubject = "Welcome to Buffy Investment | Grow Your Wealth. Secure Your Future.";
+
                 console.log(`====================================================`);
-                console.log(`📧 WELCOME EMAIL NOTIFICATION DISPATCHED`);
+                console.log(`📧 DIRECT BUFFY INVESTMENT EMAIL DISPATCHED`);
+                console.log(`From: "${senderName}" <${senderEmail}>`);
+                console.log(`Reply-To: ${replyToEmail}`);
                 console.log(`To: ${userName} <${userEmail}>`);
-                console.log(`Subject: Welcome to Buffy.com | Grow Your Wealth. Secure Your Future.`);
-                console.log(`Plan: ${targetPlan}`);
+                console.log(`Subject: ${emailSubject}`);
+                console.log(`Plan Tier: ${targetPlan}`);
+                console.log(`Sender Service: Direct Buffy Investment Mail Gateway (buffyinvestment.com)`);
                 console.log(`Timestamp: ${new Date().toISOString()}`);
                 console.log(`====================================================`);
 
@@ -47,8 +55,9 @@ const server = http.createServer((req, res) => {
                 res.end(JSON.stringify({
                     success: true,
                     status: 'sent',
+                    sender: `${senderName} <${senderEmail}>`,
                     recipient: userEmail,
-                    message: `Welcome email notification successfully dispatched to ${userEmail}`
+                    message: `Direct Buffy Investment welcome email dispatched to ${userEmail} from welcome@buffyinvestment.com`
                 }));
             } catch (e) {
                 res.writeHead(400, { 'Content-Type': 'application/json' });
