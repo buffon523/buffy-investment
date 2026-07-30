@@ -1635,10 +1635,126 @@ input[type="range"] {
     text-align: center;
 }
 
+/* ENTERPRISE RESOURCES & WATCHLIST STYLES */
+.resources-section {
+    padding: 100px 0;
+    background: rgba(11, 19, 43, 0.4);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.resources-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+}
+
+.resource-card {
+    background: var(--bg-card-glass);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-md);
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    transition: var(--transition-smooth);
+}
+
+.resource-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--gold-bright);
+    box-shadow: var(--shadow-gold);
+}
+
+.res-icon-box {
+    width: 50px;
+    height: 50px;
+    border-radius: var(--radius-sm);
+    background: rgba(212, 175, 55, 0.15);
+    color: var(--gold-bright);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.res-tag {
+    font-size: 0.72rem;
+    font-weight: 800;
+    color: var(--gold-bright);
+    letter-spacing: 1px;
+}
+
+.resource-card h3 {
+    font-size: 1.15rem;
+    color: var(--text-primary);
+}
+
+.resource-card p {
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    flex-grow: 1;
+}
+
+/* WATCHLIST & SECURITY AUDIT PANEL STYLES */
+.watchlist-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 15px;
+}
+
+.wl-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background: rgba(11, 19, 43, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: var(--radius-sm);
+    font-size: 0.88rem;
+}
+
+.text-right { text-align: right; }
+
+.sec-status-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    font-size: 0.88rem;
+}
+
+.switch-label {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    color: var(--positive);
+}
+
+.audit-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+}
+
+.auth-modal.modal-large {
+    max-width: 650px;
+    width: 90%;
+}
+
 /* RESPONSIVE MEDIA QUERIES */
 @media (max-width: 1024px) {
     .hero-grid, .portfolio-grid, .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 40px; }
-    .features-grid, .testimonials-grid, .blog-grid, .assets-grid { grid-template-columns: repeat(2, 1fr); }
+    .features-grid, .testimonials-grid, .blog-grid, .assets-grid, .resources-grid { grid-template-columns: repeat(2, 1fr); }
     .plans-grid { grid-template-columns: repeat(2, 1fr); }
     .calc-body { grid-template-columns: 1fr; }
     .dash-metrics-grid { grid-template-columns: repeat(2, 1fr); }
@@ -1651,7 +1767,7 @@ input[type="range"] {
     .mobile-toggle { display: block; }
     .nav-actions .btn-secondary, .nav-actions .btn-primary { display: none; }
     .stats-grid { grid-template-columns: repeat(2, 1fr); }
-    .features-grid, .testimonials-grid, .blog-grid, .assets-grid, .plans-grid { grid-template-columns: 1fr; }
+    .features-grid, .testimonials-grid, .blog-grid, .assets-grid, .plans-grid, .resources-grid { grid-template-columns: 1fr; }
     .hero-title { font-size: 2.5rem; }
     .footer-grid { grid-template-columns: 1fr; }
 }
