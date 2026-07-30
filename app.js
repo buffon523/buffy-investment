@@ -196,7 +196,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     startClock();
 
-    function updateUserNavState(user) {
+    async function updateUserNavState(user) {
         currentUser = user;
         const guestNav = document.getElementById('guest-nav-group');
         const userNav = document.getElementById('user-nav-group');
@@ -204,9 +204,34 @@ document.addEventListener('DOMContentLoaded', () => {
         if (user) {
             if (guestNav) guestNav.style.display = 'none';
             if (userNav) userNav.style.display = 'inline-flex';
-            const displayName = user.user_metadata?.full_name || user.email;
-            const targetPlan = user.user_metadata?.target_plan || 'Growth';
-            setDashboardUserInfo(displayName, targetPlan, user.email);
+
+            let displayName = user.user_metadata?.full_name || '';
+            let targetPlan = user.user_metadata?.target_plan || 'Growth';
+            const email = user.email;
+
+            // For existing/old users, fetch profile from Supabase user_profiles table if metadata is missing
+            if (supabaseClient && (!displayName || displayName === email)) {
+                try {
+                    const { data } = await supabaseClient
+                        .from('user_profiles')
+                        .select('full_name, target_plan')
+                        .eq('email', email)
+                        .maybeSingle();
+
+                    if (data) {
+                        if (data.full_name) displayName = data.full_name;
+                        if (data.target_plan) targetPlan = data.target_plan;
+                    }
+                } catch (e) {
+                    console.log('Profile fetch note:', e);
+                }
+            }
+
+            if (!displayName && email) {
+                displayName = email.split('@')[0];
+            }
+
+            setDashboardUserInfo(displayName, targetPlan, email);
             loadUserTransactionsFromSupabase();
         } else {
             if (guestNav) guestNav.style.display = 'inline-flex';
