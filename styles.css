@@ -2425,6 +2425,22 @@ input[type="range"] {
 
 /* SMALL MOBILE PHONES (MAX-WIDTH: 480PX) */
 @media (max-width: 480px) {
+    .hero-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .hero-actions .btn-primary,
+    .hero-actions .btn-outline {
+        width: 100%;
+        text-align: center;
+    }
+
+    .about-grid, .mission-grid, .values-grid, .why-choose-grid, .security-grid, .contact-grid {
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+    }
+
     .panel-heading {
         font-size: 1.35rem;
     }
