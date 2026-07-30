@@ -240,9 +240,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function loadUserTransactionsFromSupabase() {
-        if (!supabaseClient) return;
+        const userEmail = currentUser ? currentUser.email : null;
+        if (!supabaseClient || !userEmail) return;
+
         try {
-            const { data } = await supabaseClient.from('user_transactions').select('*').order('created_at', { ascending: false }).limit(10);
+            const { data } = await supabaseClient
+                .from('user_transactions')
+                .select('*')
+                .eq('user_email', userEmail)
+                .order('created_at', { ascending: false })
+                .limit(20);
+
             if (data && data.length > 0) {
                 renderTransactionsTable(data);
             }
@@ -252,22 +260,28 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderTransactionsTable(transactions) {
-        const tbody = document.querySelector('.dash-table tbody');
-        if (!tbody) return;
-        tbody.innerHTML = '';
+        const tbodies = document.querySelectorAll('#dash-deposit-history-table tbody, .dash-table tbody');
+        if (!tbodies || tbodies.length === 0) return;
 
-        transactions.forEach(tx => {
-            const dateStr = new Date(tx.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-            const tr = document.createElement('tr');
-            const isDeposit = tx.tx_type === 'Deposit';
-            tr.innerHTML = `
-                <td>${dateStr}</td>
-                <td><span class="tx-badge ${isDeposit ? 'deposit' : 'buy'}"><i class="fa-solid ${isDeposit ? 'fa-arrow-down-left' : 'fa-arrow-up-right'}"></i> ${tx.tx_type}</span></td>
-                <td>${tx.asset_class || 'USD Cash'}</td>
-                <td class="${isDeposit ? 'positive' : ''}">${isDeposit ? '+' : '-'}$${parseFloat(tx.amount).toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
-                <td><span class="status-pill success">${tx.status || 'Completed'}</span></td>
-            `;
-            tbody.appendChild(tr);
+        tbodies.forEach(tbody => {
+            tbody.innerHTML = '';
+            transactions.forEach(tx => {
+                const dateStr = new Date(tx.created_at || Date.now()).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+                const tr = document.createElement('tr');
+                const isDeposit = tx.tx_type === 'Deposit';
+                const statusStr = tx.status || 'Completed';
+                const statusClass = statusStr.toLowerCase().includes('complete') ? 'completed' : (statusStr.toLowerCase().includes('fail') ? 'failed' : 'pending');
+
+                tr.setAttribute('data-status', statusClass);
+                tr.innerHTML = `
+                    <td>${dateStr}</td>
+                    <td><code>DEP-${Math.floor(100000 + Math.random() * 900000)}</code></td>
+                    <td><span class="w-badge ${isDeposit ? 'usdt' : 'payeer'}">${tx.tx_type}</span> ${tx.asset_class || 'USD Cash'}</td>
+                    <td class="${isDeposit ? 'positive' : ''}">${isDeposit ? '+' : '-'}$${parseFloat(tx.amount || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                    <td><span class="status-pill ${statusClass === 'completed' ? 'success' : (statusClass === 'failed' ? 'error' : 'warning')}"><i class="fa-solid ${statusClass === 'completed' ? 'fa-circle-check' : 'fa-hourglass-half'}"></i> ${statusStr}</span></td>
+                `;
+                tbody.appendChild(tr);
+            });
         });
     }
 
