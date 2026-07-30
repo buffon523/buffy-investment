@@ -60,8 +60,103 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // ------------------------------------------------------------------
+    // DYNAMIC USER IDENTITY & BALANCE MANAGER
+    // ------------------------------------------------------------------
+    let userBalanceState = {
+        total_balance: 0.00,
+        last_deposit: 0.00,
+        active_deposits: 0.00,
+        total_deposits: 0.00,
+        earned_total: 0.00,
+        pending_withdrawals: 0.00,
+        total_withdrawals: 0.00
+    };
+
+    function updateDashboardBalanceUI() {
+        const hdrTotalBal = document.getElementById('hdr-total-balance');
+        const wbUsdt = document.getElementById('wb-usdt');
+        const dashLastDep = document.getElementById('dash-last-dep');
+        const dashActiveDep = document.getElementById('dash-active-dep');
+        const dashTotalDep = document.getElementById('dash-total-dep');
+        const dashEarnedTotal = document.getElementById('dash-earned-total');
+        const dashPendingWith = document.getElementById('dash-pending-with');
+        const dashTotalWith = document.getElementById('dash-total-with');
+
+        const formatUSD = num => `$ ${num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+        if (hdrTotalBal) hdrTotalBal.textContent = formatUSD(userBalanceState.total_balance);
+        if (wbUsdt) wbUsdt.textContent = formatUSD(userBalanceState.total_balance);
+        if (dashLastDep) dashLastDep.textContent = formatUSD(userBalanceState.last_deposit);
+        if (dashActiveDep) dashActiveDep.textContent = formatUSD(userBalanceState.active_deposits);
+        if (dashTotalDep) dashTotalDep.textContent = formatUSD(userBalanceState.total_deposits);
+        if (dashEarnedTotal) dashEarnedTotal.textContent = formatUSD(userBalanceState.earned_total);
+        if (dashPendingWith) dashPendingWith.textContent = formatUSD(userBalanceState.pending_withdrawals);
+        if (dashTotalWith) dashTotalWith.textContent = formatUSD(userBalanceState.total_withdrawals);
+    }
+
+    async function recalculateUserBalances(userEmail) {
+        const targetEmail = userEmail || (currentUser ? currentUser.email : null);
+        if (!targetEmail) {
+            updateDashboardBalanceUI();
+            return;
+        }
+
+        if (supabaseClient) {
+            try {
+                const { data } = await supabaseClient
+                    .from('user_transactions')
+                    .select('*')
+                    .eq('user_email', targetEmail);
+
+                if (data && data.length > 0) {
+                    let totalDep = 0;
+                    let lastDep = 0;
+                    let totalWith = 0;
+
+                    data.forEach(tx => {
+                        const amt = parseFloat(tx.amount) || 0;
+                        if (tx.tx_type === 'Deposit') {
+                            totalDep += amt;
+                            lastDep = amt;
+                        } else if (tx.tx_type === 'Withdrawal') {
+                            totalWith += amt;
+                        }
+                    });
+
+                    userBalanceState.total_deposits = totalDep;
+                    userBalanceState.active_deposits = totalDep;
+                    userBalanceState.last_deposit = lastDep;
+                    userBalanceState.total_withdrawals = totalWith;
+                    userBalanceState.earned_total = totalDep > 0 ? parseFloat((totalDep * 0.10).toFixed(2)) : 0.00;
+                    userBalanceState.total_balance = Math.max(0, (totalDep + userBalanceState.earned_total) - totalWith);
+                } else {
+                    userBalanceState = {
+                        total_balance: 0.00,
+                        last_deposit: 0.00,
+                        active_deposits: 0.00,
+                        total_deposits: 0.00,
+                        earned_total: 0.00,
+                        pending_withdrawals: 0.00,
+                        total_withdrawals: 0.00
+                    };
+                }
+            } catch (err) {
+                console.log('Balance calculation note:', err);
+            }
+        }
+        updateDashboardBalanceUI();
+    }
+
     function setDashboardUserInfo(name, plan, email) {
-        const userNameStr = name || (email ? email.split('@')[0] : 'Angel');
+        let userNameStr = name ? name.trim() : '';
+        if (!userNameStr && email) {
+            userNameStr = email.split('@')[0];
+        }
+        if (!userNameStr) {
+            userNameStr = 'Angel';
+        }
+
         const userPlanStr = plan || 'Growth';
 
         const hdrUsername = document.getElementById('hdr-username');
@@ -86,6 +181,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (profName) profName.value = userNameStr;
         if (settingName) settingName.value = userNameStr;
         if (settingEmail && email) settingEmail.value = email;
+
+        recalculateUserBalances(email || (currentUser ? currentUser.email : null));
     }
 
     // Live Server Clock Widget
@@ -735,20 +832,73 @@ document.addEventListener('DOMContentLoaded', () => {
             const method = document.getElementById('transfer-method')?.value;
             const isDeposit = transferTitle?.textContent.includes('Deposit');
             const txType = isDeposit ? 'Deposit' : 'Withdrawal';
+            const userEmail = currentUser ? currentUser.email : 'investor@buffyinvestment.com';
 
             if (supabaseClient && amount) {
                 try {
                     await supabaseClient.from('user_transactions').insert([
-                        { user_email: 'alexander@buffy.com', tx_type: txType, asset_class: `USD Cash (${method})`, amount: parseFloat(amount), status: 'Completed' }
+                        { user_email: userEmail, tx_type: txType, asset_class: `USD Cash (${method})`, amount: parseFloat(amount), status: 'Completed' }
                     ]);
                 } catch (err) {
                     console.log('Supabase transaction insert note:', err);
                 }
             }
 
+            await recalculateUserBalances(userEmail);
             closeAllModals();
-            showToast(`Successfully processed $${amount} via ${method}. Recorded in Supabase database.`, 'success');
+            showToast(`Successfully processed $${amount} via ${method}. Account balances updated!`, 'success');
             loadUserTransactionsFromSupabase();
+        });
+    }
+
+    // Make Deposit Panel Handler
+    const formDashDeposit = document.getElementById('form-dash-deposit');
+    if (formDashDeposit) {
+        formDashDeposit.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const plan = document.getElementById('dep-plan-select')?.value;
+            const amount = parseFloat(document.getElementById('dep-amount-input')?.value || 0);
+            const gateway = document.getElementById('dep-gateway-select')?.value;
+            const userEmail = currentUser ? currentUser.email : 'investor@buffyinvestment.com';
+
+            if (supabaseClient && amount > 0) {
+                try {
+                    await supabaseClient.from('user_transactions').insert([
+                        { user_email: userEmail, tx_type: 'Deposit', asset_class: `${plan} (${gateway})`, amount: amount, status: 'Completed' }
+                    ]);
+                } catch (err) {
+                    console.log('Deposit insert note:', err);
+                }
+            }
+
+            await recalculateUserBalances(userEmail);
+            loadUserTransactionsFromSupabase();
+            showToast(`Deposit of $${amount.toLocaleString()} processed! Portfolio balance updated.`, 'success');
+        });
+    }
+
+    // Withdrawal Panel Handler
+    const formDashWithdraw = document.getElementById('form-dash-withdraw');
+    if (formDashWithdraw) {
+        formDashWithdraw.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const amount = parseFloat(document.getElementById('with-amount-input')?.value || 0);
+            const address = document.getElementById('with-address-input')?.value;
+            const userEmail = currentUser ? currentUser.email : 'investor@buffyinvestment.com';
+
+            if (supabaseClient && amount > 0) {
+                try {
+                    await supabaseClient.from('user_transactions').insert([
+                        { user_email: userEmail, tx_type: 'Withdrawal', asset_class: `Payout (${address})`, amount: amount, status: 'Processing' }
+                    ]);
+                } catch (err) {
+                    console.log('Withdrawal insert note:', err);
+                }
+            }
+
+            await recalculateUserBalances(userEmail);
+            loadUserTransactionsFromSupabase();
+            showToast(`Withdrawal request of $${amount.toLocaleString()} submitted for processing.`, 'success');
         });
     }
 
