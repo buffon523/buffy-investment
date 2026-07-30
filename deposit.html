@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deposit Funds | Buffy.com Wealth Management</title>
+    <meta name="description" content="Securely add funds to your Buffy.com investment account via Bank Transfer, Credit/Debit Card, Digital Wallets, or Crypto Custody.">
+    <meta name="keywords" content="Deposit funds, Buffy.com deposit, bank transfer, crypto deposit, investment account funding">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js & Supabase JS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Navigation Header -->
+    <header class="navbar-header" id="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="brand-logo">
+                <div class="logo-icon">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span class="logo-spark"></span>
+                </div>
+                <div class="logo-text">
+                    <span class="brand-name">Buffy<span class="gold-accent">.com</span></span>
+                    <span class="brand-sub">WEALTH MANAGEMENT</span>
+                </div>
+            </a>
+
+            <!-- Desktop Navigation Links -->
+            <nav class="nav-menu" id="nav-menu">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="about.html" class="nav-link">About</a>
+                <a href="index.html#plans" class="nav-link">Investment Solutions</a>
+                <a href="index.html#markets" class="nav-link">Markets</a>
+                <a href="index.html#portfolio" class="nav-link">Portfolio</a>
+                <a href="deposit.html" class="nav-link active">Deposit Funds</a>
+                <a href="index.html#faq" class="nav-link">FAQ</a>
+                <a href="index.html#contact" class="nav-link">Contact</a>
+            </nav>
+
+            <!-- Nav Actions & Investor Portal -->
+            <div class="nav-actions">
+                <button class="btn-demo-toggle" id="btn-toggle-dashboard" title="Open Investor Portal Dashboard">
+                    <i class="fa-solid fa-chart-line"></i> Investor Portal
+                </button>
+
+                <div id="guest-nav-group" class="guest-nav-group" style="display: inline-flex; gap: 8px; align-items: center;">
+                    <button class="btn-secondary" id="btn-open-login">Log In</button>
+                    <button class="btn-primary" id="btn-open-signup">Create Account <i class="fa-solid fa-arrow-right"></i></button>
+                </div>
+
+                <div id="user-nav-group" class="user-nav-group hidden" style="display: none; gap: 8px; align-items: center;">
+                    <button class="btn-secondary btn-sm" id="btn-nav-profile" title="View Profile Settings"><i class="fa-solid fa-user-gear"></i> <span id="nav-user-name">Angel</span></button>
+                    <button class="btn-outline btn-sm" id="btn-logout" title="Sign Out of Session"><i class="fa-solid fa-right-from-bracket"></i> Log Out</button>
+                </div>
+                
+                <button class="mobile-toggle" id="mobile-toggle" aria-label="Toggle navigation menu">
+                    <i class="fa-solid fa-bars-staggered"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN DEPOSIT PAGE CONTENT -->
+    <main id="public-site-view">
+
+        <!-- DEPOSIT HERO HEADER -->
+        <section class="hero-section" style="padding: 130px 0 60px 0;">
+            <div class="hero-bg-glow"></div>
+            <div class="container text-center" style="max-width: 800px; margin: 0 auto; text-align: center;">
+                <div class="trust-pill" style="display: inline-flex;">
+                    <span class="pill-dot"></span> Institutional Payment Gateway
+                </div>
+                <h1 class="hero-title" style="margin-top: 15px;">
+                    Deposit <span class="gold-gradient-text">Funds</span>
+                </h1>
+                <p class="hero-subheadline" style="font-size: 1.15rem;">
+                    “Securely add funds to your investment account to begin or continue your investment journey.”
+                </p>
+            </div>
+        </section>
+
+        <!-- DEPOSIT FORM & PAYMENT METHODS SECTION -->
+        <section class="features-section" style="padding: 40px 0 90px 0;">
+            <div class="container">
+                <!-- Select Payment Method Cards Grid -->
+                <div class="section-header" style="text-align: left; margin-bottom: 25px;">
+                    <span class="section-tag">STEP 1: CHOOSE PAYMENT METHOD</span>
+                    <h2 class="section-title" style="font-size: 1.6rem;">Select Funding Gateway</h2>
+                </div>
+
+                <div class="payment-cards-grid">
+                    <!-- Method 1: Bank Transfer -->
+                    <div class="payment-card active" data-method="Bank Transfer" data-fee="0.00" data-time="1-2 Business Days" data-min="100">
+                        <div class="pm-badge gold">0% FEE</div>
+                        <div class="pm-icon"><i class="fa-solid fa-building-columns"></i></div>
+                        <h3>Bank Transfer (ACH / Wire)</h3>
+                        <p>Direct bank wire & ACH transfer. Ideal for large capital deposits.</p>
+                        <div class="pm-meta">
+                            <span>Processing: <strong>1-2 Days</strong></span>
+                            <span>Min: <strong>$100.00</strong></span>
+                        </div>
+                    </div>
+
+                    <!-- Method 2: Credit / Debit Card -->
+                    <div class="payment-card" data-method="Debit/Credit Card" data-fee="0.00" data-time="Instant (3D Secure)" data-min="50">
+                        <div class="pm-badge gold">INSTANT</div>
+                        <div class="pm-icon"><i class="fa-solid fa-credit-card"></i></div>
+                        <h3>Debit / Credit Card</h3>
+                        <p>Visa, Mastercard, and Amex accepted with 3D Secure fraud check.</p>
+                        <div class="pm-meta">
+                            <span>Processing: <strong>Instant</strong></span>
+                            <span>Min: <strong>$50.00</strong></span>
+                        </div>
+                    </div>
+
+                    <!-- Method 3: Digital Wallets -->
+                    <div class="payment-card" data-method="Digital Wallet" data-fee="0.00" data-time="Instant" data-min="50">
+                        <div class="pm-badge gold">INSTANT</div>
+                        <div class="pm-icon"><i class="fa-solid fa-wallet"></i></div>
+                        <h3>Digital Wallets</h3>
+                        <p>Apple Pay, Google Pay, and PayPal zero-friction funding.</p>
+                        <div class="pm-meta">
+                            <span>Processing: <strong>Instant</strong></span>
+                            <span>Min: <strong>$50.00</strong></span>
+                        </div>
+                    </div>
+
+                    <!-- Method 4: Crypto Custody -->
+                    <div class="payment-card" data-method="Crypto Custody" data-fee="0.00" data-time="10-15 Minutes" data-min="20">
+                        <div class="pm-badge green">MULTI-CHAIN</div>
+                        <div class="pm-icon"><i class="fa-brands fa-bitcoin"></i></div>
+                        <h3>Crypto Custody</h3>
+                        <p>USDT (TRC20/ERC20), BTC, ETH, LTC, and BNB cold storage deposits.</p>
+                        <div class="pm-meta">
+                            <span>Processing: <strong>~15 Mins</strong></span>
+                            <span>Min: <strong>$20.00</strong></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Deposit Form & Live Summary Grid -->
+                <div class="deposit-form-layout" style="margin-top: 40px;">
+                    <!-- Left Form Panel -->
+                    <div class="deposit-form-card">
+                        <div class="section-header" style="text-align: left; margin-bottom: 20px;">
+                            <span class="section-tag">STEP 2: DEPOSIT DETAILS</span>
+                            <h2 class="section-title" style="font-size: 1.4rem;">Enter Deposit Amount</h2>
+                        </div>
+
+                        <form id="standalone-deposit-form">
+                            <div class="form-row" style="display: grid; grid-template-columns: 2fr 1fr; gap: 15px;">
+                                <div class="form-group">
+                                    <label for="dep-amount">Deposit Amount</label>
+                                    <input type="number" id="dep-amount" value="1000" min="10" step="50" placeholder="1000" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="dep-currency">Currency</label>
+                                    <select id="dep-currency" class="calc-select">
+                                        <option value="USD" selected>USD ($)</option>
+                                        <option value="EUR">EUR (€)</option>
+                                        <option value="GBP">GBP (£)</option>
+                                        <option value="USDT">USDT (Tether)</option>
+                                        <option value="BTC">BTC (Bitcoin)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="dep-selected-method">Selected Payment Gateway</label>
+                                <select id="dep-selected-method" class="calc-select">
+                                    <option value="Bank Transfer">Bank Transfer (ACH / Wire)</option>
+                                    <option value="Debit/Credit Card">Debit / Credit Card (Visa/MC)</option>
+                                    <option value="Digital Wallet">Digital Wallet (Apple/Google Pay)</option>
+                                    <option value="Crypto Custody">Crypto Custody (USDT / BTC)</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="dep-account-tier">Target Investment Strategy Account</label>
+                                <select id="dep-account-tier" class="calc-select">
+                                    <option value="Starter">Starter Plan ($100 Min)</option>
+                                    <option value="Growth" selected>Growth Plan ($1,000 Min)</option>
+                                    <option value="Professional">Professional Plan ($10,000 Min)</option>
+                                    <option value="Institutional">Institutional Bespoke</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="dep-reference">Optional Reference / Note</label>
+                                <input type="text" id="dep-reference" placeholder="e.g. Q3 Portfolio Allocation">
+                            </div>
+
+                            <button type="submit" class="btn-primary btn-block btn-large" id="btn-continue-deposit">
+                                Continue Deposit <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Right Live Deposit Summary Panel -->
+                    <div class="deposit-summary-card">
+                        <div class="summary-header">
+                            <i class="fa-solid fa-receipt gold-icon"></i>
+                            <h3>Live Deposit Summary</h3>
+                        </div>
+
+                        <div class="summary-list">
+                            <div class="summary-row">
+                                <span>Deposit Amount:</span>
+                                <strong id="sum-amount">$ 1,000.00</strong>
+                            </div>
+                            <div class="summary-row">
+                                <span>Processing Fee:</span>
+                                <strong class="positive" id="sum-fee">$ 0.00 (Free)</strong>
+                            </div>
+                            <div class="summary-row">
+                                <span>Selected Method:</span>
+                                <strong id="sum-method">Bank Transfer</strong>
+                            </div>
+                            <div class="summary-row">
+                                <span>Est. Processing Time:</span>
+                                <strong id="sum-time">1-2 Business Days</strong>
+                            </div>
+                            <div class="summary-divider"></div>
+                            <div class="summary-row total-row">
+                                <span>Estimated Total Credited:</span>
+                                <strong class="gold-accent" id="sum-total">$ 1,000.00</strong>
+                            </div>
+                        </div>
+
+                        <!-- Trust Seal -->
+                        <div class="trust-seal-box">
+                            <i class="fa-solid fa-shield-halved"></i>
+                            <p>Funds are deposited directly into your segregated account protected by 256-bit SSL encryption protocols.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DEPOSIT STATUS & RECENT HISTORY SECTION -->
+                <div class="deposit-history-section" style="margin-top: 60px;">
+                    <div class="section-header" style="text-align: left; margin-bottom: 20px;">
+                        <span class="section-tag">TRANSACTION AUDIT</span>
+                        <h2 class="section-title" style="font-size: 1.5rem;">Recent Deposit Status</h2>
+                    </div>
+
+                    <!-- Status Tabs -->
+                    <div class="deposit-status-tabs" id="deposit-status-tabs">
+                        <button class="d-tab active" data-status="all">All Deposits</button>
+                        <button class="d-tab" data-status="completed">Completed</button>
+                        <button class="d-tab" data-status="pending">Pending</button>
+                        <button class="d-tab" data-status="failed">Failed</button>
+                    </div>
+
+                    <!-- Deposit History Table -->
+                    <div class="dash-table-card">
+                        <div class="table-responsive">
+                            <table class="dash-table" id="deposit-history-table">
+                                <thead>
+                                    <tr>
+                                        <th>Date & Time</th>
+                                        <th>Reference ID</th>
+                                        <th>Gateway Method</th>
+                                        <th>Amount</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr data-status="completed">
+                                        <td>Jul 28, 2026 09:14 AM</td>
+                                        <td><code>DEP-894201-USDT</code></td>
+                                        <td><span class="w-badge usdt">USDT</span> Crypto Custody</td>
+                                        <td>+$10,000.00</td>
+                                        <td><span class="status-pill success"><i class="fa-solid fa-circle-check"></i> Completed</span></td>
+                                    </tr>
+                                    <tr data-status="completed">
+                                        <td>Jul 15, 2026 02:45 PM</td>
+                                        <td><code>DEP-742910-ACH</code></td>
+                                        <td><span class="w-badge payeer">ACH</span> Bank Transfer</td>
+                                        <td>+$5,000.00</td>
+                                        <td><span class="status-pill success"><i class="fa-solid fa-circle-check"></i> Completed</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DEPOSIT GUIDELINES & REMINDERS -->
+                <div class="deposit-guidelines-box" style="margin-top: 50px;">
+                    <div class="guidelines-header">
+                        <i class="fa-solid fa-circle-info gold-icon"></i>
+                        <h3>Deposit Guidelines & Compliance Reminders</h3>
+                    </div>
+                    <ul class="guidelines-list">
+                        <li><i class="fa-solid fa-check"></i> <strong>Name Matching:</strong> Always use payment methods registered in your own legal name. Third-party deposits are strictly prohibited under AML regulations.</li>
+                        <li><i class="fa-solid fa-check"></i> <strong>Verification:</strong> Verify account numbers, routing details, or wallet addresses before confirming your transaction.</li>
+                        <li><i class="fa-solid fa-check"></i> <strong>Identity Check:</strong> Complete KYC identity verification if requested to enable higher deposit thresholds.</li>
+                        <li><i class="fa-solid fa-check"></i> <strong>Processing Times:</strong> Processing speeds vary by gateway (instant for cards/crypto, 1-2 days for bank wires).</li>
+                    </ul>
+                </div>
+
+                <!-- SECURITY AND TRUST INDICATORS -->
+                <div class="security-trust-grid" style="margin-top: 40px;">
+                    <div class="sec-card">
+                        <i class="fa-solid fa-lock"></i>
+                        <h4>256-Bit SSL Encryption</h4>
+                        <p>All financial data transmissions are protected using bank-grade encryption protocols.</p>
+                    </div>
+
+                    <div class="sec-card">
+                        <i class="fa-solid fa-user-shield"></i>
+                        <h4>Fraud Protection</h4>
+                        <p>Real-time automated transaction monitoring to prevent unauthorized funding activities.</p>
+                    </div>
+
+                    <div class="sec-card">
+                        <i class="fa-solid fa-shield-cat"></i>
+                        <h4>Privacy & Custody</h4>
+                        <p>Client funds reside in segregated accounts with leading custodian partner institutions.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- INTERACTIVE USER DASHBOARD VIEW (SHARED) -->
+    <div id="dashboard-view" class="dashboard-view hidden">
+        <!-- Dashboard Top Header Bar -->
+        <div class="dash-top-header">
+            <div class="dash-hdr-left">
+                <a href="index.html" class="brand-logo small">
+                    <div class="logo-icon"><i class="fa-solid fa-chart-line"></i></div>
+                    <div class="logo-text">
+                        <span class="brand-name">Buffy<span class="gold-accent">.com</span></span>
+                    </div>
+                </a>
+            </div>
+
+            <div class="dash-hdr-widgets">
+                <div class="hdr-widget">
+                    <i class="fa-solid fa-user gold-icon"></i>
+                    <div><span class="hdr-lbl">USERNAME:</span> <strong id="hdr-username">Angel</strong></div>
+                </div>
+
+                <div class="hdr-widget">
+                    <i class="fa-solid fa-calendar-days"></i>
+                    <div><span class="hdr-lbl">LAST SEEN:</span> <span id="hdr-lastseen">Jun-6-2026 11:33:36 AM</span></div>
+                </div>
+
+                <div class="hdr-widget">
+                    <i class="fa-solid fa-network-wired"></i>
+                    <div><span class="hdr-lbl">WITH IP ADDRESS:</span> <span id="hdr-ip">105.112.194.20</span></div>
+                </div>
+
+                <div class="hdr-widget balance-highlight">
+                    <i class="fa-solid fa-wallet"></i>
+                    <div><span class="hdr-lbl">YOUR BALANCE:</span> <strong id="hdr-total-balance">$ 14,499.00</strong></div>
+                </div>
+
+                <div class="hdr-widget">
+                    <i class="fa-solid fa-clock"></i>
+                    <div><span class="hdr-lbl">TIME:</span> <span id="hdr-clock">21:29:51</span></div>
+                </div>
+
+                <div class="hdr-widget">
+                    <i class="fa-solid fa-envelope"></i>
+                    <div><span class="hdr-lbl">SUPPORT:</span> <a href="mailto:support@buffyinvestment.com">support@buffyinvestment.com</a></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Multi-Wallet Bar -->
+        <div class="wallet-ticker-bar">
+            <div class="w-ticker-item"><span class="w-badge pm">PM</span> <span class="w-lbl">AVAILABLE BALANCE:</span> <strong>$ 0.00</strong></div>
+            <div class="w-ticker-item"><span class="w-badge payeer">P</span> <span class="w-lbl">AVAILABLE BALANCE:</span> <strong>$ 0.00</strong></div>
+            <div class="w-ticker-item"><span class="w-badge btc">BTC</span> <span class="w-lbl">AVAILABLE BALANCE:</span> <strong id="wb-btc">$ 0.00</strong></div>
+            <div class="w-ticker-item"><span class="w-badge ltc">LTC</span> <span class="w-lbl">AVAILABLE BALANCE:</span> <strong>$ 0.00</strong></div>
+            <div class="w-ticker-item"><span class="w-badge eth">ETH</span> <span class="w-lbl">AVAILABLE BALANCE:</span> <strong id="wb-eth">$ 0.00</strong></div>
+            <div class="w-ticker-item"><span class="w-badge doge">DOGE</span> <span class="w-lbl">AVAILABLE BALANCE:</span> <strong>$ 0.00</strong></div>
+            <div class="w-ticker-item"><span class="w-badge bnb">BNB</span> <span class="w-lbl">AVAILABLE BALANCE:</span> <strong>$ 0.00</strong></div>
+            <div class="w-ticker-item"><span class="w-badge usdt">USDT</span> <span class="w-lbl">AVAILABLE BALANCE:</span> <strong id="wb-usdt">$ 14,499.00</strong></div>
+        </div>
+
+        <!-- Dashboard Layout -->
+        <div class="dash-layout">
+            <aside class="dash-sidebar">
+                <nav class="side-nav">
+                    <button class="side-link active" data-tab="account"><i class="fa-solid fa-user-gear"></i> MY ACCOUNT</button>
+                    <button class="side-link" data-tab="make-deposit"><i class="fa-solid fa-chart-line"></i> MAKE DEPOSIT</button>
+                    <button class="side-link" data-tab="deposits-list"><i class="fa-solid fa-list-check"></i> DEPOSITS LIST</button>
+                    <button class="side-link" data-tab="withdrawal"><i class="fa-solid fa-wallet"></i> WITHDRAWAL</button>
+                    <button class="side-link" data-tab="settings"><i class="fa-solid fa-gears"></i> SETTINGS</button>
+                    <button class="side-link" data-tab="security"><i class="fa-solid fa-shield-halved"></i> SECURITY</button>
+                    <button class="side-link" data-tab="history"><i class="fa-solid fa-clock-rotate-left"></i> HISTORY</button>
+                    <button class="side-link" data-tab="referrals"><i class="fa-solid fa-users"></i> REFERRALS</button>
+                    <button class="side-link logout" id="side-logout-btn"><i class="fa-solid fa-right-from-bracket"></i> LOGOUT</button>
+                </nav>
+            </aside>
+
+            <main class="dash-main-panel">
+                <div class="dash-tab-panel active" id="panel-account">
+                    <h2 class="panel-heading">My Account</h2>
+                    <div style="margin-top: 25px; text-align: right;">
+                        <button class="btn-secondary btn-sm" id="btn-close-dashboard"><i class="fa-solid fa-globe"></i> Return to Site Portal</button>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- FOOTER SECTION -->
+    <footer class="site-footer">
+        <div class="container footer-grid">
+            <div class="footer-brand-col">
+                <a href="index.html" class="brand-logo">
+                    <div class="logo-icon"><i class="fa-solid fa-chart-line"></i></div>
+                    <div class="logo-text"><span class="brand-name">Buffy<span class="gold-accent">.com</span></span></div>
+                </a>
+                <p class="footer-tagline">Grow Your Wealth. Secure Your Future.</p>
+                <p class="footer-desc">Buffy.com Financial Technologies Inc. Premier wealth management and capital execution platform.</p>
+            </div>
+
+            <div class="footer-col">
+                <h4>Solutions & Navigation</h4>
+                <ul>
+                    <li><a href="index.html">Home Portal</a></li>
+                    <li><a href="about.html">About Buffy.com</a></li>
+                    <li><a href="deposit.html">Deposit Funds</a></li>
+                    <li><a href="index.html#plans">Investment Solutions</a></li>
+                    <li><a href="index.html#faq">FAQ</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Legal & Compliance</h4>
+                <ul>
+                    <li><a href="#" id="link-privacy">Privacy Policy</a></li>
+                    <li><a href="#" id="link-terms">Terms of Service</a></li>
+                    <li><a href="#" id="link-disclosures">Risk Disclosure</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom container">
+            <p>© 2026 Buffy.com Financial Technologies Inc. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Main JavaScript Engine -->
+    <script src="app.js"></script>
+</body>
+</html>
