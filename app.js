@@ -606,16 +606,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-            // Dispatch Welcome Email Notification to New User
+            // Dispatch Direct Welcome Email Notification to New User
             sendWelcomeEmailNotification(email, name, plan);
 
             closeAllModals();
-            showToast(`Welcome ${name || email}! Your Buffy.com account has been created. Confirmation email sent.`, 'success');
+            showToast(`Welcome ${name || email}! Account active. Direct welcome email sent from welcome@buffyinvestment.com.`, 'success');
             switchView(true);
         });
     }
 
-    // Helper: Send Welcome Email Notification to Newly Registered User
+    // Helper: Send Direct Welcome Email Notification (From: welcome@buffyinvestment.com)
     async function sendWelcomeEmailNotification(email, name, plan) {
         if (!email) return;
         try {
@@ -626,7 +626,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             const result = await res.json();
             if (result?.success) {
-                console.log(`📧 Welcome email successfully dispatched to ${email}`);
+                console.log(`📧 Direct Buffy Investment welcome email dispatched to ${email} (From: welcome@buffyinvestment.com)`);
             }
         } catch (err) {
             console.log('Welcome email dispatch note:', err);
