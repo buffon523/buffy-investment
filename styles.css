@@ -1529,7 +1529,8 @@ input[type="range"] {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 16px;
+    padding: clamp(8px, 3vw, 24px);
+    overflow-y: auto;
 }
 
 .modal-overlay.hidden { display: none; }
@@ -1537,12 +1538,14 @@ input[type="range"] {
 .auth-modal {
     background: var(--bg-card);
     border: 1px solid var(--gold-primary);
-    border-radius: var(--radius-lg);
-    padding: 36px 32px;
-    width: 92%;
-    max-width: 500px;
+    border-radius: 20px;
+    padding: clamp(20px, 5vw, 36px);
+    width: min(94vw, 500px);
+    max-height: 90vh;
+    overflow-y: auto;
     position: relative;
     box-shadow: 0 20px 50px rgba(0,0,0,0.85);
+    box-sizing: border-box;
 }
 
 .auth-modal.hidden { display: none; }
@@ -2296,6 +2299,39 @@ input[type="range"] {
         display: none;
     }
 
+    /* Universal Mobile Auth Modal Expansion */
+    .modal-overlay {
+        padding: 10px;
+    }
+
+    .auth-modal {
+        width: 95vw !important;
+        max-width: 100% !important;
+        padding: 24px 18px !important;
+        border-radius: 20px !important;
+        margin: auto !important;
+        box-sizing: border-box !important;
+    }
+
+    .auth-modal.modal-large {
+        width: 98vw !important;
+        max-width: 100% !important;
+        padding: 20px 14px !important;
+    }
+
+    .auth-modal .form-group input,
+    .auth-modal .form-group select {
+        font-size: 16px !important; /* Prevents auto-zoom on iOS */
+        padding: 14px 14px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    .auth-modal .btn-primary {
+        padding: 14px 16px !important;
+        font-size: 0.95rem !important;
+    }
+
     /* Mobile Sidebar & Dashboard Layout */
     .dash-layout {
         display: flex;
@@ -2389,46 +2425,6 @@ input[type="range"] {
 
 /* SMALL MOBILE PHONES (MAX-WIDTH: 480PX) */
 @media (max-width: 480px) {
-    .modal-overlay {
-        padding: 10px;
-    }
-
-    .auth-modal {
-        width: 96% !important;
-        max-width: 100% !important;
-        padding: 24px 16px !important;
-        border-radius: 20px !important;
-        margin: 0 auto !important;
-        box-sizing: border-box !important;
-    }
-
-    .auth-modal.modal-large {
-        width: 98% !important;
-        max-width: 100% !important;
-        padding: 20px 12px !important;
-    }
-
-    .auth-header h3 {
-        font-size: 1.35rem;
-    }
-
-    .auth-header p {
-        font-size: 0.82rem;
-    }
-
-    .auth-modal .form-group input,
-    .auth-modal .form-group select {
-        font-size: 16px !important; /* Prevents auto-zoom on iOS */
-        padding: 13px 14px !important;
-        width: 100% !important;
-        box-sizing: border-box !important;
-    }
-
-    .auth-modal .btn-primary {
-        padding: 14px 16px !important;
-        font-size: 0.95rem !important;
-    }
-
     .panel-heading {
         font-size: 1.35rem;
     }
