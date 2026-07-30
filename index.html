@@ -1006,12 +1006,16 @@
                     </div>
                 </div>
 
-                <!-- SUB-PANEL: MAKE DEPOSIT -->
+                <!-- SUB-PANEL: MAKE DEPOSIT (EMBEDDED DEPOSIT FUNDS INTERFACE) -->
                 <div class="dash-tab-panel hidden" id="panel-make-deposit">
-                    <h2 class="panel-heading">Deposit Funds</h2>
-                    
-                    <!-- Payment Methods Cards Grid -->
-                    <div class="payment-cards-grid" style="margin-bottom: 25px;">
+                    <div style="margin-bottom: 25px;">
+                        <h2 class="panel-heading" style="margin-bottom: 6px;">Deposit Funds</h2>
+                        <p style="color: #94A3B8; font-size: 0.95rem;">“Securely add funds to your investment account to begin or continue your investment journey.”</p>
+                    </div>
+
+                    <!-- STEP 1: PAYMENT METHOD CARDS GRID -->
+                    <div style="margin-bottom: 12px;"><span class="section-tag">STEP 1: CHOOSE PAYMENT METHOD</span></div>
+                    <div class="payment-cards-grid" style="margin-bottom: 30px;">
                         <div class="payment-card active" data-method="Bank Transfer">
                             <div class="pm-badge gold">0% FEE</div>
                             <div class="pm-icon"><i class="fa-solid fa-building-columns"></i></div>
@@ -1023,8 +1027,8 @@
                         <div class="payment-card" data-method="Debit/Credit Card">
                             <div class="pm-badge gold">INSTANT</div>
                             <div class="pm-icon"><i class="fa-solid fa-credit-card"></i></div>
-                            <h3>Card Deposit</h3>
-                            <p>Visa & Mastercard with 3D Secure instant verification.</p>
+                            <h3>Debit / Credit Card</h3>
+                            <p>Visa & Mastercard with 3D Secure instant fraud check.</p>
                             <div class="pm-meta"><span>Time: <strong>Instant</strong></span><span>Min: <strong>$50</strong></span></div>
                         </div>
 
@@ -1045,33 +1049,152 @@
                         </div>
                     </div>
 
-                    <div class="dash-chart-card">
-                        <form id="form-dash-deposit">
-                            <div class="form-group">
-                                <label>Target Strategy Tier</label>
-                                <select id="dep-plan-select" class="calc-select">
-                                    <option value="Starter Plan">Starter Plan ($100 Min)</option>
-                                    <option value="Growth Strategy Plan" selected>Growth Strategy Plan ($1,000 Min)</option>
-                                    <option value="Professional Strategy Plan">Professional Strategy Plan ($10,000 Min)</option>
-                                    <option value="Institutional Bespoke Tier">Institutional Bespoke Tier</option>
-                                </select>
+                    <!-- STEP 2: DEPOSIT FORM + LIVE SUMMARY SIDE-BY-SIDE GRID -->
+                    <div style="margin-bottom: 12px;"><span class="section-tag">STEP 2: ENTER AMOUNT & LIVE SUMMARY</span></div>
+                    <div class="deposit-form-layout" style="margin-bottom: 35px;">
+                        <div class="deposit-form-card">
+                            <form id="form-dash-deposit">
+                                <div class="form-row" style="display: grid; grid-template-columns: 2fr 1fr; gap: 15px;">
+                                    <div class="form-group">
+                                        <label for="dep-amount-input">Deposit Amount</label>
+                                        <input type="number" id="dep-amount-input" value="1000" min="10" step="50" placeholder="1000" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="dep-currency-input">Currency</label>
+                                        <select id="dep-currency-input" class="calc-select">
+                                            <option value="USD" selected>USD ($)</option>
+                                            <option value="EUR">EUR (€)</option>
+                                            <option value="GBP">GBP (£)</option>
+                                            <option value="USDT">USDT (Tether)</option>
+                                            <option value="BTC">BTC (Bitcoin)</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="dep-gateway-select">Selected Gateway Processor</label>
+                                    <select id="dep-gateway-select" class="calc-select">
+                                        <option value="Bank Transfer" selected>Bank Transfer (ACH / Wire)</option>
+                                        <option value="Debit / Credit Card">Debit / Credit Card (Visa/MC)</option>
+                                        <option value="Digital Wallet">Digital Wallet (Apple/Google Pay)</option>
+                                        <option value="Crypto Custody">Crypto Custody (USDT / BTC)</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="dep-plan-select">Target Strategy Tier</label>
+                                    <select id="dep-plan-select" class="calc-select">
+                                        <option value="Starter Plan">Starter Plan ($100 Min)</option>
+                                        <option value="Growth Strategy Plan" selected>Growth Strategy Plan ($1,000 Min)</option>
+                                        <option value="Professional Strategy Plan">Professional Strategy Plan ($10,000 Min)</option>
+                                        <option value="Institutional Bespoke Tier">Institutional Bespoke Tier</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="dep-ref-note">Optional Reference Note</label>
+                                    <input type="text" id="dep-ref-note" placeholder="e.g. Q3 Portfolio Allocation">
+                                </div>
+
+                                <button type="submit" class="btn-primary btn-block btn-large">
+                                    Confirm Deposit & Credit Account <i class="fa-solid fa-arrow-right"></i>
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- Live Summary Box -->
+                        <div class="deposit-summary-card">
+                            <div class="summary-header">
+                                <i class="fa-solid fa-receipt gold-icon"></i>
+                                <h3>Live Deposit Summary</h3>
                             </div>
-                            <div class="form-group">
-                                <label>Deposit Amount (USD)</label>
-                                <input type="number" id="dep-amount-input" value="1000" min="10" step="50" required>
+
+                            <div class="summary-list">
+                                <div class="summary-row">
+                                    <span>Deposit Amount:</span>
+                                    <strong id="dash-sum-amount">$ 1,000.00</strong>
+                                </div>
+                                <div class="summary-row">
+                                    <span>Processing Fee:</span>
+                                    <strong class="positive" id="dash-sum-fee">$ 0.00 (Free)</strong>
+                                </div>
+                                <div class="summary-row">
+                                    <span>Selected Gateway:</span>
+                                    <strong id="dash-sum-method">Bank Transfer</strong>
+                                </div>
+                                <div class="summary-row">
+                                    <span>Est. Processing Time:</span>
+                                    <strong id="dash-sum-time">1-2 Business Days</strong>
+                                </div>
+                                <div class="summary-divider"></div>
+                                <div class="summary-row total-row">
+                                    <span>Estimated Total Credited:</span>
+                                    <strong class="gold-accent" id="dash-sum-total">$ 1,000.00</strong>
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label>Payment Processor / Crypto Wallet Gateway</label>
-                                <select id="dep-gateway-select" class="calc-select">
-                                    <option value="USDT">USDT Tether (TRC20 / ERC20)</option>
-                                    <option value="Bank Wire / ACH">Bank Wire / ACH</option>
-                                    <option value="Debit / Credit Card">Debit / Credit Card (Visa/MC)</option>
-                                    <option value="Bitcoin (BTC)">Bitcoin (BTC)</option>
-                                    <option value="Ethereum (ETH)">Ethereum (ETH)</option>
-                                </select>
+
+                            <div class="trust-seal-box">
+                                <i class="fa-solid fa-shield-halved"></i>
+                                <p>Funds are deposited directly into your segregated account protected by 256-bit SSL encryption protocols.</p>
                             </div>
-                            <button type="submit" class="btn-primary btn-block">Confirm Deposit & Credit Account &rarr;</button>
-                        </form>
+                        </div>
+                    </div>
+
+                    <!-- STEP 3: RECENT DEPOSIT STATUS & TRANSACTION AUDIT -->
+                    <div style="margin-bottom: 12px;"><span class="section-tag">STEP 3: DEPOSIT TRANSACTION AUDIT</span></div>
+                    <div class="deposit-history-section" style="margin-bottom: 35px;">
+                        <div class="deposit-status-tabs" id="dash-deposit-status-tabs">
+                            <button class="d-tab active" data-status="all">All Deposits</button>
+                            <button class="d-tab" data-status="completed">Completed</button>
+                            <button class="d-tab" data-status="pending">Pending</button>
+                            <button class="d-tab" data-status="failed">Failed</button>
+                        </div>
+
+                        <div class="dash-table-card">
+                            <div class="table-responsive">
+                                <table class="dash-table" id="dash-deposit-history-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Date & Time</th>
+                                            <th>Reference ID</th>
+                                            <th>Gateway Method</th>
+                                            <th>Amount</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr data-status="completed">
+                                            <td>Jul 28, 2026 09:14 AM</td>
+                                            <td><code>DEP-894201-USDT</code></td>
+                                            <td><span class="w-badge usdt">USDT</span> Crypto Custody</td>
+                                            <td>+$10,000.00</td>
+                                            <td><span class="status-pill success"><i class="fa-solid fa-circle-check"></i> Completed</span></td>
+                                        </tr>
+                                        <tr data-status="completed">
+                                            <td>Jul 15, 2026 02:45 PM</td>
+                                            <td><code>DEP-742910-ACH</code></td>
+                                            <td><span class="w-badge payeer">ACH</span> Bank Wire</td>
+                                            <td>+$5,000.00</td>
+                                            <td><span class="status-pill success"><i class="fa-solid fa-circle-check"></i> Completed</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STEP 4: GUIDELINES & SECURITY INDICATORS -->
+                    <div class="deposit-guidelines-box" style="margin-bottom: 25px;">
+                        <div class="guidelines-header">
+                            <i class="fa-solid fa-circle-info gold-icon"></i>
+                            <h3>Deposit Guidelines & Compliance Reminders</h3>
+                        </div>
+                        <ul class="guidelines-list">
+                            <li><i class="fa-solid fa-check"></i> <strong>Name Matching:</strong> Always use payment methods registered in your own legal name. Third-party deposits are strictly prohibited under AML regulations.</li>
+                            <li><i class="fa-solid fa-check"></i> <strong>Verification:</strong> Verify account numbers, routing details, or wallet addresses before confirming your transaction.</li>
+                            <li><i class="fa-solid fa-check"></i> <strong>Identity Check:</strong> Complete KYC identity verification if requested to enable higher deposit thresholds.</li>
+                            <li><i class="fa-solid fa-check"></i> <strong>Processing Times:</strong> Processing speeds vary by gateway (instant for cards/crypto, 1-2 days for bank wires).</li>
+                        </ul>
                     </div>
                 </div>
 
