@@ -1145,18 +1145,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ------------------------------------------------------------------
-    // 14. DEPOSIT FUNDS PAGE & LIVE SUMMARY CALCULATOR
+    // 14. EMBEDDED DASHBOARD DEPOSIT FUNDS ENGINE & LIVE CALCULATOR
     // ------------------------------------------------------------------
     function updateDepositLiveSummary() {
-        const amtInput = document.getElementById('dep-amount');
-        const currSelect = document.getElementById('dep-currency');
-        const methodSelect = document.getElementById('dep-selected-method');
+        const amtInput = document.getElementById('dep-amount-input');
+        const currSelect = document.getElementById('dep-currency-input');
+        const methodSelect = document.getElementById('dep-gateway-select');
 
-        const sumAmt = document.getElementById('sum-amount');
-        const sumFee = document.getElementById('sum-fee');
-        const sumMethod = document.getElementById('sum-method');
-        const sumTime = document.getElementById('sum-time');
-        const sumTotal = document.getElementById('sum-total');
+        const sumAmt = document.getElementById('dash-sum-amount');
+        const sumFee = document.getElementById('dash-sum-fee');
+        const sumMethod = document.getElementById('dash-sum-method');
+        const sumTime = document.getElementById('dash-sum-time');
+        const sumTotal = document.getElementById('dash-sum-total');
 
         if (!amtInput) return;
 
@@ -1173,7 +1173,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (sumTime) {
             if (method.includes('Card') || method.includes('Wallet')) sumTime.textContent = 'Instant';
-            else if (method.includes('Crypto')) sumTime.textContent = '10-15 Minutes';
+            else if (method.includes('Crypto') || method.includes('USDT') || method.includes('BTC') || method.includes('ETH')) sumTime.textContent = '10-15 Minutes';
             else sumTime.textContent = '1-2 Business Days';
         }
 
@@ -1187,7 +1187,7 @@ document.addEventListener('DOMContentLoaded', () => {
             card.classList.add('active');
 
             const method = card.getAttribute('data-method');
-            const methodSelect = document.getElementById('dep-selected-method');
+            const methodSelect = document.getElementById('dep-gateway-select');
             if (methodSelect) {
                 for (let i = 0; i < methodSelect.options.length; i++) {
                     if (methodSelect.options[i].value.includes(method) || method.includes(methodSelect.options[i].value)) {
@@ -1200,23 +1200,23 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    const depAmt = document.getElementById('dep-amount');
-    const depCurr = document.getElementById('dep-currency');
-    const depMethodSel = document.getElementById('dep-selected-method');
+    const depAmt = document.getElementById('dep-amount-input');
+    const depCurr = document.getElementById('dep-currency-input');
+    const depMethodSel = document.getElementById('dep-gateway-select');
 
     if (depAmt) depAmt.addEventListener('input', updateDepositLiveSummary);
     if (depCurr) depCurr.addEventListener('change', updateDepositLiveSummary);
     if (depMethodSel) depMethodSel.addEventListener('change', updateDepositLiveSummary);
 
     // Status Filter Tabs
-    const statusTabs = document.querySelectorAll('#deposit-status-tabs .d-tab');
+    const statusTabs = document.querySelectorAll('#dash-deposit-status-tabs .d-tab');
     statusTabs.forEach(tab => {
         tab.addEventListener('click', () => {
             statusTabs.forEach(t => t.classList.remove('active'));
             tab.classList.add('active');
 
             const filter = tab.getAttribute('data-status');
-            const tableRows = document.querySelectorAll('#deposit-history-table tbody tr');
+            const tableRows = document.querySelectorAll('#dash-deposit-history-table tbody tr');
 
             tableRows.forEach(row => {
                 const rowStatus = row.getAttribute('data-status');
