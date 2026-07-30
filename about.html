@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Buffy.com | Empowering Long-Term Wealth Creation</title>
+    <meta name="description" content="Learn about Buffy.com's story, mission, vision, core values, and security commitment to helping individuals and businesses build lasting wealth through responsible investing.">
+    <meta name="keywords" content="About Buffy.com, wealth management, responsible investing, financial education, portfolio security, fintech innovation">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js & Supabase JS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Navigation Header -->
+    <header class="navbar-header" id="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="brand-logo">
+                <div class="logo-icon">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span class="logo-spark"></span>
+                </div>
+                <div class="logo-text">
+                    <span class="brand-name">Buffy<span class="gold-accent">.com</span></span>
+                    <span class="brand-sub">WEALTH MANAGEMENT</span>
+                </div>
+            </a>
+
+            <!-- Desktop Navigation Links -->
+            <nav class="nav-menu" id="nav-menu">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="about.html" class="nav-link active">About</a>
+                <a href="index.html#plans" class="nav-link">Investment Solutions</a>
+                <a href="index.html#markets" class="nav-link">Markets</a>
+                <a href="index.html#portfolio" class="nav-link">Portfolio</a>
+                <a href="index.html#resources" class="nav-link">Resources</a>
+                <a href="index.html#blog" class="nav-link">Blog</a>
+                <a href="index.html#faq" class="nav-link">FAQ</a>
+                <a href="index.html#contact" class="nav-link">Contact</a>
+            </nav>
+
+            <!-- Nav Actions & Investor Portal -->
+            <div class="nav-actions">
+                <button class="btn-demo-toggle" id="btn-toggle-dashboard" title="Open Investor Portal Dashboard">
+                    <i class="fa-solid fa-chart-line"></i> Investor Portal
+                </button>
+
+                <div id="guest-nav-group" class="guest-nav-group" style="display: inline-flex; gap: 8px; align-items: center;">
+                    <button class="btn-secondary" id="btn-open-login">Log In</button>
+                    <button class="btn-primary" id="btn-open-signup">Create Account <i class="fa-solid fa-arrow-right"></i></button>
+                </div>
+
+                <div id="user-nav-group" class="user-nav-group hidden" style="display: none; gap: 8px; align-items: center;">
+                    <button class="btn-secondary btn-sm" id="btn-nav-profile" title="View Profile Settings"><i class="fa-solid fa-user-gear"></i> <span id="nav-user-name">Alexander Vance</span></button>
+                    <button class="btn-outline btn-sm" id="btn-logout" title="Sign Out of Session"><i class="fa-solid fa-right-from-bracket"></i> Log Out</button>
+                </div>
+                
+                <!-- Mobile Hamburger Toggle -->
+                <button class="mobile-toggle" id="mobile-toggle" aria-label="Toggle navigation menu">
+                    <i class="fa-solid fa-bars-staggered"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN ABOUT PAGE CONTENT -->
+    <main id="public-site-view">
+
+        <!-- HERO SECTION -->
+        <section class="hero-section" style="padding: 140px 0 80px 0;">
+            <div class="hero-bg-glow"></div>
+            <div class="hero-bg-grid"></div>
+            <div class="container hero-grid">
+                <div class="hero-content">
+                    <div class="trust-pill">
+                        <span class="pill-dot"></span> Institutional Wealth Architecture
+                    </div>
+                    <h1 class="hero-title">
+                        About <span class="gold-gradient-text">Buffy.com</span>
+                    </h1>
+                    <p class="hero-subheadline">
+                        Empowering investors with transparent, secure, and innovative financial solutions designed for long-term growth.
+                    </p>
+                    <div class="hero-cta-group">
+                        <button class="btn-primary btn-large" id="hero-btn-start">
+                            Create Account <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                        <a href="index.html#plans" class="btn-outline btn-large">
+                            Explore Solutions <i class="fa-solid fa-sliders"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="hero-visual">
+                    <div class="visual-card-wrapper">
+                        <img src="assets/advisor.jpg" alt="Buffy.com Institutional Strategy Team" class="hero-dashboard-img">
+                        <div class="floating-badge badge-top-right">
+                            <div class="f-icon gold"><i class="fa-solid fa-shield-halved"></i></div>
+                            <div>
+                                <span class="f-label">Fiduciary Standard</span>
+                                <span class="f-val">Client-First Focus</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- OUR STORY SECTION -->
+        <section class="about-section" style="padding: 90px 0; background: rgba(11, 19, 43, 0.4);">
+            <div class="container">
+                <div class="about-grid">
+                    <div class="about-content">
+                        <span class="section-tag">OUR FOUNDATION</span>
+                        <h2 class="section-title">Our Story</h2>
+                        <p class="lead-p">Buffy.com was created with a clear vision: to make long-term wealth management more accessible, transparent, and secure for individuals and businesses alike.</p>
+                        <p>We recognized that navigating complex capital markets often felt intimidating or opaque. In response, we built a modern platform that combines time-tested financial discipline with cutting-edge technology. Our commitment is rooted in responsible investing, continuous innovation, and building lasting client relationships grounded in trust.</p>
+                    </div>
+                    <div class="about-image-wrapper">
+                        <img src="assets/hero_dashboard.jpg" alt="Buffy.com Technology Platform" class="about-img">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MISSION & VISION SECTION -->
+        <section class="features-section" style="padding: 90px 0;">
+            <div class="container">
+                <div class="features-grid" style="grid-template-columns: repeat(2, 1fr);">
+                    <div class="feature-card" style="border-color: rgba(212, 175, 55, 0.3);">
+                        <div class="feature-icon"><i class="fa-solid fa-bullseye"></i></div>
+                        <span class="section-tag">PURPOSE & OBJECTIVE</span>
+                        <h3>Our Mission</h3>
+                        <p style="font-size: 1.05rem; color: var(--text-primary); font-style: italic; line-height: 1.7;">
+                            “Our mission is to empower individuals and businesses with the knowledge, tools, and technology needed to make informed investment decisions and pursue their long-term financial goals.”
+                        </p>
+                    </div>
+
+                    <div class="feature-card" style="border-color: rgba(212, 175, 55, 0.3);">
+                        <div class="feature-icon"><i class="fa-solid fa-eye"></i></div>
+                        <span class="section-tag">ASPIRATION</span>
+                        <h3>Our Vision</h3>
+                        <p style="font-size: 1.05rem; color: var(--text-primary); font-style: italic; line-height: 1.7;">
+                            “To become a trusted global investment platform recognized for innovation, integrity, transparency, and exceptional customer experience.”
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- OUR CORE VALUES SECTION -->
+        <section class="portfolio-section" style="padding: 90px 0; background: rgba(11, 19, 43, 0.3);">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-tag">GUIDING PRINCIPLES</span>
+                    <h2 class="section-title">Our Core Values</h2>
+                    <p class="section-subtitle">Every feature we build and every relationship we nurture is anchored by eight foundational values.</p>
+                </div>
+
+                <div class="features-grid" style="grid-template-columns: repeat(4, 1fr);">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fa-solid fa-scale-balanced"></i></div>
+                        <h4>Integrity</h4>
+                        <p>Operating with uncompromised ethics, clarity, and client advocacy in every decision.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fa-solid fa-eye"></i></div>
+                        <h4>Transparency</h4>
+                        <p>Providing clear fee structures, real-time reporting, and zero hidden costs.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fa-solid fa-lock"></i></div>
+                        <h4>Security</h4>
+                        <p>Deploying multi-layered 256-bit encryption and cold storage architecture to protect client capital.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fa-solid fa-lightbulb"></i></div>
+                        <h4>Innovation</h4>
+                        <p>Leveraging modern financial engineering and automated rebalancing technology.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fa-solid fa-user-shield"></i></div>
+                        <h4>Customer Focus</h4>
+                        <p>Designing tools around user needs with priority wealth specialist assistance.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fa-solid fa-clipboard-check"></i></div>
+                        <h4>Accountability</h4>
+                        <p>Taking ownership of system resilience, uptime, and transparent execution reporting.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+                        <h4>Financial Education</h4>
+                        <p>Equipping investors with research reports, market insights, and portfolio guides.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fa-solid fa-chart-line"></i></div>
+                        <h4>Long-Term Thinking</h4>
+                        <p>Focusing on sustainable wealth preservation rather than short-term speculative hype.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- WHAT WE OFFER SECTION -->
+        <section class="features-section" style="padding: 90px 0;">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-tag">SERVICES OVERVIEW</span>
+                    <h2 class="section-title">What We Offer</h2>
+                    <p class="section-subtitle">Comprehensive financial capabilities engineered to support your wealth journey.</p>
+                </div>
+
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fa-solid fa-vault"></i></div>
+                        <h3>Investment Account Management</h3>
+                        <p>Seamless management of personal, business, and institutional capital across diversified portfolios.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fa-solid fa-chart-pie"></i></div>
+                        <h3>Portfolio Diversification Tools</h3>
+                        <p>Intelligent asset allocation across global equities, ETFs, fixed income, real estate, and digital assets.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fa-solid fa-book-open"></i></div>
+                        <h3>Educational Resources</h3>
+                        <p>Access macro research reports, tax harvesting guides, and market intelligence whitepapers.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fa-solid fa-newspaper"></i></div>
+                        <h3>Market Insights</h3>
+                        <p>Timely economic analysis and quantitative commentary from our strategy team.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fa-solid fa-chart-simple"></i></div>
+                        <h3>Performance Tracking</h3>
+                        <p>Real-time dashboard metrics, historical valuation graphs, and transaction reporting.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fa-solid fa-shield-cat"></i></div>
+                        <h3>Secure Account Management</h3>
+                        <p>Bank-grade SSL encryption, device session audit logs, and account protection controls.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-disclaimer" style="margin-top: 40px;">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    <p><strong>Responsibility Notice:</strong> Buffy.com provides technology and portfolio management tools. We do not claim guaranteed returns or risk-free investments. All capital allocation involves market volatility, and investors should review risk disclosures prior to investing.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- WHY CHOOSE BUFFY.COM SECTION -->
+        <section class="portfolio-section" style="padding: 90px 0; background: rgba(11, 19, 43, 0.4);">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-tag">THE BUFFY ADVANTAGE</span>
+                    <h2 class="section-title">Why Choose Buffy.com</h2>
+                    <p class="section-subtitle">Built for clarity, speed, and long-term financial confidence.</p>
+                </div>
+
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fa-solid fa-desktop"></i></div>
+                        <h4>User-Friendly Platform</h4>
+                        <p>Intuitive interface built for seamless navigation on desktop, tablet, and mobile devices.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fa-solid fa-microchip"></i></div>
+                        <h4>Modern Technology</h4>
+                        <p>Powered by modern cloud infrastructure, real-time API pricing feeds, and quantitative engines.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fa-solid fa-lock-open"></i></div>
+                        <h4>Strong Security Practices</h4>
+                        <p>Multi-layer encryption, cold storage protocols, and session audit monitoring.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fa-solid fa-comments"></i></div>
+                        <h4>Transparent Communication</h4>
+                        <p>No hidden fees or complex terms—clear reporting on every transaction.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fa-solid fa-headset"></i></div>
+                        <h4>Professional Customer Support</h4>
+                        <p>Dedicated customer support channels available to answer questions promptly.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fa-solid fa-gauge-high"></i></div>
+                        <h4>Intuitive Reporting</h4>
+                        <p>Comprehensive performance dashboards and CSV statement exports.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECURITY AND TRUST SECTION -->
+        <section class="about-section" style="padding: 90px 0;">
+            <div class="container">
+                <div class="about-grid">
+                    <div class="about-content">
+                        <span class="section-tag">PROTECTING YOUR CAPITAL</span>
+                        <h2 class="section-title">Security and Trust</h2>
+                        <p class="lead-p">Protecting customer information and assets is our top priority. We implement strict security technologies, robust account protection features, 256-bit encryption, and ongoing infrastructure improvements.</p>
+                        <p>Our engineering team continuously conducts vulnerability assessments and security audits to ensure that your financial data and transaction records remain safeguarded at all times.</p>
+                    </div>
+                    <div class="about-image-wrapper">
+                        <img src="assets/client.jpg" alt="Buffy.com Security Protocols" class="about-img">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- LOOKING AHEAD SECTION -->
+        <section class="plans-section" style="padding: 90px 0; background: rgba(11, 19, 43, 0.4);">
+            <div class="container text-center" style="max-width: 800px; margin: 0 auto; text-align: center;">
+                <span class="section-tag">OUR FUTURE HORIZON</span>
+                <h2 class="section-title">Looking Ahead</h2>
+                <p style="font-size: 1.1rem; color: var(--text-secondary); line-height: 1.8; margin-bottom: 30px;">
+                    As we grow, Buffy.com remains committed to continuously refining our platform, expanding our educational resources responsibly, and introducing enhanced wealth tools. We recognize that all investments carry risk, and our goal is to serve as a steady, reliable partner as you navigate your financial journey.
+                </p>
+                <button class="btn-primary btn-large" id="about-btn-signup">
+                    Get Started With Buffy.com <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- INTERACTIVE USER DASHBOARD VIEW (SHARED) -->
+    <div id="dashboard-view" class="dashboard-view hidden">
+        <div class="dashboard-header-bar">
+            <div class="dash-welcome">
+                <h2>Welcome Back, <span class="gold-gradient-text">Alexander Vance</span></h2>
+                <p>Growth Tier Member • Account #BF-894201</p>
+            </div>
+
+            <div class="dash-quick-actions">
+                <button class="btn-primary btn-sm" id="btn-dash-deposit"><i class="fa-solid fa-arrow-down-left"></i> Quick Deposit</button>
+                <button class="btn-outline btn-sm" id="btn-dash-withdraw"><i class="fa-solid fa-arrow-up-right"></i> Withdraw</button>
+                <button class="btn-secondary btn-sm" id="btn-close-dashboard"><i class="fa-solid fa-globe"></i> Return to Site</button>
+            </div>
+        </div>
+
+        <div class="container-fluid dashboard-content">
+            <div class="dash-metrics-grid">
+                <div class="dash-metric-card">
+                    <div class="m-title">Total Portfolio Value</div>
+                    <div class="m-val">$128,450.80</div>
+                    <div class="m-change positive"><i class="fa-solid fa-arrow-trend-up"></i> +$3,420.50 (2.73% YTD)</div>
+                </div>
+
+                <div class="dash-metric-card">
+                    <div class="m-title">Cash & Liquidity</div>
+                    <div class="m-val">$14,200.00</div>
+                    <div class="m-sub">Available for Instant Allocation</div>
+                </div>
+
+                <div class="dash-metric-card">
+                    <div class="m-title">Cumulative Returns</div>
+                    <div class="m-val positive">+$28,450.80</div>
+                    <div class="m-sub">Total All-Time Profits</div>
+                </div>
+
+                <div class="dash-metric-card">
+                    <div class="m-title">Risk Profile Score</div>
+                    <div class="m-val gold-accent">68 / 100</div>
+                    <div class="m-sub">Moderate Growth Shielded</div>
+                </div>
+            </div>
+
+            <div class="dash-charts-grid">
+                <div class="dash-chart-card main-chart">
+                    <div class="chart-header">
+                        <div>
+                            <h3>Portfolio Growth History</h3>
+                            <p>Real-time valuation track</p>
+                        </div>
+                        <div class="chart-timeframe" id="timeframe-selector">
+                            <button class="tf-btn" data-tf="1d">1D</button>
+                            <button class="tf-btn" data-tf="1w">1W</button>
+                            <button class="tf-btn" data-tf="1m">1M</button>
+                            <button class="tf-btn active" data-tf="1y">1Y</button>
+                            <button class="tf-btn" data-tf="all">ALL</button>
+                        </div>
+                    </div>
+                    <div class="chart-canvas-holder">
+                        <canvas id="dashboardPerformanceChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="dash-chart-card side-chart">
+                    <div class="chart-header">
+                        <h3>Asset Allocation</h3>
+                    </div>
+                    <div class="chart-canvas-holder donut-holder">
+                        <canvas id="dashboardDonutChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AUTHENTICATION MODALS SYSTEM -->
+    <div class="modal-overlay hidden" id="modal-overlay">
+        <!-- Login Modal -->
+        <div class="auth-modal hidden" id="modal-login">
+            <button class="modal-close" id="close-login-btn"><i class="fa-solid fa-xmark"></i></button>
+            <div class="auth-header">
+                <div class="logo-icon small"><i class="fa-solid fa-chart-line"></i></div>
+                <h3>Log In to Buffy.com</h3>
+                <p>Access your secure wealth portfolio</p>
+            </div>
+            <form id="form-login">
+                <div class="form-group">
+                    <label for="login-email">Email Address</label>
+                    <input type="email" id="login-email" placeholder="name@example.com" required>
+                </div>
+                <div class="form-group">
+                    <div class="flex-between">
+                        <label for="login-password">Password</label>
+                        <a href="#" id="link-forgot-pass" class="small-link">Forgot Password?</a>
+                    </div>
+                    <input type="password" id="login-password" placeholder="••••••••••••" required>
+                </div>
+                <button type="submit" class="btn-primary btn-block">Log In <i class="fa-solid fa-right-to-bracket"></i></button>
+            </form>
+            <div class="auth-footer">
+                Don't have an account? <a href="#" id="switch-to-signup" class="gold-link">Create Account</a>
+            </div>
+        </div>
+
+        <!-- Signup Modal -->
+        <div class="auth-modal hidden" id="modal-signup">
+            <button class="modal-close" id="close-signup-btn"><i class="fa-solid fa-xmark"></i></button>
+            <div class="auth-header">
+                <div class="logo-icon small"><i class="fa-solid fa-chart-line"></i></div>
+                <h3>Create Your Account</h3>
+                <p>Start your wealth building journey</p>
+            </div>
+            <form id="form-signup">
+                <div class="form-group">
+                    <label for="signup-name">Full Name</label>
+                    <input type="text" id="signup-name" placeholder="Alexander Vance" required>
+                </div>
+                <div class="form-group">
+                    <label for="signup-email">Work or Personal Email</label>
+                    <input type="email" id="signup-email" placeholder="alexander@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="signup-password">Create Password</label>
+                    <input type="password" id="signup-password" placeholder="Minimum 8 characters" required>
+                </div>
+                <div class="form-group">
+                    <label for="signup-plan">Target Investment Plan</label>
+                    <select id="signup-plan" class="calc-select">
+                        <option value="Starter">Starter Plan ($100 Min)</option>
+                        <option value="Growth" selected>Growth Plan ($1,000 Min)</option>
+                        <option value="Professional">Professional Tier ($10,000 Min)</option>
+                        <option value="Institutional">Institutional Bespoke</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-primary btn-block">Create Account <i class="fa-solid fa-user-plus"></i></button>
+            </form>
+            <div class="auth-footer">
+                Already registered? <a href="#" id="switch-to-login" class="gold-link">Log In</a>
+            </div>
+        </div>
+
+        <!-- Profile Modal -->
+        <div class="auth-modal hidden" id="modal-profile">
+            <button class="modal-close" id="close-profile-btn"><i class="fa-solid fa-xmark"></i></button>
+            <div class="auth-header">
+                <div class="logo-icon small gold"><i class="fa-solid fa-user-gear"></i></div>
+                <h3>Account & Security Settings</h3>
+                <p>Manage your investor profile and preferences</p>
+            </div>
+            <form id="form-profile">
+                <div class="form-group">
+                    <label for="prof-name">Full Name</label>
+                    <input type="text" id="prof-name" value="Alexander Vance" required>
+                </div>
+                <div class="form-group">
+                    <label for="prof-email">Email Address</label>
+                    <input type="email" id="prof-email" value="alexander@buffy.com" disabled style="opacity: 0.7;">
+                </div>
+                <button type="submit" class="btn-primary btn-block">Save Profile Changes</button>
+            </form>
+        </div>
+
+        <!-- Transfer Modal -->
+        <div class="auth-modal hidden" id="modal-transfer">
+            <button class="modal-close" id="close-transfer-btn"><i class="fa-solid fa-xmark"></i></button>
+            <div class="auth-header">
+                <h3 id="transfer-title">Quick Deposit</h3>
+                <p id="transfer-sub">Transfer funds directly to your Buffy.com cash balance</p>
+            </div>
+            <form id="form-transfer">
+                <div class="form-group">
+                    <label for="transfer-amount">Amount (USD)</label>
+                    <input type="number" id="transfer-amount" min="10" placeholder="1000" required>
+                </div>
+                <div class="form-group">
+                    <label for="transfer-method">Payment Source</label>
+                    <select id="transfer-method" class="calc-select">
+                        <option value="ACH">Linked Bank Account (ACH)</option>
+                        <option value="Wire">Domestic Wire Transfer</option>
+                        <option value="Crypto">USDT / USDC Wallet</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-primary btn-block" id="btn-submit-transfer">Confirm Deposit</button>
+            </form>
+        </div>
+
+        <!-- Legal Compliance Document Viewer Modal -->
+        <div class="auth-modal modal-large hidden" id="modal-legal-doc">
+            <button class="modal-close" id="close-legal-btn"><i class="fa-solid fa-xmark"></i></button>
+            <div class="auth-header">
+                <div class="logo-icon small gold"><i class="fa-solid fa-scale-balanced"></i></div>
+                <h3 id="legal-doc-title">Privacy Policy & Data Security</h3>
+                <p id="legal-doc-sub">Buffy.com Institutional Compliance Framework</p>
+            </div>
+            <div class="legal-doc-body" id="legal-doc-content" style="max-height: 400px; overflow-y: auto; text-align: left; padding: 15px; background: rgba(0,0,0,0.2); border-radius: var(--radius-sm); font-size: 14px; color: var(--text-secondary); line-height: 1.7;">
+                <p>Loading document content...</p>
+            </div>
+            <div style="margin-top: 15px;">
+                <button class="btn-primary btn-block modal-close-action">I Understand & Agree</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER SECTION -->
+    <footer class="site-footer">
+        <div class="container footer-grid">
+            <div class="footer-brand-col">
+                <a href="index.html" class="brand-logo">
+                    <div class="logo-icon">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </div>
+                    <div class="logo-text">
+                        <span class="brand-name">Buffy<span class="gold-accent">.com</span></span>
+                    </div>
+                </a>
+                <p class="footer-tagline">Grow Your Wealth. Secure Your Future.</p>
+                <p class="footer-desc">Buffy.com Financial Technologies Inc. is a premier wealth management and capital execution firm. Dedicated to transparency, institutional risk protocols, and client security.</p>
+                
+                <div class="social-links">
+                    <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+                    <a href="#" aria-label="X Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+                    <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+                    <a href="#" aria-label="Telegram"><i class="fa-brands fa-telegram"></i></a>
+                </div>
+            </div>
+
+            <div class="footer-col">
+                <h4>Solutions & Navigation</h4>
+                <ul>
+                    <li><a href="index.html#home">Home Portal</a></li>
+                    <li><a href="about.html">About Buffy.com</a></li>
+                    <li><a href="index.html#plans">Investment Solutions</a></li>
+                    <li><a href="index.html#markets">Global Markets</a></li>
+                    <li><a href="index.html#resources">Investor Resources</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Legal & Compliance</h4>
+                <ul>
+                    <li><a href="#" id="link-privacy">Privacy Policy</a></li>
+                    <li><a href="#" id="link-terms">Terms of Service</a></li>
+                    <li><a href="#" id="link-disclosures">Risk Disclosure</a></li>
+                    <li><a href="#" id="link-cookie">Cookie Policy</a></li>
+                    <li><a href="#" id="link-aml">AML/KYC Policy</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col newsletter-col">
+                <h4>Market Intelligence</h4>
+                <p>Subscribe to our weekly economic digest and portfolio allocation insights.</p>
+                <form id="newsletter-form" class="newsletter-box">
+                    <input type="email" placeholder="Enter your work email" required>
+                    <button type="submit" aria-label="Subscribe"><i class="fa-solid fa-paper-plane"></i></button>
+                </form>
+            </div>
+        </div>
+
+        <div class="footer-bottom container">
+            <div class="legal-text">
+                <p>© 2026 Buffy.com Financial Technologies Inc. All rights reserved. Securities offered through partner financial institutions. Investment Advisory Services provided by Buffy Wealth Management LLC.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Main JavaScript Engine -->
+    <script src="app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const aboutBtn = document.getElementById('about-btn-signup');
+            if (aboutBtn) {
+                aboutBtn.addEventListener('click', () => {
+                    if (window.openAuthModal) window.openAuthModal('modal-signup');
+                });
+            }
+        });
+    </script>
+</body>
+</html>
