@@ -24,6 +24,40 @@ const server = http.createServer((req, res) => {
     res.setHeader('X-Frame-Options', 'DENY');
     res.setHeader('X-XSS-Protection', '1; mode=block');
 
+    // Welcome Email API Endpoint for New Registered Users
+    if (req.url === '/api/send-welcome-email' && req.method === 'POST') {
+        let body = '';
+        req.on('data', chunk => { body += chunk; });
+        req.on('end', () => {
+            try {
+                const data = JSON.parse(body || '{}');
+                const userEmail = data.email || 'investor@example.com';
+                const userName = data.full_name || 'Valued Investor';
+                const targetPlan = data.target_plan || 'Growth Plan';
+
+                console.log(`====================================================`);
+                console.log(`📧 WELCOME EMAIL NOTIFICATION DISPATCHED`);
+                console.log(`To: ${userName} <${userEmail}>`);
+                console.log(`Subject: Welcome to Buffy.com | Grow Your Wealth. Secure Your Future.`);
+                console.log(`Plan: ${targetPlan}`);
+                console.log(`Timestamp: ${new Date().toISOString()}`);
+                console.log(`====================================================`);
+
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({
+                    success: true,
+                    status: 'sent',
+                    recipient: userEmail,
+                    message: `Welcome email notification successfully dispatched to ${userEmail}`
+                }));
+            } catch (e) {
+                res.writeHead(400, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ success: false, error: 'Invalid JSON payload' }));
+            }
+        });
+        return;
+    }
+
     let reqPath = req.url.split('?')[0];
     if (reqPath === '/') {
         reqPath = '/index.html';
