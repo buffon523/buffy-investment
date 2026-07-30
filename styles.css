@@ -2085,11 +2085,41 @@ input[type="range"] {
 
 .pm-meta {
     display: flex;
-    justify-content: space-between;
-    font-size: 0.75rem;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 0.78rem;
     color: #CBD5E1;
     padding-top: 12px;
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    margin-top: auto;
+}
+
+.pm-meta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.pm-meta-row span {
+    color: #94A3B8;
+}
+.pm-meta-row strong {
+    color: #F4C430;
+    font-weight: 700;
+}
+
+.form-row-dep {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+@media (max-width: 600px) {
+    .form-row-dep {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
 }
 
 .deposit-form-layout {
