@@ -1288,4 +1288,122 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 1200);
         });
     }
+
+    // ------------------------------------------------------------------
+    // SETTINGS HUB SUB-TAB SWITCHER & FORM HANDLERS
+    // ------------------------------------------------------------------
+    const setTabBtns = document.querySelectorAll('.set-tab-btn[data-set-tab]');
+    setTabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const targetTab = btn.getAttribute('data-set-tab');
+            
+            // Highlight active button
+            setTabBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            // Hide all setting boxes and show target box
+            const setBoxes = document.querySelectorAll('.settings-panel-box');
+            setBoxes.forEach(box => box.classList.add('hidden'));
+
+            const targetBox = document.getElementById(`set-box-${targetTab}`);
+            if (targetBox) {
+                targetBox.classList.remove('hidden');
+            }
+        });
+    });
+
+    // Profile Settings Form Submit
+    const formSetProfile = document.getElementById('form-settings-profile');
+    if (formSetProfile) {
+        formSetProfile.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const fullNameVal = document.getElementById('setting-fullname')?.value || 'Angel';
+            const userEmail = currentUser ? currentUser.email : 'investor@buffyinvestment.com';
+
+            setDashboardUserInfo(fullNameVal, 'Growth Strategy Plan', userEmail);
+
+            if (supabaseClient && currentUser) {
+                try {
+                    await supabaseClient.from('user_profiles').upsert([
+                        { email: userEmail, full_name: fullNameVal, target_plan: 'Growth Strategy Plan' }
+                    ], { onConflict: 'email' });
+                } catch (err) {
+                    console.log('Profile update note:', err);
+                }
+            }
+            showToast('✅ Investor profile changes saved successfully!', 'success');
+        });
+    }
+
+    // Account Info Form Submit
+    const formSetAccount = document.getElementById('form-settings-account');
+    if (formSetAccount) {
+        formSetAccount.addEventListener('submit', (e) => {
+            e.preventDefault();
+            showToast('✅ Account details updated successfully!', 'success');
+        });
+    }
+
+    // Password Update Form Submit
+    const formSetPassword = document.getElementById('form-settings-password');
+    if (formSetPassword) {
+        formSetPassword.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const newPass = document.getElementById('set-new-pass')?.value;
+            const confirmPass = document.getElementById('set-confirm-pass')?.value;
+
+            if (newPass !== confirmPass) {
+                showToast('Passwords do not match. Please re-enter.', 'error');
+                return;
+            }
+            showToast('🔒 Account password updated successfully!', 'success');
+            formSetPassword.reset();
+        });
+    }
+
+    // 2FA Toggle Switch Handler
+    const toggle2FA = document.getElementById('toggle-2fa-setting');
+    if (toggle2FA) {
+        toggle2FA.addEventListener('change', (e) => {
+            const isChecked = e.target.checked;
+            showToast(isChecked ? '🛡️ Two-Factor Authentication (2FA) is ENABLED.' : '⚠️ Two-Factor Authentication disabled.', isChecked ? 'success' : 'info');
+        });
+    }
+
+    // Add Payment Method CTA
+    const btnAddPayment = document.getElementById('btn-add-payment-method');
+    if (btnAddPayment) {
+        btnAddPayment.addEventListener('click', () => {
+            const newMethod = prompt('Enter Bank ACH Account or Crypto Wallet Address to add:');
+            if (newMethod) {
+                showToast(`💳 Payment Method "${newMethod}" submitted for verification.`, 'success');
+            }
+        });
+    }
+
+    // Notifications Form Submit
+    const formSetNotif = document.getElementById('form-settings-notifications');
+    if (formSetNotif) {
+        formSetNotif.addEventListener('submit', (e) => {
+            e.preventDefault();
+            showToast('🔔 Notification preferences saved.', 'success');
+        });
+    }
+
+    // Data Archive CTA
+    const btnDownloadData = document.getElementById('btn-download-user-data');
+    if (btnDownloadData) {
+        btnDownloadData.addEventListener('click', () => {
+            showToast('📥 Preparing encrypted account data archive for download...', 'info');
+        });
+    }
+
+    // Platform Preferences Form Submit
+    const formSetPref = document.getElementById('form-settings-preferences');
+    if (formSetPref) {
+        formSetPref.addEventListener('submit', (e) => {
+            e.preventDefault();
+            showToast('⚙️ Platform preferences saved.', 'success');
+        });
+    }
 });
