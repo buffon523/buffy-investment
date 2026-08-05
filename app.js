@@ -588,6 +588,49 @@ document.addEventListener('DOMContentLoaded', () => {
     if (btnToggleDashboard) btnToggleDashboard.addEventListener('click', () => switchView(true));
     if (btnCloseDashboard) btnCloseDashboard.addEventListener('click', () => switchView(false));
 
+    // ------------------------------------------------------------------
+    // DASHBOARD SIDEBAR MAIN TAB SWITCHER
+    // ------------------------------------------------------------------
+    const sideNavLinks = document.querySelectorAll('.side-link[data-tab]');
+    sideNavLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const tabKey = link.getAttribute('data-tab');
+
+            // Highlight active side link
+            sideNavLinks.forEach(l => l.classList.remove('active'));
+            link.classList.add('active');
+
+            // Hide all dashboard panels and show target panel
+            const allPanels = document.querySelectorAll('.dash-tab-panel');
+            allPanels.forEach(p => {
+                p.classList.add('hidden');
+                p.classList.remove('active');
+            });
+
+            // Map data-tab keys to panel IDs
+            let panelId = `panel-${tabKey}`;
+            if (tabKey === 'account') panelId = 'panel-account';
+            if (tabKey === 'make-deposit') panelId = 'panel-make-deposit';
+            if (tabKey === 'withdrawal') panelId = 'panel-withdrawal';
+            if (tabKey === 'settings') panelId = 'panel-settings';
+
+            const targetPanel = document.getElementById(panelId);
+            if (targetPanel) {
+                targetPanel.classList.remove('hidden');
+                targetPanel.classList.add('active');
+            } else {
+                // Default fallback to panel-account if panel is coming soon
+                const accountPanel = document.getElementById('panel-account');
+                if (accountPanel) {
+                    accountPanel.classList.remove('hidden');
+                    accountPanel.classList.add('active');
+                }
+                showToast(`Section "${tabKey.toUpperCase().replace('-', ' ')}" loaded.`, 'info');
+            }
+        });
+    });
+
     function initDashboardCharts() {
         // Performance Chart
         const ctxPerf = document.getElementById('dashboardPerformanceChart');
