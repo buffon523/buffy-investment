@@ -608,12 +608,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 p.classList.remove('active');
             });
 
-            // Map data-tab keys to panel IDs
+            // Map data-tab keys to panel IDs / Modal Hub
+            if (tabKey === 'settings') {
+                const setMUsername = document.getElementById('set-m-username');
+                const hdrUsername = document.getElementById('hdr-username');
+                if (setMUsername && hdrUsername) {
+                    setMUsername.textContent = hdrUsername.textContent;
+                }
+                openAuthModal('modal-settings-hub');
+                return;
+            }
+
             let panelId = `panel-${tabKey}`;
             if (tabKey === 'account') panelId = 'panel-account';
             if (tabKey === 'make-deposit') panelId = 'panel-make-deposit';
             if (tabKey === 'withdrawal') panelId = 'panel-withdrawal';
-            if (tabKey === 'settings') panelId = 'panel-settings';
 
             const targetPanel = document.getElementById(panelId);
             if (targetPanel) {
@@ -1335,23 +1344,31 @@ document.addEventListener('DOMContentLoaded', () => {
     // ------------------------------------------------------------------
     // SETTINGS HUB SUB-TAB SWITCHER & FORM HANDLERS
     // ------------------------------------------------------------------
-    const setTabBtns = document.querySelectorAll('.set-tab-btn[data-set-tab]');
+    const setTabBtns = document.querySelectorAll('.set-tab-btn[data-set-tab], .set-m-tab[data-set-tab]');
     setTabBtns.forEach(btn => {
         btn.addEventListener('click', () => {
             const targetTab = btn.getAttribute('data-set-tab');
             
-            // Highlight active button
-            setTabBtns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+            // Highlight active button in all tab bars
+            setTabBtns.forEach(b => {
+                if (b.getAttribute('data-set-tab') === targetTab) {
+                    b.classList.add('active');
+                } else {
+                    b.classList.remove('active');
+                }
+            });
 
             // Hide all setting boxes and show target box
             const setBoxes = document.querySelectorAll('.settings-panel-box');
-            setBoxes.forEach(box => box.classList.add('hidden'));
-
-            const targetBox = document.getElementById(`set-box-${targetTab}`);
-            if (targetBox) {
-                targetBox.classList.remove('hidden');
-            }
+            setBoxes.forEach(box => {
+                if (box.id === `set-box-${targetTab}`) {
+                    box.classList.remove('hidden');
+                    box.classList.add('active');
+                } else {
+                    box.classList.add('hidden');
+                    box.classList.remove('active');
+                }
+            });
         });
     });
 
