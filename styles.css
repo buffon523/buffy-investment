@@ -2190,6 +2190,65 @@ input[type="range"] {
     border-radius: var(--radius-full);
 }
 
+/* DEDICATED SETTINGS MODAL HUB STYLES */
+.settings-hub-modal {
+    width: min(94vw, 920px) !important;
+    max-width: 920px !important;
+    padding: 28px 32px !important;
+    border: 1px solid var(--gold-primary) !important;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.95) !important;
+}
+
+.set-m-tab {
+    background: transparent;
+    border: none;
+    color: #94A3B8;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 0.86rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.2s ease;
+    width: 100%;
+}
+
+.set-m-tab:hover {
+    color: #FFF;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.set-m-tab.active {
+    background: linear-gradient(135deg, rgba(244, 196, 48, 0.2), rgba(212, 160, 23, 0.3));
+    color: #F4C430;
+    border-left: 3px solid #F4C430;
+}
+
+@media (max-width: 768px) {
+    .settings-modal-body {
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+    }
+    .settings-modal-nav {
+        border-right: none !important;
+        border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+        padding-right: 0 !important;
+        padding-bottom: 16px !important;
+    }
+    .settings-modal-nav > div:last-child {
+        flex-direction: row !important;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+    .set-m-tab {
+        flex-shrink: 0;
+        width: auto;
+    }
+}
+
 .deposit-form-layout {
     display: grid;
     grid-template-columns: 1.4fr 1fr;
