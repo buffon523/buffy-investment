@@ -2416,11 +2416,21 @@ input[type="range"] {
 .sec-card p { font-size: 0.8rem; color: #94A3B8; line-height: 1.4; }
 
 /* ------------------------------------------------------------------
-   COMPREHENSIVE RESPONSIVE DESIGN (PHONES, TABLETS & LAPTOPS)
+   COMPREHENSIVE UNIVERSAL RESPONSIVE DESIGN (PHONES, TABLETS, LAPTOPS & 4K)
    ------------------------------------------------------------------ */
 
-/* LAPTOPS & DESKTOPS (MIN-WIDTH: 1025PX) */
-@media (min-width: 1025px) {
+/* ULTRA-WIDE DESKTOPS & 4K MONITORS (MIN-WIDTH: 1440PX) */
+@media (min-width: 1440px) {
+    .container {
+        max-width: 1320px;
+    }
+    .payment-cards-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* LAPTOPS & DESKTOPS (MIN-WIDTH: 1025PX TO 1439PX) */
+@media (min-width: 1025px) and (max-width: 1439px) {
     .payment-cards-grid {
         grid-template-columns: repeat(4, 1fr);
     }
@@ -2464,18 +2474,32 @@ input[type="range"] {
     }
 }
 
-/* SMARTPHONES & MOBILE DEVICES (MAX-WIDTH: 768PX) */
+/* SMARTPHONES & SMALL TABLETS (MAX-WIDTH: 768PX) */
 @media (max-width: 768px) {
     .nav-menu { display: none; }
     .mobile-toggle { display: block; }
-    .nav-actions .btn-secondary, .nav-actions .btn-primary { display: none; }
+    
+    .guest-nav-group, .user-nav-group {
+        display: inline-flex !important;
+        gap: 6px !important;
+    }
+
+    .guest-nav-group .btn-secondary,
+    .guest-nav-group .btn-primary,
+    .user-nav-group .btn-primary,
+    .user-nav-group .btn-secondary {
+        padding: 8px 12px !important;
+        font-size: 0.78rem !important;
+        border-radius: 18px !important;
+    }
+
     .stats-grid { grid-template-columns: repeat(2, 1fr); }
     .features-grid, .testimonials-grid, .blog-grid, .assets-grid, .plans-grid, .resources-grid { grid-template-columns: 1fr; }
-    .hero-title { font-size: 2.2rem; }
+    .hero-title { font-size: 2.1rem; }
     .footer-grid { grid-template-columns: 1fr; }
 
     .nav-container {
-        padding: 12px 16px;
+        padding: 10px 14px;
     }
 
     .brand-logo .brand-sub {
@@ -2490,7 +2514,7 @@ input[type="range"] {
     .auth-modal {
         width: 95vw !important;
         max-width: 100% !important;
-        padding: 24px 18px !important;
+        padding: 24px 16px !important;
         border-radius: 20px !important;
         margin: auto !important;
         box-sizing: border-box !important;
@@ -2504,7 +2528,7 @@ input[type="range"] {
 
     .auth-modal .form-group input,
     .auth-modal .form-group select {
-        font-size: 16px !important; /* Prevents auto-zoom on iOS */
+        font-size: 16px !important; /* Prevents auto-zoom on iOS Safari */
         padding: 14px 14px !important;
         width: 100% !important;
         box-sizing: border-box !important;
@@ -2512,7 +2536,7 @@ input[type="range"] {
 
     .auth-modal .btn-primary {
         padding: 14px 16px !important;
-        font-size: 0.95rem !important;
+        font-size: 0.92rem !important;
     }
 
     /* Mobile Sidebar & Dashboard Layout */
@@ -2608,6 +2632,10 @@ input[type="range"] {
 
 /* SMALL MOBILE PHONES (MAX-WIDTH: 480PX) */
 @media (max-width: 480px) {
+    .hero-title {
+        font-size: 1.85rem !important;
+    }
+
     .hero-actions {
         flex-direction: column;
         width: 100%;
@@ -2625,7 +2653,7 @@ input[type="range"] {
     }
 
     .panel-heading {
-        font-size: 1.35rem;
+        font-size: 1.25rem !important;
     }
 
     .hdr-widget.balance-highlight {
@@ -2643,5 +2671,27 @@ input[type="range"] {
     .btn-large {
         padding: 12px 16px;
         font-size: 0.88rem;
+    }
+
+    .dep-wallet-banner {
+        padding: 16px 14px !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+    }
+}
+
+/* ULTRA-COMPACT PHONES (MAX-WIDTH: 360PX) */
+@media (max-width: 360px) {
+    .hero-title {
+        font-size: 1.6rem !important;
+    }
+    .brand-logo .brand-name {
+        font-size: 1.15rem !important;
+    }
+    .nav-container {
+        padding: 8px 10px !important;
+    }
+    .auth-modal {
+        padding: 18px 12px !important;
     }
 }
