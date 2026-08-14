@@ -1206,17 +1206,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Profile Settings & Logout Actions
+    // Profile Settings & Logout Actions (Open Settings Hub)
     const btnNavProfile = document.getElementById('btn-nav-profile');
     if (btnNavProfile) {
         btnNavProfile.addEventListener('click', () => {
-            if (currentUser) {
-                const profName = document.getElementById('prof-name');
-                const profEmail = document.getElementById('prof-email');
-                if (profName) profName.value = currentUser.user_metadata?.full_name || '';
-                if (profEmail) profEmail.value = currentUser.email || '';
+            const setMUsername = document.getElementById('set-m-username');
+            const hdrUsername = document.getElementById('hdr-username');
+            if (setMUsername && hdrUsername) {
+                setMUsername.textContent = hdrUsername.textContent;
             }
-            openAuthModal('modal-profile');
+            openAuthModal('modal-settings-hub');
         });
     }
 
