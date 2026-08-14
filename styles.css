@@ -1423,7 +1423,9 @@ input[type="range"] {
     padding-bottom: 60px;
 }
 
-.dashboard-view.hidden { display: none; }
+.dashboard-view.hidden { display: none !important; }
+.dash-tab-panel.hidden { display: none !important; }
+.dash-tab-panel.active { display: block !important; }
 
 .dashboard-header-bar {
     background: var(--bg-card);
