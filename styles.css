@@ -2281,6 +2281,39 @@ input[type="range"] {
     box-shadow: 0 0 10px rgba(244, 196, 48, 0.2);
 }
 
+/* PASSWORD INPUT TOGGLE EYE BUTTON */
+.password-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.password-input-wrapper input {
+    padding-right: 44px !important;
+    width: 100%;
+}
+
+.btn-toggle-password {
+    position: absolute;
+    right: 12px;
+    background: transparent;
+    border: none;
+    color: #94A3B8;
+    font-size: 1.05rem;
+    cursor: pointer;
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s ease;
+    z-index: 5;
+}
+
+.btn-toggle-password:hover {
+    color: #F4C430;
+}
+
 .deposit-form-card {
     background: rgba(18, 26, 48, 0.6);
     border: 1px solid rgba(255, 255, 255, 0.08);
