@@ -2255,6 +2255,32 @@ input[type="range"] {
     gap: 30px;
 }
 
+/* QUICK AMOUNT PRESET CHIPS */
+.btn-preset-chip {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #94A3B8;
+    padding: 6px 14px;
+    border-radius: var(--radius-full);
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-preset-chip:hover {
+    color: #FFF;
+    border-color: #F4C430;
+    background: rgba(244, 196, 48, 0.1);
+}
+
+.btn-preset-chip.active {
+    background: linear-gradient(135deg, rgba(244, 196, 48, 0.25), rgba(212, 160, 23, 0.35));
+    color: #F4C430;
+    border-color: #F4C430;
+    box-shadow: 0 0 10px rgba(244, 196, 48, 0.2);
+}
+
 .deposit-form-card {
     background: rgba(18, 26, 48, 0.6);
     border: 1px solid rgba(255, 255, 255, 0.08);
