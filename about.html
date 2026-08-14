@@ -520,9 +520,36 @@
 
                 <!-- SUB-PANEL: MAKE DEPOSIT (EMBEDDED DEPOSIT FUNDS INTERFACE) -->
                 <div class="dash-tab-panel hidden" id="panel-make-deposit">
-                    <div style="margin-bottom: 25px;">
+                    <div style="margin-bottom: 20px;">
                         <h2 class="panel-heading" style="margin-bottom: 6px;">Deposit Funds</h2>
-                        <p style="color: #94A3B8; font-size: 0.95rem;">“Securely add funds to your investment account to begin or continue your investment journey.”</p>
+                        <p style="color: #94A3B8; font-size: 0.95rem;">“Securely add funds to your investment account to begin or continue your wealth building journey.”</p>
+                    </div>
+
+                    <!-- WALLET BALANCE OVERVIEW HEADER -->
+                    <div class="dep-wallet-banner" style="background: linear-gradient(135deg, rgba(11, 19, 43, 0.95), rgba(18, 26, 48, 0.95)); border: 1px solid rgba(244, 196, 48, 0.3); border-radius: var(--radius-md); padding: 20px 24px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.4);">
+                        <div style="display: flex; align-items: center; gap: 16px;">
+                            <div style="width: 48px; height: 48px; border-radius: 50%; background: rgba(244, 196, 48, 0.15); border: 1px solid #F4C430; display: flex; align-items: center; justify-content: center; color: #F4C430; font-size: 1.4rem;">
+                                <i class="fa-solid fa-wallet"></i>
+                            </div>
+                            <div>
+                                <span style="color: #94A3B8; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.8px; display: block; margin-bottom: 2px;">Current Account Balance</span>
+                                <strong style="font-size: 1.6rem; color: #FFF; font-weight: 800; letter-spacing: -0.5px;" id="dep-available-bal-display">$ 0.00</strong>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; gap: 20px; align-items: center;">
+                            <div>
+                                <span style="color: #94A3B8; font-size: 0.78rem; display: block;">Active Deposits:</span>
+                                <strong style="color: #F4C430; font-size: 1.05rem;" id="dep-active-dep-display">$ 0.00</strong>
+                            </div>
+                            <div style="height: 32px; width: 1px; background: rgba(255,255,255,0.1);"></div>
+                            <div>
+                                <span style="color: #94A3B8; font-size: 0.78rem; display: block;">USDT Custody:</span>
+                                <strong style="color: #10B981; font-size: 1.05rem;" id="dep-usdt-bal-display">$ 0.00</strong>
+                            </div>
+                            <div style="height: 32px; width: 1px; background: rgba(255,255,255,0.1);"></div>
+                            <span class="status-pill success"><i class="fa-solid fa-shield-check"></i> Encrypted Channel</span>
+                        </div>
                     </div>
 
                     <!-- STEP 1: PAYMENT METHOD CARDS GRID -->
@@ -584,19 +611,31 @@
                                         <input type="number" id="dep-amount-input" value="1000" min="10" step="50" placeholder="1000" required>
                                     </div>
                                     <div class="form-group">
-                                        <label for="dep-currency-input">Currency</label>
+                                        <label for="dep-currency-input">Currency Selection</label>
                                         <select id="dep-currency-input" class="calc-select">
-                                            <option value="USD" selected>USD ($)</option>
-                                            <option value="EUR">EUR (€)</option>
-                                            <option value="GBP">GBP (£)</option>
-                                            <option value="USDT">USDT (Tether)</option>
-                                            <option value="BTC">BTC (Bitcoin)</option>
+                                            <option value="USD" selected>USD ($) - US Dollar</option>
+                                            <option value="EUR">EUR (€) - Euro</option>
+                                            <option value="GBP">GBP (£) - British Pound</option>
+                                            <option value="USDT">USDT - Tether (TRC20)</option>
+                                            <option value="BTC">BTC - Bitcoin</option>
                                         </select>
                                     </div>
                                 </div>
 
+                                <!-- QUICK AMOUNT PRESET CHIPS -->
+                                <div style="margin-bottom: 18px;">
+                                    <label style="font-size: 0.8rem; color: #94A3B8; margin-bottom: 8px; display: block;">Quick Amount Presets:</label>
+                                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                                        <button type="button" class="btn-preset-chip" data-preset="100">+$100</button>
+                                        <button type="button" class="btn-preset-chip" data-preset="500">+$500</button>
+                                        <button type="button" class="btn-preset-chip active" data-preset="1000">+$1,000</button>
+                                        <button type="button" class="btn-preset-chip" data-preset="5000">+$5,000</button>
+                                        <button type="button" class="btn-preset-chip" data-preset="10000">+$10,000</button>
+                                    </div>
+                                </div>
+
                                 <div class="form-group">
-                                    <label for="dep-gateway-select">Selected Gateway Processor</label>
+                                    <label for="dep-gateway-select">Selected Payment Method</label>
                                     <select id="dep-gateway-select" class="calc-select">
                                         <option value="Bank Transfer" selected>Bank Transfer (ACH / Wire)</option>
                                         <option value="Debit / Credit Card">Debit / Credit Card (Visa/MC)</option>
@@ -616,12 +655,12 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="dep-ref-note">Optional Reference Note</label>
-                                    <input type="text" id="dep-ref-note" placeholder="e.g. Q3 Portfolio Allocation">
+                                    <label for="dep-ref-note">Optional Reference / Description</label>
+                                    <input type="text" id="dep-ref-note" placeholder="e.g. Q3 Portfolio Capital Allocation">
                                 </div>
 
-                                <button type="submit" class="btn-primary btn-block btn-large">
-                                    Confirm Deposit & Credit Account <i class="fa-solid fa-arrow-right"></i>
+                                <button type="submit" class="btn-primary btn-block btn-large" id="btn-deposit-now">
+                                    Deposit Now & Credit Account <i class="fa-solid fa-arrow-right"></i>
                                 </button>
                             </form>
                         </div>
@@ -630,7 +669,7 @@
                         <div class="deposit-summary-card">
                             <div class="summary-header">
                                 <i class="fa-solid fa-receipt gold-icon"></i>
-                                <h3>Live Deposit Summary</h3>
+                                <h3>Deposit Summary</h3>
                             </div>
 
                             <div class="summary-list">
@@ -657,15 +696,15 @@
                                 </div>
                             </div>
 
-                            <div class="trust-seal-box">
-                                <i class="fa-solid fa-shield-halved"></i>
-                                <p>Funds are deposited directly into your segregated account protected by 256-bit SSL encryption protocols.</p>
+                            <div class="trust-seal-box" style="margin-top: 20px;">
+                                <i class="fa-solid fa-lock" style="color: #F4C430;"></i>
+                                <p>Bank-grade 256-bit SSL encrypted transaction. All client capital is held in segregated institutional custodian accounts protected under SEC & SIPC frameworks.</p>
                             </div>
                         </div>
                     </div>
 
                     <!-- STEP 3: RECENT DEPOSIT STATUS & TRANSACTION AUDIT -->
-                    <div style="margin-bottom: 12px;"><span class="section-tag">STEP 3: DEPOSIT TRANSACTION AUDIT</span></div>
+                    <div style="margin-bottom: 12px;"><span class="section-tag">STEP 3: RECENT DEPOSIT HISTORY & TRANSACTION STATUS</span></div>
                     <div class="deposit-history-section" style="margin-bottom: 35px;">
                         <div class="deposit-status-tabs" id="dash-deposit-status-tabs">
                             <button class="d-tab active" data-status="all">All Deposits</button>
@@ -683,7 +722,7 @@
                                             <th>Reference ID</th>
                                             <th>Gateway Method</th>
                                             <th>Amount</th>
-                                            <th>Status</th>
+                                            <th>Transaction Status</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -710,14 +749,14 @@
                     <!-- STEP 4: GUIDELINES & SECURITY INDICATORS -->
                     <div class="deposit-guidelines-box" style="margin-bottom: 25px;">
                         <div class="guidelines-header">
-                            <i class="fa-solid fa-circle-info gold-icon"></i>
-                            <h3>Deposit Guidelines & Compliance Reminders</h3>
+                            <i class="fa-solid fa-shield-halved gold-icon"></i>
+                            <h3>Bank-Grade Security & Compliance Protocols</h3>
                         </div>
                         <ul class="guidelines-list">
-                            <li><i class="fa-solid fa-check"></i> <strong>Name Matching:</strong> Always use payment methods registered in your own legal name. Third-party deposits are strictly prohibited under AML regulations.</li>
-                            <li><i class="fa-solid fa-check"></i> <strong>Verification:</strong> Verify account numbers, routing details, or wallet addresses before confirming your transaction.</li>
-                            <li><i class="fa-solid fa-check"></i> <strong>Identity Check:</strong> Complete KYC identity verification if requested to enable higher deposit thresholds.</li>
-                            <li><i class="fa-solid fa-check"></i> <strong>Processing Times:</strong> Processing speeds vary by gateway (instant for cards/crypto, 1-2 days for bank wires).</li>
+                            <li><i class="fa-solid fa-check"></i> <strong>Name Matching Protocol:</strong> Deposits must originate from payment accounts matching your legal registration name. Third-party funding is prohibited under anti-money laundering laws.</li>
+                            <li><i class="fa-solid fa-check"></i> <strong>256-Bit SSL Encrypted:</strong> All transaction payload data is transmitted over secure end-to-end encrypted telemetry.</li>
+                            <li><i class="fa-solid fa-check"></i> <strong>Segregated Custodial Accounts:</strong> Funds are deposited directly into segregated custodian accounts protected under SIPC/FDIC frameworks.</li>
+                            <li><i class="fa-solid fa-check"></i> <strong>Instant Notification:</strong> An immediate email confirmation receipt will be dispatched from welcome@buffyinvestment.com upon confirmation.</li>
                         </ul>
                     </div>
                 </div>
