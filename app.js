@@ -759,11 +759,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     planBtns.forEach(btn => {
         btn.addEventListener('click', () => {
-            const plan = btn.getAttribute('data-plan');
-            const selectPlan = document.getElementById('signup-plan');
-            if (selectPlan) selectPlan.value = plan;
             openAuthModal('modal-signup');
-            showToast(`Selected ${plan} Investment Plan. Fill in details to proceed.`, 'info');
+            showToast(`Fill in registration details & preferred payout wallet to start investing.`, 'info');
         });
     });
 
@@ -811,7 +808,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Signup Form Submit -> Direct Supabase Auth & Dashboard Access (2FA Removed)
+    // Signup Form Submit -> Direct Supabase Auth & Preferred Wallet Save
     const formSignup = document.getElementById('form-signup');
     if (formSignup) {
         formSignup.addEventListener('submit', async (e) => {
@@ -819,14 +816,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const name = document.getElementById('signup-name')?.value;
             const email = document.getElementById('signup-email')?.value;
             const password = document.getElementById('signup-password')?.value;
-            const plan = document.getElementById('signup-plan')?.value;
+            const wallet = document.getElementById('signup-wallet')?.value || '';
 
             if (supabaseClient && email && password) {
                 try {
                     const { data, error } = await supabaseClient.auth.signUp({
                         email,
                         password,
-                        options: { data: { full_name: name, target_plan: plan } }
+                        options: { data: { full_name: name, preferred_wallet: wallet } }
                     });
                     if (error) {
                         console.warn('Supabase SignUp Note:', error.message);
@@ -835,7 +832,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             id: data.user.id,
                             email: email,
                             full_name: name,
-                            target_plan: plan
+                            preferred_wallet: wallet
                         });
                     }
                 } catch (err) {
@@ -843,9 +840,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
+            // Pre-fill withdrawal destination input with registered wallet
+            const withAddrInput = document.getElementById('with-address-input');
+            if (withAddrInput && wallet) {
+                withAddrInput.value = wallet;
+            }
+
             // Update Dashboard and Navigation UI with Registered User's Name
             const displayName = name || email || 'Valued Investor';
-            setDashboardUserInfo(displayName, plan || 'Growth');
+            setDashboardUserInfo(displayName, 'Growth Strategy Plan', email);
 
             const guestNav = document.getElementById('guest-nav-group');
             const userNav = document.getElementById('user-nav-group');
@@ -853,10 +856,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (userNav) userNav.style.display = 'inline-flex';
 
             // Dispatch Direct Welcome Email Notification to New User
-            sendWelcomeEmailNotification(email, name, plan);
+            sendWelcomeEmailNotification(email, name, 'Growth Strategy Plan');
 
             closeAllModals();
-            showToast(`Welcome ${displayName}! Portfolio dashboard active. Welcome email sent from welcome@buffyinvestment.com.`, 'success');
+            showToast(`Welcome ${displayName}! Portfolio dashboard active. Preferred withdrawal payout wallet saved (${wallet || 'USDT TRC20'}).`, 'success');
             switchView(true);
         });
     }
