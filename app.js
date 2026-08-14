@@ -584,8 +584,26 @@ document.addEventListener('DOMContentLoaded', () => {
             publicSiteView.style.display = 'none';
             dashboardView.classList.remove('hidden');
             window.scrollTo(0, 0);
+
+            // Ensure MY ACCOUNT is active and MAKE DEPOSIT is strictly hidden
+            const sideNavLinks = document.querySelectorAll('.side-link[data-tab]');
+            sideNavLinks.forEach(l => l.classList.remove('active'));
+            const accountLink = document.querySelector('.side-link[data-tab="account"]');
+            if (accountLink) accountLink.classList.add('active');
+
+            const allPanels = document.querySelectorAll('.dash-tab-panel');
+            allPanels.forEach(p => {
+                p.classList.add('hidden');
+                p.classList.remove('active');
+            });
+            const accountPanel = document.getElementById('panel-account');
+            if (accountPanel) {
+                accountPanel.classList.remove('hidden');
+                accountPanel.classList.add('active');
+            }
+
             initDashboardCharts();
-            showToast('Loaded Interactive Client Dashboard UI Demo.', 'info');
+            showToast('Loaded Interactive Client Dashboard UI.', 'info');
         } else {
             dashboardView.classList.add('hidden');
             publicSiteView.style.display = 'block';
