@@ -48,16 +48,38 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(fetchLiveMarketData, 60000);
 
     // ------------------------------------------------------------------
-    // AUTH SESSION STATE & PROFILE SYNC
+    // AUTH SESSION STATE & PROFILE SYNC (REFRESH PERSISTENCE)
     // ------------------------------------------------------------------
     async function checkUserSession() {
-        if (!supabaseClient) return;
-        const { data: { session } } = await supabaseClient.auth.getSession();
-        updateUserNavState(session?.user || null);
+        // 1. Check local session storage first for instant page refresh restore
+        const savedSession = localStorage.getItem('buffy_active_session');
+        let localUser = null;
+        if (savedSession) {
+            try {
+                localUser = JSON.parse(savedSession);
+            } catch (e) {}
+        }
 
-        supabaseClient.auth.onAuthStateChange((_event, session) => {
-            updateUserNavState(session?.user || null);
-        });
+        if (supabaseClient) {
+            try {
+                const { data: { session } } = await supabaseClient.auth.getSession();
+                if (session?.user) {
+                    updateUserNavState(session.user, true);
+                } else if (localUser && localUser.loggedIn) {
+                    updateUserNavState(localUser, true);
+                }
+            } catch (e) {
+                if (localUser && localUser.loggedIn) updateUserNavState(localUser, true);
+            }
+
+            supabaseClient.auth.onAuthStateChange((_event, session) => {
+                if (session?.user) {
+                    updateUserNavState(session.user, false);
+                }
+            });
+        } else if (localUser && localUser.loggedIn) {
+            updateUserNavState(localUser, true);
+        }
     }
 
     // ------------------------------------------------------------------
@@ -204,7 +226,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     startClock();
 
-    async function updateUserNavState(user) {
+    async function updateUserNavState(user, autoOpenDashboard = false) {
         currentUser = user;
         const guestNav = document.getElementById('guest-nav-group');
         const userNav = document.getElementById('user-nav-group');
@@ -213,22 +235,34 @@ document.addEventListener('DOMContentLoaded', () => {
             if (guestNav) guestNav.style.display = 'none';
             if (userNav) userNav.style.display = 'inline-flex';
 
-            let displayName = user.user_metadata?.full_name || '';
-            let targetPlan = user.user_metadata?.target_plan || 'Growth';
+            let displayName = user.user_metadata?.full_name || user.displayName || user.name || '';
+            let targetPlan = user.user_metadata?.target_plan || user.plan || 'Growth';
             const email = user.email;
 
+            // Save active session to localStorage so browser refreshes NEVER log out
+            localStorage.setItem('buffy_active_session', JSON.stringify({
+                email: email,
+                displayName: displayName,
+                plan: targetPlan,
+                loggedIn: true
+            }));
+
             // For existing/old users, fetch profile from Supabase user_profiles table if metadata is missing
-            if (supabaseClient && (!displayName || displayName === email)) {
+            if (supabaseClient && email && (!displayName || displayName === email)) {
                 try {
                     const { data } = await supabaseClient
                         .from('user_profiles')
-                        .select('full_name, target_plan')
+                        .select('full_name, target_plan, preferred_wallet')
                         .eq('email', email)
                         .maybeSingle();
 
                     if (data) {
                         if (data.full_name) displayName = data.full_name;
                         if (data.target_plan) targetPlan = data.target_plan;
+                        if (data.preferred_wallet) {
+                            const withAddrInput = document.getElementById('with-address-input');
+                            if (withAddrInput) withAddrInput.value = data.preferred_wallet;
+                        }
                     }
                 } catch (e) {
                     console.log('Profile fetch note:', e);
@@ -241,7 +275,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
             setDashboardUserInfo(displayName, targetPlan, email);
             loadUserTransactionsFromSupabase();
+
+            // Automatically stay inside dashboard upon browser refresh if logged in
+            if (autoOpenDashboard) {
+                switchView(true);
+            }
         } else {
+            localStorage.removeItem('buffy_active_session');
             if (guestNav) guestNav.style.display = 'inline-flex';
             if (userNav) userNav.style.display = 'none';
         }
@@ -1203,18 +1243,21 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    const handleLogoutAction = async () => {
+        if (supabaseClient) {
+            try { await supabaseClient.auth.signOut(); } catch (e) {}
+        }
+        localStorage.removeItem('buffy_active_session');
+        currentUser = null;
+        updateUserNavState(null);
+        switchView(false);
+        showToast('Signed out of Buffy.com session.', 'info');
+    };
+
     const btnLogout = document.getElementById('btn-logout');
-    if (btnLogout) {
-        btnLogout.addEventListener('click', async () => {
-            if (supabaseClient) {
-                await supabaseClient.auth.signOut();
-            }
-            currentUser = null;
-            updateUserNavState(null);
-            switchView(false);
-            showToast('You have been logged out of Buffy.com.', 'info');
-        });
-    }
+    const sideLogoutBtn = document.getElementById('side-logout-btn');
+    if (btnLogout) btnLogout.addEventListener('click', handleLogoutAction);
+    if (sideLogoutBtn) sideLogoutBtn.addEventListener('click', handleLogoutAction);
 
     // ------------------------------------------------------------------
     // 10. FAQ ACCORDION & SEARCH FILTER
