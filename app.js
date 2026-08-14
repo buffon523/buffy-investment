@@ -775,6 +775,25 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Toggle Password Visibility (Eye Icon Handler)
+    const togglePassBtns = document.querySelectorAll('.btn-toggle-password');
+    togglePassBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const wrapper = btn.closest('.password-input-wrapper');
+            const input = wrapper ? wrapper.querySelector('input') : null;
+            const icon = btn.querySelector('i');
+            if (input) {
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    if (icon) icon.className = 'fa-solid fa-eye-slash';
+                } else {
+                    input.type = 'password';
+                    if (icon) icon.className = 'fa-solid fa-eye';
+                }
+            }
+        });
+    });
+
     // Switch between login & signup
     const switchToSignup = document.getElementById('switch-to-signup');
     const switchToLogin = document.getElementById('switch-to-login');
