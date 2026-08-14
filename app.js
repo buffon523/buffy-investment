@@ -83,6 +83,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const dashPendingWith = document.getElementById('dash-pending-with');
         const dashTotalWith = document.getElementById('dash-total-with');
 
+        const depAvailableBal = document.getElementById('dep-available-bal-display');
+        const depActiveDepDisp = document.getElementById('dep-active-dep-display');
+        const depUsdtBalDisp = document.getElementById('dep-usdt-bal-display');
+
         const formatUSD = num => `$ ${num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
         if (hdrTotalBal) hdrTotalBal.textContent = formatUSD(userBalanceState.total_balance);
@@ -93,6 +97,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (dashEarnedTotal) dashEarnedTotal.textContent = formatUSD(userBalanceState.earned_total);
         if (dashPendingWith) dashPendingWith.textContent = formatUSD(userBalanceState.pending_withdrawals);
         if (dashTotalWith) dashTotalWith.textContent = formatUSD(userBalanceState.total_withdrawals);
+
+        if (depAvailableBal) depAvailableBal.textContent = formatUSD(userBalanceState.total_balance);
+        if (depActiveDepDisp) depActiveDepDisp.textContent = formatUSD(userBalanceState.active_deposits);
+        if (depUsdtBalDisp) depUsdtBalDisp.textContent = formatUSD(userBalanceState.total_balance > 0 ? userBalanceState.total_balance * 0.6 : 0.00);
     }
 
     async function recalculateUserBalances(userEmail) {
@@ -944,6 +952,57 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Quick Amount Preset Chips & Live Summary Interaction
+    const presetChips = document.querySelectorAll('.btn-preset-chip');
+    const depAmountInput = document.getElementById('dep-amount-input');
+    const depCurrencyInput = document.getElementById('dep-currency-input');
+    const depGatewaySelect = document.getElementById('dep-gateway-select');
+
+    function updateLiveDepositSummary() {
+        const amt = parseFloat(document.getElementById('dep-amount-input')?.value || 0);
+        const curr = document.getElementById('dep-currency-input')?.value || 'USD';
+        const method = document.getElementById('dep-gateway-select')?.value || 'Bank Transfer';
+
+        const sumAmount = document.getElementById('dash-sum-amount');
+        const sumMethod = document.getElementById('dash-sum-method');
+        const sumTime = document.getElementById('dash-sum-time');
+        const sumTotal = document.getElementById('dash-sum-total');
+
+        let symbol = '$ ';
+        if (curr === 'EUR') symbol = '€ ';
+        if (curr === 'GBP') symbol = '£ ';
+        if (curr === 'USDT') symbol = 'USDT ';
+        if (curr === 'BTC') symbol = 'BTC ';
+
+        if (sumAmount) sumAmount.textContent = `${symbol}${amt.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
+        if (sumMethod) sumMethod.textContent = method;
+        if (sumTotal) sumTotal.textContent = `${symbol}${amt.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
+
+        if (sumTime) {
+            if (method.includes('Card') || method.includes('Wallet')) sumTime.textContent = 'Instant (3D Secure)';
+            else if (method.includes('Crypto')) sumTime.textContent = '~15 Mins (Blockchain Confirm)';
+            else sumTime.textContent = '1-2 Business Days';
+        }
+    }
+
+    if (presetChips.length > 0 && depAmountInput) {
+        presetChips.forEach(chip => {
+            chip.addEventListener('click', () => {
+                presetChips.forEach(c => c.classList.remove('active'));
+                chip.classList.add('active');
+                const presetVal = chip.getAttribute('data-preset');
+                if (presetVal) {
+                    depAmountInput.value = presetVal;
+                    updateLiveDepositSummary();
+                }
+            });
+        });
+    }
+
+    if (depAmountInput) depAmountInput.addEventListener('input', updateLiveDepositSummary);
+    if (depCurrencyInput) depCurrencyInput.addEventListener('change', updateLiveDepositSummary);
+    if (depGatewaySelect) depGatewaySelect.addEventListener('change', updateLiveDepositSummary);
+
     // Make Deposit Panel Handler
     const formDashDeposit = document.getElementById('form-dash-deposit');
     if (formDashDeposit) {
@@ -951,22 +1010,40 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             const plan = document.getElementById('dep-plan-select')?.value;
             const amount = parseFloat(document.getElementById('dep-amount-input')?.value || 0);
-            const gateway = document.getElementById('dep-gateway-select')?.value;
+            const currency = document.getElementById('dep-currency-input')?.value || 'USD';
+            const gateway = document.getElementById('dep-gateway-select')?.value || 'Bank Transfer';
             const userEmail = currentUser ? currentUser.email : 'investor@buffyinvestment.com';
+
+            if (amount <= 0) {
+                showToast('Please enter a valid deposit amount greater than 0.', 'warning');
+                return;
+            }
+
+            const btnDepNow = document.getElementById('btn-deposit-now');
+            if (btnDepNow) {
+                btnDepNow.disabled = true;
+                btnDepNow.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Processing Encrypted Deposit...`;
+            }
 
             if (supabaseClient && amount > 0) {
                 try {
                     await supabaseClient.from('user_transactions').insert([
-                        { user_email: userEmail, tx_type: 'Deposit', asset_class: `${plan} (${gateway})`, amount: amount, status: 'Completed' }
+                        { user_email: userEmail, tx_type: 'Deposit', asset_class: `${plan} (${gateway} - ${currency})`, amount: amount, status: 'Completed' }
                     ]);
                 } catch (err) {
                     console.log('Deposit insert note:', err);
                 }
             }
 
-            await recalculateUserBalances(userEmail);
-            loadUserTransactionsFromSupabase();
-            showToast(`Deposit of $${amount.toLocaleString()} processed! Portfolio balance updated.`, 'success');
+            setTimeout(async () => {
+                await recalculateUserBalances(userEmail);
+                loadUserTransactionsFromSupabase();
+                if (btnDepNow) {
+                    btnDepNow.disabled = false;
+                    btnDepNow.innerHTML = `Deposit Now & Credit Account <i class="fa-solid fa-arrow-right"></i>`;
+                }
+                showToast(`🎉 Deposit Request Submitted Successfully! $${amount.toLocaleString('en-US', { minimumFractionDigits: 2 })} credited via ${gateway}. Account balances updated!`, 'success');
+            }, 800);
         });
     }
 
