@@ -97,6 +97,19 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }, true);
 
+    // Auto-open auth modal or dashboard based on URL parameters or hash
+    setTimeout(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const hash = window.location.hash;
+        if (urlParams.get('auth') === 'login' || hash === '#login') {
+            window.openLoginModal();
+        } else if (urlParams.get('auth') === 'signup' || hash === '#signup' || urlParams.get('signup') === 'true') {
+            window.openSignupModal();
+        } else if (urlParams.get('dashboard') === 'true') {
+            switchView(true);
+        }
+    }, 100);
+
     // ------------------------------------------------------------------
     // LIVE MARKET TICKER API (REAL-TIME CRYPTO & ASSETS)
     // ------------------------------------------------------------------
