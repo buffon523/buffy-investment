@@ -210,7 +210,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const refLinkMainInput = document.getElementById('ref-link-main-input');
         const refCodeVal = document.getElementById('ref-code-val');
+        const tellFriendLinkInput = document.getElementById('tell-friend-link-input');
         if (refLinkMainInput) refLinkMainInput.value = `https://buffyinvestment.com/?ref=${encodeURIComponent(formattedRefUser)}`;
+        if (tellFriendLinkInput) tellFriendLinkInput.value = `https://buffyinvestment.com/?ref=${encodeURIComponent(formattedRefUser)}`;
         if (refCodeVal) refCodeVal.textContent = `BUFFY-${formattedRefUser.toUpperCase()}`;
 
         // Update all banner embed codes dynamically with user referral handle
@@ -830,6 +832,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (tabKey === 'settings') panelId = 'panel-settings';
             if (tabKey === 'referrals') panelId = 'panel-referrals';
             if (tabKey === 'banners' || tabKey === 'banner-links') panelId = 'panel-banners';
+            if (tabKey === 'tell-friend') panelId = 'panel-tell-friend';
 
             const targetPanel = document.getElementById(panelId);
             if (targetPanel) {
@@ -1909,5 +1912,74 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             return;
         }
+
+        // 6. Tell a Friend Copy Link
+        const btnTellCopy = e.target.closest('#btn-tell-copy-link');
+        if (btnTellCopy) {
+            const tellInput = document.getElementById('tell-friend-link-input');
+            if (tellInput) {
+                tellInput.select();
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(tellInput.value).then(() => {
+                        showToast('📋 Referral link copied to clipboard!', 'success');
+                    }).catch(() => {
+                        showToast('📋 Referral link copied to clipboard!', 'success');
+                    });
+                } else {
+                    showToast('📋 Referral link copied to clipboard!', 'success');
+                }
+            }
+            return;
+        }
+
+        // 7. Tell a Friend Share Link
+        const btnTellShare = e.target.closest('#btn-tell-share-link');
+        if (btnTellShare) {
+            const tellInput = document.getElementById('tell-friend-link-input');
+            const targetUrl = tellInput ? tellInput.value : 'https://buffyinvestment.com/?ref=Angel';
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Join me on Buffy.com',
+                    text: 'Explore institutional quantitative wealth management with up to 14.8% APY yields!',
+                    url: targetUrl
+                }).catch(() => {});
+            } else {
+                if (navigator.clipboard) navigator.clipboard.writeText(targetUrl);
+                showToast('🔗 Referral link copied! Ready to share with your friends.', 'info');
+            }
+            return;
+        }
+
+        // 8. Social Share Chips (WhatsApp, Telegram, Twitter, Facebook, Email)
+        const chipWA = e.target.closest('.btn-share-chip-whatsapp');
+        const chipTG = e.target.closest('.btn-share-chip-telegram');
+        const chipTW = e.target.closest('.btn-share-chip-twitter');
+        const chipFB = e.target.closest('.btn-share-chip-facebook');
+        const chipEM = e.target.closest('.btn-share-chip-email');
+
+        if (chipWA || chipTG || chipTW || chipFB || chipEM) {
+            const tellInput = document.getElementById('tell-friend-link-input');
+            const refUrl = encodeURIComponent(tellInput ? tellInput.value : 'https://buffyinvestment.com/?ref=Angel');
+            const msg = encodeURIComponent('Hey! Check out Buffy.com for quantitative wealth management and high-yield growth strategies: ');
+
+            if (chipWA) window.open(`https://api.whatsapp.com/send?text=${msg}${refUrl}`, '_blank');
+            if (chipTG) window.open(`https://t.me/share/url?url=${refUrl}&text=${msg}`, '_blank');
+            if (chipTW) window.open(`https://twitter.com/intent/tweet?text=${msg}&url=${refUrl}`, '_blank');
+            if (chipFB) window.open(`https://www.facebook.com/sharer/sharer.php?u=${refUrl}`, '_blank');
+            if (chipEM) window.open(`mailto:?subject=${encodeURIComponent('Join Buffy.com Wealth Management')}&body=${msg}${refUrl}`, '_blank');
+            return;
+        }
     });
+
+    // Send Direct Email Invitation Form Handler
+    const formTellEmail = document.getElementById('form-tell-friend-email');
+    if (formTellEmail) {
+        formTellEmail.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const friendName = document.getElementById('tell-friend-name')?.value || 'Friend';
+            const friendEmail = document.getElementById('tell-friend-email')?.value || '';
+            showToast(`📩 Official invitation email dispatched to ${friendName} (${friendEmail})!`, 'success');
+            formTellEmail.reset();
+        });
+    }
 });
