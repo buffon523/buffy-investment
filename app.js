@@ -1339,8 +1339,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (formSignup) {
         formSignup.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const name = document.getElementById('signup-name')?.value;
-            const email = document.getElementById('signup-email')?.value;
+            const name = document.getElementById('signup-name')?.value || 'Valued Investor';
+            const email = document.getElementById('signup-email')?.value || 'investor@buffy.com';
             const password = document.getElementById('signup-password')?.value;
             const wallet = document.getElementById('signup-wallet')?.value || '';
 
@@ -1366,26 +1366,26 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
+            const displayName = name || (email.includes('@') ? email.split('@')[0] : email);
+            const userObj = { email: email, name: displayName, wallet: wallet, loggedIn: true };
+            localStorage.setItem('buffy_active_session', JSON.stringify(userObj));
+
             // Pre-fill withdrawal destination input with registered wallet
             const withAddrInput = document.getElementById('with-address-input');
             if (withAddrInput && wallet) {
                 withAddrInput.value = wallet;
             }
 
-            // Update Dashboard and Navigation UI with Registered User's Name
-            const displayName = name || email || 'Valued Investor';
-            setDashboardUserInfo(displayName, 'Growth Strategy Plan', email);
-
-            const guestNav = document.getElementById('guest-nav-group');
-            const userNav = document.getElementById('user-nav-group');
-            if (guestNav) guestNav.style.display = 'none';
-            if (userNav) userNav.style.display = 'inline-flex';
+            updateUserNavState(userObj, true);
+            recalculateUserBalances(email);
+            loadAccountHistory(email);
+            initReferralsDashboard(email);
 
             // Dispatch Direct Welcome Email Notification to New User
-            sendWelcomeEmailNotification(email, name, 'Growth Strategy Plan');
+            sendWelcomeEmailNotification(email, displayName, 'Growth Strategy Plan');
 
             closeAllModals();
-            showToast(`Welcome ${displayName}! Portfolio dashboard active. Preferred withdrawal payout wallet saved (${wallet || 'USDT TRC20'}).`, 'success');
+            showToast(`Registration Successful! Welcome ${displayName}. Portfolio active.`, 'success');
             switchView(true);
         });
     }
