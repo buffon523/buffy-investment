@@ -3,6 +3,52 @@
  * Core Application Engine
  */
 
+// Global Auth Modal Invocation Handlers
+window.openLoginModal = function() {
+    const overlay = document.getElementById('modal-overlay');
+    const target = document.getElementById('modal-login');
+    if (overlay && target) {
+        overlay.classList.remove('hidden');
+        overlay.style.setProperty('display', 'flex', 'important');
+        overlay.style.setProperty('pointer-events', 'auto', 'important');
+        document.querySelectorAll('.auth-modal').forEach(m => {
+            m.classList.add('hidden');
+            m.style.setProperty('display', 'none', 'important');
+        });
+        target.classList.remove('hidden');
+        target.style.setProperty('display', 'block', 'important');
+    }
+};
+
+window.openSignupModal = function() {
+    const overlay = document.getElementById('modal-overlay');
+    const target = document.getElementById('modal-signup');
+    if (overlay && target) {
+        overlay.classList.remove('hidden');
+        overlay.style.setProperty('display', 'flex', 'important');
+        overlay.style.setProperty('pointer-events', 'auto', 'important');
+        document.querySelectorAll('.auth-modal').forEach(m => {
+            m.classList.add('hidden');
+            m.style.setProperty('display', 'none', 'important');
+        });
+        target.classList.remove('hidden');
+        target.style.setProperty('display', 'block', 'important');
+    }
+};
+
+window.closeAllModals = function() {
+    const overlay = document.getElementById('modal-overlay');
+    if (overlay) {
+        overlay.classList.add('hidden');
+        overlay.style.setProperty('display', 'none', 'important');
+        overlay.style.setProperty('pointer-events', 'none', 'important');
+    }
+    document.querySelectorAll('.auth-modal').forEach(m => {
+        m.classList.add('hidden');
+        m.style.setProperty('display', 'none', 'important');
+    });
+};
+
 document.addEventListener('DOMContentLoaded', () => {
     // ------------------------------------------------------------------
     // SUPABASE BACKEND INTEGRATION & PRODUCTION ENGINE
