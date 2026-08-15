@@ -205,8 +205,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const timeStr = now.toLocaleTimeString('en-US');
             hdrLastSeen.textContent = `${dateStr} ${timeStr}`;
         }
-        if (hdrIp) hdrIp.textContent = '105.112.194.20';
-        if (dashRefLink) dashRefLink.value = `https://buffyinvestment.com/?ref=${encodeURIComponent(userNameStr.toLowerCase().replace(/\s+/g, ''))}`;
+        const formattedRefUser = userNameStr.toLowerCase().replace(/\s+/g, '');
+        if (dashRefLink) dashRefLink.value = `https://buffyinvestment.com/?ref=${encodeURIComponent(formattedRefUser)}`;
+
+        const refLinkMainInput = document.getElementById('ref-link-main-input');
+        const refCodeVal = document.getElementById('ref-code-val');
+        if (refLinkMainInput) refLinkMainInput.value = `https://buffyinvestment.com/?ref=${encodeURIComponent(formattedRefUser)}`;
+        if (refCodeVal) refCodeVal.textContent = `BUFFY-${formattedRefUser.toUpperCase()}`;
+
         if (navUserName) navUserName.textContent = userNameStr;
         if (profName) profName.value = userNameStr;
         if (settingName) settingName.value = userNameStr;
@@ -721,6 +727,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (tabKey === 'make-deposit') panelId = 'panel-make-deposit';
             if (tabKey === 'withdrawal') panelId = 'panel-withdrawal';
             if (tabKey === 'settings') panelId = 'panel-settings';
+            if (tabKey === 'referrals') panelId = 'panel-referrals';
 
             const targetPanel = document.getElementById(panelId);
             if (targetPanel) {
@@ -1678,6 +1685,41 @@ document.addEventListener('DOMContentLoaded', () => {
         formSetPref.addEventListener('submit', (e) => {
             e.preventDefault();
             showToast('⚙️ Platform preferences saved.', 'success');
+        });
+    }
+
+    // Dedicated Referral Panel Copy & Share Button Handlers
+    const btnCopyMainRef = document.getElementById('btn-copy-main-ref');
+    const btnShareMainRef = document.getElementById('btn-share-main-ref');
+    const refLinkMainInput = document.getElementById('ref-link-main-input');
+
+    if (btnCopyMainRef && refLinkMainInput) {
+        btnCopyMainRef.addEventListener('click', () => {
+            refLinkMainInput.select();
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(refLinkMainInput.value).then(() => {
+                    showToast('📋 Referral link copied to clipboard!', 'success');
+                }).catch(() => {
+                    showToast('📋 Referral link copied to clipboard!', 'success');
+                });
+            } else {
+                showToast('📋 Referral link copied to clipboard!', 'success');
+            }
+        });
+    }
+
+    if (btnShareMainRef && refLinkMainInput) {
+        btnShareMainRef.addEventListener('click', () => {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Invest with Buffy.com',
+                    text: 'Join Buffy.com quantitative wealth management and start growing your capital with 10% bonus yields!',
+                    url: refLinkMainInput.value
+                }).catch(() => {});
+            } else {
+                if (navigator.clipboard) navigator.clipboard.writeText(refLinkMainInput.value);
+                showToast('🔗 Referral link copied! Share it with your network to earn instant commissions.', 'info');
+            }
         });
     }
 });
