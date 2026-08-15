@@ -4,6 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>Buffy.com | Grow Your Wealth. Secure Your Future.</title>
+    <script>
+        (function() {
+            try {
+                var saved = localStorage.getItem('buffy_active_session');
+                var params = new URLSearchParams(window.location.search);
+                if (saved || params.get('dashboard') === 'true') {
+                    document.documentElement.classList.add('is-dashboard-active');
+                }
+            } catch(e) {}
+        })();
+    </script>
     <meta name="description" content="Buffy.com is a modern institutional-grade investment platform designed to help individuals and businesses build lasting wealth through secure, diversified portfolio solutions.">
     <meta name="keywords" content="investment platform, wealth management, portfolio diversification, financial planning, ETFs, stocks, bonds, crypto assets">
     
