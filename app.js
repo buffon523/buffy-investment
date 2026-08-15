@@ -716,21 +716,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 p.classList.remove('active');
             });
 
-            // Map data-tab keys to panel IDs / Modal Hub
-            if (tabKey === 'settings') {
-                const setMUsername = document.getElementById('set-m-username');
-                const hdrUsername = document.getElementById('hdr-username');
-                if (setMUsername && hdrUsername) {
-                    setMUsername.textContent = hdrUsername.textContent;
-                }
-                openAuthModal('modal-settings-hub');
-                return;
-            }
-
             let panelId = `panel-${tabKey}`;
             if (tabKey === 'account') panelId = 'panel-account';
             if (tabKey === 'make-deposit') panelId = 'panel-make-deposit';
             if (tabKey === 'withdrawal') panelId = 'panel-withdrawal';
+            if (tabKey === 'settings') panelId = 'panel-settings';
 
             const targetPanel = document.getElementById(panelId);
             if (targetPanel) {
