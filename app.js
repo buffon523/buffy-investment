@@ -1336,7 +1336,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (formLogin) {
         formLogin.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const email = document.getElementById('login-email')?.value;
+            const email = document.getElementById('login-email')?.value || 'investor@buffy.com';
             const password = document.getElementById('login-password')?.value;
 
             if (supabaseClient && email && password) {
@@ -1352,8 +1352,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
+            const displayName = email.includes('@') ? email.split('@')[0] : email;
+            const userObj = { email: email, name: displayName, loggedIn: true };
+            localStorage.setItem('buffy_active_session', JSON.stringify(userObj));
+
+            updateUserNavState(userObj, true);
+            recalculateUserBalances(email);
+            loadAccountHistory(email);
+            initReferralsDashboard(email);
+
             closeAllModals();
-            showToast(`Welcome back! Accessing your Buffy.com portfolio.`, 'success');
+            showToast(`Welcome back ${displayName}! Accessing your Buffy.com portfolio.`, 'success');
             switchView(true);
         });
     }
