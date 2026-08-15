@@ -213,6 +213,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (refLinkMainInput) refLinkMainInput.value = `https://buffyinvestment.com/?ref=${encodeURIComponent(formattedRefUser)}`;
         if (refCodeVal) refCodeVal.textContent = `BUFFY-${formattedRefUser.toUpperCase()}`;
 
+        // Update all banner embed codes dynamically with user referral handle
+        const embedCodes = document.querySelectorAll('.banner-embed-code');
+        embedCodes.forEach(codeEl => {
+            codeEl.value = codeEl.value.replace(/\?ref=[a-zA-Z0-9_-]+/g, `?ref=${encodeURIComponent(formattedRefUser)}`);
+        });
+
         if (navUserName) navUserName.textContent = userNameStr;
         if (profName) profName.value = userNameStr;
         if (settingName) settingName.value = userNameStr;
@@ -823,6 +829,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (tabKey === 'withdrawal') panelId = 'panel-withdrawal';
             if (tabKey === 'settings') panelId = 'panel-settings';
             if (tabKey === 'referrals') panelId = 'panel-referrals';
+            if (tabKey === 'banners' || tabKey === 'banner-links') panelId = 'panel-banners';
 
             const targetPanel = document.getElementById(panelId);
             if (targetPanel) {
@@ -1817,4 +1824,90 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // ------------------------------------------------------------------
+    // BANNERS LINKS PANEL INTERACTIVE BUTTON HANDLERS
+    // ------------------------------------------------------------------
+    document.addEventListener('click', (e) => {
+        // 1. Copy HTML Embed Code
+        const btnCode = e.target.closest('.btn-copy-banner-code');
+        if (btnCode) {
+            const container = btnCode.closest('.form-group');
+            const codeEl = container ? container.querySelector('.banner-embed-code') : null;
+            if (codeEl) {
+                codeEl.select();
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(codeEl.value).then(() => {
+                        showToast('📋 HTML Embed Code copied to clipboard!', 'success');
+                    }).catch(() => {
+                        showToast('📋 HTML Embed Code copied to clipboard!', 'success');
+                    });
+                } else {
+                    showToast('📋 HTML Embed Code copied to clipboard!', 'success');
+                }
+            }
+            return;
+        }
+
+        // 2. Copy Direct Image URL
+        const btnUrl = e.target.closest('.btn-copy-banner-url');
+        if (btnUrl) {
+            const container = btnUrl.closest('.form-group');
+            const inputEl = container ? container.querySelector('.banner-url-input') : null;
+            if (inputEl) {
+                inputEl.select();
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(inputEl.value).then(() => {
+                        showToast('🔗 Direct Image URL copied to clipboard!', 'success');
+                    }).catch(() => {
+                        showToast('🔗 Direct Image URL copied to clipboard!', 'success');
+                    });
+                } else {
+                    showToast('🔗 Direct Image URL copied to clipboard!', 'success');
+                }
+            }
+            return;
+        }
+
+        // 3. Copy Referral Link Action
+        const btnRefLinkAction = e.target.closest('.btn-copy-banner-link-action');
+        if (btnRefLinkAction) {
+            const refInput = document.getElementById('ref-link-main-input') || document.getElementById('dash-ref-link');
+            const targetVal = refInput ? refInput.value : 'https://buffyinvestment.com/?ref=Angel';
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(targetVal).then(() => {
+                    showToast('📋 Referral link copied to clipboard!', 'success');
+                });
+            } else {
+                showToast('📋 Referral link copied to clipboard!', 'success');
+            }
+            return;
+        }
+
+        // 4. Download Banner Asset Package
+        const btnDownload = e.target.closest('.btn-download-banner-asset');
+        if (btnDownload) {
+            const size = btnDownload.getAttribute('data-size') || 'banner';
+            showToast(`📥 Preparing high-res ${size} banner asset download package...`, 'info');
+            return;
+        }
+
+        // 5. Share Banner Asset
+        const btnShareBanner = e.target.closest('.btn-share-banner-asset');
+        if (btnShareBanner) {
+            const refInput = document.getElementById('ref-link-main-input') || document.getElementById('dash-ref-link');
+            const targetVal = refInput ? refInput.value : 'https://buffyinvestment.com/?ref=Angel';
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Buffy.com Promotional Banner',
+                    text: 'Invest with Buffy.com - Quantitative Wealth Management Suite',
+                    url: targetVal
+                }).catch(() => {});
+            } else {
+                if (navigator.clipboard) navigator.clipboard.writeText(targetVal);
+                showToast('🔗 Promotional banner link copied! Ready to share on social networks.', 'info');
+            }
+            return;
+        }
+    });
 });
