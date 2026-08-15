@@ -62,40 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let dashboardPerformanceChart = null;
     let dashboardDonutChart = null;
 
-    // Root Capture-Phase Auth Modal Controller (Fires instantly on click)
-    window.addEventListener('click', (e) => {
-        const btnLogin = e.target.closest('#btn-open-login') || e.target.closest('.btn-open-login') || e.target.closest('#switch-to-login');
-        if (btnLogin) {
-            e.preventDefault();
-            const overlay = document.getElementById('modal-overlay');
-            const target = document.getElementById('modal-login');
-            if (overlay && target) {
-                overlay.classList.remove('hidden');
-                overlay.style.display = 'flex';
-                overlay.style.pointerEvents = 'auto';
-                document.querySelectorAll('.auth-modal').forEach(m => { m.classList.add('hidden'); m.style.display = 'none'; });
-                target.classList.remove('hidden');
-                target.style.display = 'block';
-            }
-            return;
-        }
 
-        const btnSignup = e.target.closest('#btn-open-signup') || e.target.closest('.btn-open-signup') || e.target.closest('#hero-btn-start') || e.target.closest('#switch-to-signup');
-        if (btnSignup) {
-            e.preventDefault();
-            const overlay = document.getElementById('modal-overlay');
-            const target = document.getElementById('modal-signup');
-            if (overlay && target) {
-                overlay.classList.remove('hidden');
-                overlay.style.display = 'flex';
-                overlay.style.pointerEvents = 'auto';
-                document.querySelectorAll('.auth-modal').forEach(m => { m.classList.add('hidden'); m.style.display = 'none'; });
-                target.classList.remove('hidden');
-                target.style.display = 'block';
-            }
-            return;
-        }
-    }, true);
 
     // Auto-open auth modal or dashboard based on URL parameters or hash
     setTimeout(() => {
