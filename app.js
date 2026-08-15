@@ -1039,6 +1039,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const dashboardView = document.getElementById('dashboard-view');
 
         if (showDashboard) {
+            document.documentElement.classList.add('is-dashboard-active');
             if (publicSiteView) publicSiteView.style.setProperty('display', 'none', 'important');
             if (dashboardView) {
                 dashboardView.classList.remove('hidden');
@@ -1068,6 +1069,7 @@ document.addEventListener('DOMContentLoaded', () => {
             initDashboardCharts();
             showToast('Loaded Interactive Client Dashboard UI.', 'info');
         } else {
+            document.documentElement.classList.remove('is-dashboard-active');
             if (dashboardView) {
                 dashboardView.classList.add('hidden');
                 dashboardView.style.setProperty('display', 'none', 'important');
