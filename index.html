@@ -1525,6 +1525,151 @@
                         </form>
                     </div>
                 </div>
+
+                <!-- SUB-PANEL: REFERRALS (AFFILIATE DASHBOARD & NETWORK) -->
+                <div class="dash-tab-panel hidden" id="panel-referrals">
+                    <div style="margin-bottom: 24px;">
+                        <h2 class="panel-heading" style="margin-bottom: 6px;">Referral Program & Affiliate Network</h2>
+                        <p style="color: #94A3B8; font-size: 0.95rem;">Invite investors to Buffy.com and earn up to 10% instant commission on every funded portfolio tier.</p>
+                    </div>
+
+                    <!-- REFERRAL LINK & CODE HERO CARD -->
+                    <div style="background: linear-gradient(135deg, rgba(11, 19, 43, 0.95), rgba(18, 26, 48, 0.95)); border: 1px solid rgba(244, 196, 48, 0.3); border-radius: var(--radius-md); padding: 24px; margin-bottom: 28px; box-shadow: 0 10px 30px rgba(0,0,0,0.4);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 20px;">
+                            <div>
+                                <span style="color: #F4C430; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 4px;"><i class="fa-solid fa-share-nodes"></i> YOUR UNIQUE REFERRAL LINK</span>
+                                <h3 style="color: #FFF; font-size: 1.25rem; font-weight: 700; margin: 0;">Share Your Link & Earn Instant 10% Yield Bonuses</h3>
+                            </div>
+                            <div style="background: rgba(244,196,48,0.1); border: 1px solid rgba(244,196,48,0.25); padding: 8px 16px; border-radius: 20px; color: #F4C430; font-weight: 700; font-size: 0.85rem;">
+                                Referral Code: <code id="ref-code-val" style="color: #FFF; font-family: monospace; font-size: 0.95rem; margin-left: 4px;">BUFFY-894201</code>
+                            </div>
+                        </div>
+
+                        <div class="form-row-dep" style="align-items: center; margin-bottom: 0;">
+                            <div class="form-group" style="flex-grow: 1; margin-bottom: 0;">
+                                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                                    <input type="text" id="ref-link-main-input" value="https://buffyinvestment.com/?ref=Angel" readonly style="flex-grow: 1; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.15); color: #FFF; font-size: 0.95rem; padding: 12px 16px; border-radius: 10px;">
+                                    <button type="button" class="btn-primary btn-md" id="btn-copy-main-ref"><i class="fa-regular fa-copy"></i> Copy Link</button>
+                                    <button type="button" class="btn-secondary btn-md" id="btn-share-main-ref"><i class="fa-solid fa-share-nodes"></i> Share Link</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- REFERRAL STATISTICS GRID (4 CARDS) -->
+                    <div style="margin-bottom: 12px;"><span class="section-tag">REFERRAL OVERVIEW & METRICS</span></div>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 30px;">
+                        <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 20px; display: flex; align-items: center; gap: 16px;">
+                            <div style="width: 50px; height: 50px; border-radius: 14px; background: rgba(59, 130, 246, 0.15); border: 1px solid #3B82F6; display: flex; align-items: center; justify-content: center; color: #3B82F6; font-size: 1.4rem;">
+                                <i class="fa-solid fa-users"></i>
+                            </div>
+                            <div>
+                                <span style="color: #94A3B8; font-size: 0.78rem; display: block; text-transform: uppercase;">Total Referrals</span>
+                                <strong style="color: #FFF; font-size: 1.4rem; font-weight: 800;" id="ref-stat-total">14 Investors</strong>
+                            </div>
+                        </div>
+
+                        <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 20px; display: flex; align-items: center; gap: 16px;">
+                            <div style="width: 50px; height: 50px; border-radius: 14px; background: rgba(16, 185, 129, 0.15); border: 1px solid #10B981; display: flex; align-items: center; justify-content: center; color: #10B981; font-size: 1.4rem;">
+                                <i class="fa-solid fa-user-check"></i>
+                            </div>
+                            <div>
+                                <span style="color: #94A3B8; font-size: 0.78rem; display: block; text-transform: uppercase;">Active Investors</span>
+                                <strong style="color: #FFF; font-size: 1.4rem; font-weight: 800;" id="ref-stat-active">11 Funded</strong>
+                            </div>
+                        </div>
+
+                        <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 20px; display: flex; align-items: center; gap: 16px;">
+                            <div style="width: 50px; height: 50px; border-radius: 14px; background: rgba(244, 196, 48, 0.15); border: 1px solid #F4C430; display: flex; align-items: center; justify-content: center; color: #F4C430; font-size: 1.4rem;">
+                                <i class="fa-solid fa-coins"></i>
+                            </div>
+                            <div>
+                                <span style="color: #94A3B8; font-size: 0.78rem; display: block; text-transform: uppercase;">Referral Earnings</span>
+                                <strong style="color: #F4C430; font-size: 1.4rem; font-weight: 800;" id="ref-stat-earnings">$ 1,450.00</strong>
+                            </div>
+                        </div>
+
+                        <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 20px; display: flex; align-items: center; gap: 16px;">
+                            <div style="width: 50px; height: 50px; border-radius: 14px; background: rgba(139, 92, 246, 0.15); border: 1px solid #8B5CF6; display: flex; align-items: center; justify-content: center; color: #8B5CF6; font-size: 1.4rem;">
+                                <i class="fa-solid fa-percent"></i>
+                            </div>
+                            <div>
+                                <span style="color: #94A3B8; font-size: 0.78rem; display: block; text-transform: uppercase;">Commission Tier</span>
+                                <strong style="color: #FFF; font-size: 1.4rem; font-weight: 800;">10.00% Instant</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- HOW IT WORKS EXPLANATION SECTION -->
+                    <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 18px; padding: 24px; margin-bottom: 30px;">
+                        <h3 style="color: #FFF; font-size: 1.1rem; margin-top: 0; margin-bottom: 16px;"><i class="fa-solid fa-circle-info gold-icon"></i> How the Buffy.com Referral Program Works</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px;">
+                            <div style="background: rgba(0,0,0,0.2); padding: 18px; border-radius: 14px; border-left: 3px solid #3B82F6;">
+                                <h4 style="color: #FFF; font-size: 0.95rem; margin-top: 0; margin-bottom: 6px;">1. Share Your Referral Link</h4>
+                                <p style="color: #94A3B8; font-size: 0.82rem; margin: 0;">Copy your personal referral URL or code and share it with friends, clients, or on social platforms.</p>
+                            </div>
+                            <div style="background: rgba(0,0,0,0.2); padding: 18px; border-radius: 14px; border-left: 3px solid #F4C430;">
+                                <h4 style="color: #FFF; font-size: 0.95rem; margin-top: 0; margin-bottom: 6px;">2. Friends Register & Invest</h4>
+                                <p style="color: #94A3B8; font-size: 0.82rem; margin: 0;">When an investor registers using your link and funds a strategy, your account tracks the deposit.</p>
+                            </div>
+                            <div style="background: rgba(0,0,0,0.2); padding: 18px; border-radius: 14px; border-left: 3px solid #10B981;">
+                                <h4 style="color: #FFF; font-size: 0.95rem; margin-top: 0; margin-bottom: 6px;">3. Instant 10% Payout</h4>
+                                <p style="color: #94A3B8; font-size: 0.82rem; margin: 0;">Receive an instant 10% bonus credited to your account balance available for withdrawal anytime.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- REFERRED USERS LIST & STATUS TABLE -->
+                    <div style="margin-bottom: 12px;"><span class="section-tag">REFERRED INVESTORS AUDIT LOG</span></div>
+                    <div class="dash-table-card" style="overflow-x: auto; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 18px; padding: 20px;">
+                        <table class="dash-table" id="ref-users-table" style="width: 100%; text-align: left; border-collapse: collapse;">
+                            <thead>
+                                <tr style="border-bottom: 1px solid rgba(255,255,255,0.1); color: #94A3B8; font-size: 0.82rem; text-transform: uppercase;">
+                                    <th style="padding: 12px 14px;">Investor / User</th>
+                                    <th style="padding: 12px 14px;">Date Joined</th>
+                                    <th style="padding: 12px 14px;">Tier / Strategy</th>
+                                    <th style="padding: 12px 14px;">Total Deposit</th>
+                                    <th style="padding: 12px 14px;">Commission Earned</th>
+                                    <th style="padding: 12px 14px;">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+                                    <td style="padding: 14px;"><strong style="color: #FFF;">Marcus Vance</strong><br><span style="color: #94A3B8; font-size: 0.78rem;">m.vance@wealthnet.com</span></td>
+                                    <td style="padding: 14px; color: #CBD5E1;">Aug 12, 2026</td>
+                                    <td style="padding: 14px;"><span class="w-badge usdt">Growth Strategy</span></td>
+                                    <td style="padding: 14px; color: #FFF; font-weight: 700;">$ 5,000.00</td>
+                                    <td style="padding: 14px; color: #10B981; font-weight: 700;">+$ 500.00</td>
+                                    <td style="padding: 14px;"><span class="status-pill success"><i class="fa-solid fa-circle-check"></i> Active Investor</span></td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+                                    <td style="padding: 14px;"><strong style="color: #FFF;">Elena Rostova</strong><br><span style="color: #94A3B8; font-size: 0.78rem;">elena.r@fintechholdings.ch</span></td>
+                                    <td style="padding: 14px; color: #CBD5E1;">Aug 10, 2026</td>
+                                    <td style="padding: 14px;"><span class="w-badge payeer">Institutional Tier</span></td>
+                                    <td style="padding: 14px; color: #FFF; font-weight: 700;">$ 7,500.00</td>
+                                    <td style="padding: 14px; color: #10B981; font-weight: 700;">+$ 750.00</td>
+                                    <td style="padding: 14px;"><span class="status-pill success"><i class="fa-solid fa-circle-check"></i> Active Investor</span></td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+                                    <td style="padding: 14px;"><strong style="color: #FFF;">David Chen</strong><br><span style="color: #94A3B8; font-size: 0.78rem;">david.chen@baycapital.io</span></td>
+                                    <td style="padding: 14px; color: #CBD5E1;">Aug 08, 2026</td>
+                                    <td style="padding: 14px;"><span class="w-badge usdt">Balanced Growth</span></td>
+                                    <td style="padding: 14px; color: #FFF; font-weight: 700;">$ 2,000.00</td>
+                                    <td style="padding: 14px; color: #10B981; font-weight: 700;">+$ 200.00</td>
+                                    <td style="padding: 14px;"><span class="status-pill success"><i class="fa-solid fa-circle-check"></i> Active Investor</span></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 14px;"><strong style="color: #FFF;">Sarah Jenkins</strong><br><span style="color: #94A3B8; font-size: 0.78rem;">s.jenkins@apexadvisors.com</span></td>
+                                    <td style="padding: 14px; color: #CBD5E1;">Aug 14, 2026</td>
+                                    <td style="padding: 14px;"><span class="w-badge btc">Pending Deposit</span></td>
+                                    <td style="padding: 14px; color: #94A3B8;">$ 0.00</td>
+                                    <td style="padding: 14px; color: #94A3B8;">$ 0.00</td>
+                                    <td style="padding: 14px;"><span class="status-pill warning"><i class="fa-solid fa-hourglass-half"></i> Pending Deposit</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </main>
         </div>
 
