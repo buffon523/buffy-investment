@@ -8,6 +8,7 @@
         (function() {
             try {
                 var params = new URLSearchParams(window.location.search);
+                if (params.get('view') === 'public') return;
                 var saved = localStorage.getItem('buffy_active_session');
                 var isDashboardParam = params.get('dashboard') === 'true';
                 var isLoggedIn = false;
@@ -17,7 +18,7 @@
                         isLoggedIn = true;
                     }
                 }
-                if (isLoggedIn || isDashboardParam) {
+                if ((isLoggedIn || isDashboardParam) && params.get('view') !== 'public') {
                     document.documentElement.classList.add('is-dashboard-active');
                 }
             } catch(e) {}
