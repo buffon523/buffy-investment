@@ -1306,13 +1306,15 @@ document.addEventListener('DOMContentLoaded', () => {
     if (switchToSignup) switchToSignup.addEventListener('click', (e) => { e.preventDefault(); openAuthModal('modal-signup'); });
     if (switchToLogin) switchToLogin.addEventListener('click', (e) => { e.preventDefault(); openAuthModal('modal-login'); });
 
-    // Login Form Submit -> Direct Supabase Auth & Dashboard Access (2FA Removed)
-    const formLogin = document.getElementById('form-login');
-    if (formLogin) {
-        formLogin.addEventListener('submit', async (e) => {
+    // Universal Login Form Submissions (Modal & Standalone Page)
+    const loginForms = [document.getElementById('form-login'), document.getElementById('form-standalone-login')].filter(Boolean);
+    loginForms.forEach(form => {
+        form.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const email = document.getElementById('login-email')?.value || 'investor@buffy.com';
-            const password = document.getElementById('login-password')?.value;
+            const emailInput = form.querySelector('input[type="email"]') || document.getElementById('login-email');
+            const passInput = form.querySelector('input[type="password"]') || document.getElementById('login-password');
+            const email = emailInput?.value || 'investor@buffy.com';
+            const password = passInput?.value;
 
             if (supabaseClient && email && password) {
                 try {
@@ -1331,26 +1333,34 @@ document.addEventListener('DOMContentLoaded', () => {
             const userObj = { email: email, name: displayName, loggedIn: true };
             localStorage.setItem('buffy_active_session', JSON.stringify(userObj));
 
-            updateUserNavState(userObj, true);
-            recalculateUserBalances(email);
-            loadAccountHistory(email);
-            initReferralsDashboard(email);
-
-            closeAllModals();
-            showToast(`Welcome back ${displayName}! Accessing your Buffy.com portfolio.`, 'success');
-            switchView(true);
+            if (window.location.pathname.includes('login.html') || window.location.pathname.includes('signup.html')) {
+                window.location.href = 'index.html?dashboard=true';
+            } else {
+                updateUserNavState(userObj, true);
+                recalculateUserBalances(email);
+                loadAccountHistory(email);
+                initReferralsDashboard(email);
+                closeAllModals();
+                showToast(`Welcome back ${displayName}! Accessing your Buffy.com portfolio.`, 'success');
+                switchView(true);
+            }
         });
-    }
+    });
 
-    // Signup Form Submit -> Direct Supabase Auth & Preferred Wallet Save
-    const formSignup = document.getElementById('form-signup');
-    if (formSignup) {
-        formSignup.addEventListener('submit', async (e) => {
+    // Universal Signup Form Submissions (Modal & Standalone Page)
+    const signupForms = [document.getElementById('form-signup'), document.getElementById('form-standalone-signup')].filter(Boolean);
+    signupForms.forEach(form => {
+        form.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const name = document.getElementById('signup-name')?.value || 'Valued Investor';
-            const email = document.getElementById('signup-email')?.value || 'investor@buffy.com';
-            const password = document.getElementById('signup-password')?.value;
-            const wallet = document.getElementById('signup-wallet')?.value || '';
+            const nameInput = form.querySelector('#signup-name') || document.getElementById('signup-name');
+            const emailInput = form.querySelector('#signup-email') || document.getElementById('signup-email');
+            const passInput = form.querySelector('#signup-password') || document.getElementById('signup-password');
+            const walletInput = form.querySelector('#signup-wallet') || document.getElementById('signup-wallet');
+
+            const name = nameInput?.value || 'Valued Investor';
+            const email = emailInput?.value || 'investor@buffy.com';
+            const password = passInput?.value;
+            const wallet = walletInput?.value || '';
 
             if (supabaseClient && email && password) {
                 try {
@@ -1384,18 +1394,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 withAddrInput.value = wallet;
             }
 
-            updateUserNavState(userObj, true);
-            recalculateUserBalances(email);
-            loadAccountHistory(email);
-            initReferralsDashboard(email);
+            if (window.location.pathname.includes('login.html') || window.location.pathname.includes('signup.html')) {
+                window.location.href = 'index.html?dashboard=true';
+            } else {
+                updateUserNavState(userObj, true);
+                recalculateUserBalances(email);
+                loadAccountHistory(email);
+                initReferralsDashboard(email);
 
-            // Dispatch Direct Welcome Email Notification to New User
-            sendWelcomeEmailNotification(email, displayName, 'Growth Strategy Plan');
+                // Dispatch Direct Welcome Email Notification to New User
+                sendWelcomeEmailNotification(email, displayName, 'Growth Strategy Plan');
 
-            closeAllModals();
-            showToast(`Registration Successful! Welcome ${displayName}. Portfolio active.`, 'success');
+                closeAllModals();
+                showToast(`Registration Successful! Welcome ${displayName}. Portfolio active.`, 'success');
+                switchView(true);
+            }
         });
-    }
+    });
 
     // Helper: Send Direct Welcome Email Notification (From: welcome@buffyinvestment.com)
     async function sendWelcomeEmailNotification(email, name, plan) {
