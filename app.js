@@ -1123,19 +1123,38 @@ document.addEventListener('DOMContentLoaded', () => {
     const allModals = document.querySelectorAll('.auth-modal');
 
     function openAuthModal(modalId) {
-        if (!modalOverlay) return;
-        modalOverlay.classList.remove('hidden');
-        allModals.forEach(m => m.classList.add('hidden'));
+        const overlay = document.getElementById('modal-overlay');
+        if (!overlay) return;
+
+        overlay.classList.remove('hidden');
+        overlay.style.display = 'flex';
+        overlay.style.pointerEvents = 'auto';
+
+        const modals = document.querySelectorAll('.auth-modal');
+        modals.forEach(m => {
+            m.classList.add('hidden');
+            m.style.display = 'none';
+        });
 
         const target = document.getElementById(modalId);
         if (target) {
             target.classList.remove('hidden');
+            target.style.display = 'block';
         }
     }
 
     function closeAllModals() {
-        if (modalOverlay) modalOverlay.classList.add('hidden');
-        allModals.forEach(m => m.classList.add('hidden'));
+        const overlay = document.getElementById('modal-overlay');
+        if (overlay) {
+            overlay.classList.add('hidden');
+            overlay.style.display = 'none';
+            overlay.style.pointerEvents = 'none';
+        }
+        const modals = document.querySelectorAll('.auth-modal');
+        modals.forEach(m => {
+            m.classList.add('hidden');
+            m.style.display = 'none';
+        });
     }
 
     // Trigger buttons
