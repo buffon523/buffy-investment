@@ -2175,19 +2175,5 @@ document.addEventListener('DOMContentLoaded', () => {
             formTellEmail.reset();
         });
     }
-
-    // Auto-fit laptop view to fit 100% on phone screens without swiping (Home Page & Dashboard)
-    function autoFitPageToMobileScreen() {
-        const screenW = window.innerWidth;
-        if (screenW < 1200) {
-            const scale = screenW / 1200;
-            document.body.style.zoom = scale;
-        } else {
-            document.body.style.zoom = '1';
-        }
-    }
-
-    window.addEventListener('resize', autoFitPageToMobileScreen);
-    window.addEventListener('orientationchange', autoFitPageToMobileScreen);
-    autoFitPageToMobileScreen();
+});
 });
