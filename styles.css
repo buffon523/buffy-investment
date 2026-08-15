@@ -2748,7 +2748,19 @@ input[type="range"] {
    LAPTOP DESK-MATCHING AUTO-FIT ZOOM ON PHONES & MOBILE DEVICES (HOME PAGE & DASHBOARD)
    Enforces that mobile phone users see the ENTIRE laptop desktop home page & dashboard 
    fitted 100% on their screen without horizontal swiping, while allowing pinch-to-zoom.
-   ========================================================================== */
+/* SYNCHRONOUS DASHBOARD VIEW ENFORCER */
+html.is-dashboard-active #public-site-view {
+    display: none !important;
+}
+html.is-dashboard-active #dashboard-view {
+    display: block !important;
+}
+html.is-dashboard-active #guest-nav-group {
+    display: none !important;
+}
+html.is-dashboard-active #user-nav-group {
+    display: inline-flex !important;
+}
 
 #dashboard-view {
     overflow-x: hidden !important;
