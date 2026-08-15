@@ -218,7 +218,102 @@ document.addEventListener('DOMContentLoaded', () => {
         if (settingName) settingName.value = userNameStr;
         if (settingEmail && email) settingEmail.value = email;
 
-        recalculateUserBalances(email || (currentUser ? currentUser.email : null));
+        const activeUserEmail = email || (currentUser ? currentUser.email : null);
+        recalculateUserBalances(activeUserEmail);
+        loadAccountReferrals(activeUserEmail);
+    }
+
+    // ------------------------------------------------------------------
+    // ACCOUNT-SPECIFIC REFERRAL ENGINE & TRACKING
+    // ------------------------------------------------------------------
+    async function loadAccountReferrals(userEmail) {
+        const targetEmail = userEmail || (currentUser ? currentUser.email : null);
+        let referralsList = [];
+
+        // 1. Check local session storage for user-specific referral history
+        if (targetEmail) {
+            const localKey = `buffy_user_referrals_${targetEmail.toLowerCase()}`;
+            const saved = localStorage.getItem(localKey);
+            if (saved) {
+                try {
+                    referralsList = JSON.parse(saved);
+                } catch (e) {}
+            }
+        }
+
+        // 2. Fetch from Supabase user_referrals table if available
+        if (supabaseClient && targetEmail) {
+            try {
+                const { data } = await supabaseClient
+                    .from('user_referrals')
+                    .select('*')
+                    .eq('referrer_email', targetEmail)
+                    .order('created_at', { ascending: false });
+
+                if (data && data.length > 0) {
+                    referralsList = data;
+                }
+            } catch (err) {
+                console.log('Referrals fetch note:', err);
+            }
+        }
+
+        // If no referrals recorded for new user, keep list empty [].
+        // For default demo account (investor@buffyinvestment.com or Angel), provide initial sample referrals if none exist.
+        if ((!targetEmail || targetEmail === 'investor@buffyinvestment.com') && referralsList.length === 0) {
+            referralsList = [
+                { full_name: 'Marcus Vance', email: 'm.vance@wealthnet.com', created_at: new Date(Date.now() - 86400000 * 2).toISOString(), tier: 'Growth Strategy', deposit: 5000.00, commission: 500.00, status: 'Active Investor' },
+                { full_name: 'Elena Rostova', email: 'elena.r@fintechholdings.ch', created_at: new Date(Date.now() - 86400000 * 4).toISOString(), tier: 'Institutional Tier', deposit: 7500.00, commission: 750.00, status: 'Active Investor' },
+                { full_name: 'David Chen', email: 'david.chen@baycapital.io', created_at: new Date(Date.now() - 86400000 * 6).toISOString(), tier: 'Balanced Growth', deposit: 2000.00, commission: 200.00, status: 'Active Investor' },
+                { full_name: 'Sarah Jenkins', email: 's.jenkins@apexadvisors.com', created_at: new Date(Date.now() - 86400000 * 1).toISOString(), tier: 'Pending Deposit', deposit: 0.00, commission: 0.00, status: 'Pending Deposit' }
+            ];
+        }
+
+        renderAccountReferralsUI(referralsList);
+    }
+
+    function renderAccountReferralsUI(referrals) {
+        const refStatTotal = document.getElementById('ref-stat-total');
+        const refStatActive = document.getElementById('ref-stat-active');
+        const refStatEarnings = document.getElementById('ref-stat-earnings');
+        const refTableBody = document.querySelector('#ref-users-table tbody');
+
+        const totalCount = referrals.length;
+        const activeCount = referrals.filter(r => (r.status || '').toLowerCase().includes('active')).length;
+        let totalEarnings = 0;
+        referrals.forEach(r => {
+            totalEarnings += parseFloat(r.commission || 0);
+        });
+
+        if (refStatTotal) refStatTotal.textContent = `${totalCount} ${totalCount === 1 ? 'Investor' : 'Investors'}`;
+        if (refStatActive) refStatActive.textContent = `${activeCount} Funded`;
+        if (refStatEarnings) refStatEarnings.textContent = `$ ${totalEarnings.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+        if (refTableBody) {
+            refTableBody.innerHTML = '';
+            if (referrals.length === 0) {
+                refTableBody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #94A3B8; padding: 25px;">No investors referred yet. Share your unique link above to start earning 10% instant commissions!</td></tr>`;
+                return;
+            }
+
+            referrals.forEach(ref => {
+                const dateObj = ref.created_at ? new Date(ref.created_at) : new Date();
+                const dateStr = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                const tr = document.createElement('tr');
+                const isActive = (ref.status || '').toLowerCase().includes('active');
+
+                tr.style.borderBottom = '1px solid rgba(255,255,255,0.04)';
+                tr.innerHTML = `
+                    <td style="padding: 14px;"><strong style="color: #FFF;">${ref.full_name || 'Anonymous Investor'}</strong><br><span style="color: #94A3B8; font-size: 0.78rem;">${ref.email || 'investor@buffy.com'}</span></td>
+                    <td style="padding: 14px; color: #CBD5E1;">${dateStr}</td>
+                    <td style="padding: 14px;"><span class="w-badge ${isActive ? 'usdt' : 'btc'}">${ref.tier || 'Standard Tier'}</span></td>
+                    <td style="padding: 14px; color: ${isActive ? '#FFF' : '#94A3B8'}; font-weight: 700;">$ ${parseFloat(ref.deposit || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                    <td style="padding: 14px; color: ${isActive ? '#10B981' : '#94A3B8'}; font-weight: 700;">${isActive ? '+' : ''}$ ${parseFloat(ref.commission || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                    <td style="padding: 14px;"><span class="status-pill ${isActive ? 'success' : 'warning'}"><i class="fa-solid ${isActive ? 'fa-circle-check' : 'fa-hourglass-half'}"></i> ${ref.status || 'Pending Deposit'}</span></td>
+                `;
+                refTableBody.appendChild(tr);
+            });
+        }
     }
 
     // Live Server Clock Widget
