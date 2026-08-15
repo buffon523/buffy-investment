@@ -87,16 +87,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-    // Auto-open auth modal or dashboard based on URL parameters or hash
+    // Auto-open auth modal or dashboard based on URL parameters, hash, or active session
     setTimeout(() => {
         const urlParams = new URLSearchParams(window.location.search);
         const hash = window.location.hash;
-        if (urlParams.get('auth') === 'login' || hash === '#login') {
+        const savedSession = localStorage.getItem('buffy_active_session');
+
+        if (urlParams.get('dashboard') === 'true' || savedSession) {
+            let localUser = null;
+            if (savedSession) {
+                try { localUser = JSON.parse(savedSession); } catch(e){}
+            }
+            if (localUser && localUser.loggedIn) {
+                updateUserNavState(localUser, true);
+            } else if (urlParams.get('dashboard') === 'true') {
+                switchView(true);
+            }
+        } else if (urlParams.get('auth') === 'login' || hash === '#login') {
             window.openLoginModal();
         } else if (urlParams.get('auth') === 'signup' || hash === '#signup' || urlParams.get('signup') === 'true') {
             window.openSignupModal();
-        } else if (urlParams.get('dashboard') === 'true') {
-            switchView(true);
         }
     }, 100);
 
@@ -1046,9 +1056,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnCloseDashboard = document.getElementById('btn-close-dashboard');
 
     function switchView(showDashboard) {
+        const publicSiteView = document.getElementById('public-site-view');
+        const dashboardView = document.getElementById('dashboard-view');
+
         if (showDashboard) {
-            publicSiteView.style.display = 'none';
-            dashboardView.classList.remove('hidden');
+            if (publicSiteView) publicSiteView.style.setProperty('display', 'none', 'important');
+            if (dashboardView) {
+                dashboardView.classList.remove('hidden');
+                dashboardView.style.setProperty('display', 'block', 'important');
+            }
             window.scrollTo(0, 0);
 
             // Ensure MY ACCOUNT is active and MAKE DEPOSIT is strictly hidden
@@ -1061,18 +1077,23 @@ document.addEventListener('DOMContentLoaded', () => {
             allPanels.forEach(p => {
                 p.classList.add('hidden');
                 p.classList.remove('active');
+                p.style.setProperty('display', 'none', 'important');
             });
             const accountPanel = document.getElementById('panel-account');
             if (accountPanel) {
                 accountPanel.classList.remove('hidden');
                 accountPanel.classList.add('active');
+                accountPanel.style.setProperty('display', 'block', 'important');
             }
 
             initDashboardCharts();
             showToast('Loaded Interactive Client Dashboard UI.', 'info');
         } else {
-            dashboardView.classList.add('hidden');
-            publicSiteView.style.display = 'block';
+            if (dashboardView) {
+                dashboardView.classList.add('hidden');
+                dashboardView.style.setProperty('display', 'none', 'important');
+            }
+            if (publicSiteView) publicSiteView.style.setProperty('display', 'block', 'important');
             window.scrollTo(0, 0);
         }
     }
