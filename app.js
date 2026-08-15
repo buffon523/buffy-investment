@@ -92,27 +92,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // Auto-open auth modal or dashboard based on URL parameters, hash, or active session
-    setTimeout(() => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const hash = window.location.hash;
-        const savedSession = localStorage.getItem('buffy_active_session');
+    const urlParams = new URLSearchParams(window.location.search);
+    const hash = window.location.hash;
+    const savedSession = localStorage.getItem('buffy_active_session');
 
-        if (urlParams.get('dashboard') === 'true' || savedSession) {
-            let localUser = null;
-            if (savedSession) {
-                try { localUser = JSON.parse(savedSession); } catch(e){}
-            }
-            if (localUser && localUser.loggedIn) {
-                updateUserNavState(localUser, true);
-            } else if (urlParams.get('dashboard') === 'true') {
-                switchView(true);
-            }
-        } else if (urlParams.get('auth') === 'login' || hash === '#login') {
-            window.openLoginModal();
-        } else if (urlParams.get('auth') === 'signup' || hash === '#signup' || urlParams.get('signup') === 'true') {
-            window.openSignupModal();
+    if (urlParams.get('dashboard') === 'true' || savedSession) {
+        let localUser = null;
+        if (savedSession) {
+            try { localUser = JSON.parse(savedSession); } catch(e){}
         }
-    }, 100);
+        if (localUser && localUser.loggedIn) {
+            updateUserNavState(localUser, true);
+        } else {
+            switchView(true);
+        }
+    } else if (urlParams.get('auth') === 'login' || hash === '#login') {
+        window.openLoginModal();
+    } else if (urlParams.get('auth') === 'signup' || hash === '#signup' || urlParams.get('signup') === 'true') {
+        window.openSignupModal();
+    }
 
     // ------------------------------------------------------------------
     // LIVE MARKET TICKER API (REAL-TIME CRYPTO & ASSETS)
