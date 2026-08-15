@@ -2541,37 +2541,45 @@ input[type="range"] {
         display: none;
     }
 
-    /* Universal Mobile Auth Modal Expansion */
+    /* Universal Desktop Matching Auth Modal Scale */
     .modal-overlay {
-        padding: 10px;
+        padding: 20px !important;
+        position: fixed !important;
+        inset: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        z-index: 10000 !important;
     }
 
     .auth-modal {
-        width: 95vw !important;
-        max-width: 100% !important;
-        padding: 24px 16px !important;
-        border-radius: 20px !important;
-        margin: auto !important;
+        width: 520px !important;
+        max-width: 95% !important;
+        padding: 36px 32px !important;
+        border-radius: 24px !important;
+        box-shadow: 0 25px 60px rgba(0,0,0,0.9) !important;
         box-sizing: border-box !important;
     }
 
     .auth-modal.modal-large {
-        width: 98vw !important;
-        max-width: 100% !important;
-        padding: 20px 14px !important;
+        width: 650px !important;
+        max-width: 96% !important;
+        padding: 36px 32px !important;
     }
 
     .auth-modal .form-group input,
     .auth-modal .form-group select {
-        font-size: 16px !important; /* Prevents auto-zoom on iOS Safari */
-        padding: 14px 14px !important;
+        font-size: 0.95rem !important;
+        padding: 14px 16px !important;
         width: 100% !important;
         box-sizing: border-box !important;
     }
 
     .auth-modal .btn-primary {
         padding: 14px 16px !important;
-        font-size: 0.92rem !important;
+        font-size: 0.95rem !important;
     }
 
     /* Mobile Sidebar & Dashboard Layout */
