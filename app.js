@@ -17,6 +17,8 @@ window.openLoginModal = function() {
         });
         target.classList.remove('hidden');
         target.style.setProperty('display', 'block', 'important');
+    } else {
+        window.location.href = 'login.html';
     }
 };
 
@@ -33,6 +35,8 @@ window.openSignupModal = function() {
         });
         target.classList.remove('hidden');
         target.style.setProperty('display', 'block', 'important');
+    } else {
+        window.location.href = 'signup.html';
     }
 };
 
