@@ -1643,6 +1643,35 @@
             </div>
         </div>
 
+        <!-- Registered Member Instant Account Access Modal -->
+        <div class="auth-modal hidden" id="modal-member-access">
+            <button class="modal-close" onclick="closeAllModals()"><i class="fa-solid fa-xmark"></i></button>
+            <div class="auth-header">
+                <div class="logo-icon small"><i class="fa-solid fa-user-check"></i></div>
+                <h3>Registered Member Access</h3>
+                <p>Select or enter your registered account email</p>
+            </div>
+            <form id="form-member-access">
+                <div class="form-group">
+                    <label for="member-select-email">Select Registered Member Profile</label>
+                    <select id="member-select-email" onchange="syncMemberEmailInput(this)">
+                        <option value="angel@buffy.com">Angel Vance (angel@buffy.com)</option>
+                        <option value="buffon@buffy.com">Buffon Portfolio (buffon@buffy.com)</option>
+                        <option value="investor@buffy.com">Valued Investor (investor@buffy.com)</option>
+                        <option value="custom">Enter Other Registered Email...</option>
+                    </select>
+                </div>
+                <div class="form-group" id="group-custom-member-email" style="display: none;">
+                    <label for="member-custom-email">Registered Email Address</label>
+                    <input type="email" id="member-custom-email" placeholder="your-email@example.com">
+                </div>
+                <button type="submit" class="btn-primary btn-block"><i class="fa-solid fa-right-to-bracket"></i> Access My Account &rarr;</button>
+            </form>
+            <div class="auth-footer">
+                Need a new account? <a href="signup.html" class="gold-link">Register Here</a>
+            </div>
+        </div>
+
         <!-- Signup Modal -->
         <div class="auth-modal hidden" id="modal-signup">
             <button class="modal-close" id="close-signup-btn"><i class="fa-solid fa-xmark"></i></button>
