@@ -1926,7 +1926,88 @@
                             <button class="btn-primary btn-sm btn-copy-banner-link-action"><i class="fa-solid fa-copy"></i> Copy Referral Link</button>
                             <button class="btn-secondary btn-sm btn-download-banner-asset" data-size="1200x630"><i class="fa-solid fa-download"></i> Download Asset</button>
                             <button class="btn-secondary btn-sm btn-share-banner-asset" data-size="1200x630"><i class="fa-solid fa-share-nodes"></i> Share Banner</button>
+                    </div>
+                </div>
+
+                <!-- SUB-PANEL: TELL A FRIEND (REFERRAL INVITE SUITE) -->
+                <div class="dash-tab-panel hidden" id="panel-tell-friend">
+                    <div style="margin-bottom: 24px;">
+                        <h2 class="panel-heading" style="margin-bottom: 6px;">Tell a Friend & Share Buffy.com</h2>
+                        <p style="color: #94A3B8; font-size: 0.95rem;">Invite friends, colleagues, and family to join Buffy.com and earn up to 10% instant commission on every funded investment strategy.</p>
+                    </div>
+
+                    <!-- HERO ENCOURAGING INVITATION BANNER -->
+                    <div style="background: linear-gradient(135deg, rgba(11, 19, 43, 0.95), rgba(18, 26, 48, 0.95)); border: 1px solid rgba(244, 196, 48, 0.3); border-radius: var(--radius-md); padding: 28px; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.4);">
+                        <div style="display: flex; align-items: flex-start; gap: 20px; flex-wrap: wrap;">
+                            <div style="width: 60px; height: 60px; border-radius: 16px; background: rgba(244, 196, 48, 0.15); border: 1px solid #F4C430; display: flex; align-items: center; justify-content: center; color: #F4C430; font-size: 1.8rem; flex-shrink: 0;">
+                                <i class="fa-solid fa-users-viewfinder"></i>
+                            </div>
+                            <div style="flex-grow: 1; max-width: 750px;">
+                                <span style="color: #F4C430; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 6px;"><i class="fa-solid fa-gift"></i> SHARE THE POWER OF QUANTITATIVE WEALTH</span>
+                                <h3 style="color: #FFF; font-size: 1.35rem; font-weight: 700; margin: 0 0 10px 0;">Help Your Friends Grow Capital & Earn 10% Instant Bonuses!</h3>
+                                <p style="color: #CBD5E1; font-size: 0.92rem; line-height: 1.6; margin: 0 0 16px 0;">
+                                    When you invite your network to Buffy.com, you give them access to SEC-compliant quantitative wealth management, institutional risk protocols, and yields up to 14.8% APY. For every friend who registers and funds a strategy, your account receives an <strong>instant 10% cash commission</strong> credited directly to your withdrawal balance!
+                                </p>
+
+                                <div style="display: flex; gap: 20px; flex-wrap: wrap; font-size: 0.85rem; color: #94A3B8;">
+                                    <span><i class="fa-solid fa-circle-check" style="color: #10B981;"></i> <strong>10% Instant Cash Bonus</strong></span>
+                                    <span><i class="fa-solid fa-circle-check" style="color: #10B981;"></i> <strong>Unlimited Friend Invitations</strong></span>
+                                    <span><i class="fa-solid fa-circle-check" style="color: #10B981;"></i> <strong>0% Fee Instant Payouts</strong></span>
+                                </div>
+                            </div>
                         </div>
+                    </div>
+
+                    <!-- REFERRAL LINK & CODE CARD -->
+                    <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); border-radius: 18px; padding: 24px; margin-bottom: 30px;">
+                        <h3 style="color: #FFF; font-size: 1.1rem; font-weight: 700; margin: 0 0 14px 0;"><i class="fa-solid fa-link gold-icon"></i> Your Personal Referral Link</h3>
+                        <p style="color: #94A3B8; font-size: 0.85rem; margin: 0 0 18px 0;">Copy your unique link or click share to send it directly to your friends across social networks and messaging apps.</p>
+
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                                <input type="text" id="tell-friend-link-input" value="https://buffyinvestment.com/?ref=Angel" readonly style="flex-grow: 1; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.15); color: #FFF; font-size: 0.98rem; padding: 12px 16px; border-radius: 10px; font-family: monospace;">
+                                <button type="button" class="btn-primary btn-md" id="btn-tell-copy-link"><i class="fa-regular fa-copy"></i> Copy Link</button>
+                                <button type="button" class="btn-secondary btn-md" id="btn-tell-share-link"><i class="fa-solid fa-share-nodes"></i> Share Link</button>
+                            </div>
+                        </div>
+
+                        <!-- QUICK ONE-CLICK SOCIAL SHARE CHIPS -->
+                        <div style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 18px;">
+                            <label style="font-size: 0.82rem; color: #94A3B8; display: block; margin-bottom: 10px;">Quick One-Click Social Share:</label>
+                            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                                <button class="btn-preset-chip btn-share-chip-whatsapp" style="background: rgba(37,211,102,0.15); border-color: #25D366; color: #25D366;"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button>
+                                <button class="btn-preset-chip btn-share-chip-telegram" style="background: rgba(0,136,204,0.15); border-color: #0088cc; color: #0088cc;"><i class="fa-brands fa-telegram"></i> Telegram</button>
+                                <button class="btn-preset-chip btn-share-chip-twitter" style="background: rgba(29,161,242,0.15); border-color: #1DA1F2; color: #1DA1F2;"><i class="fa-brands fa-x-twitter"></i> X (Twitter)</button>
+                                <button class="btn-preset-chip btn-share-chip-facebook" style="background: rgba(24,119,242,0.15); border-color: #1877F2; color: #1877F2;"><i class="fa-brands fa-facebook"></i> Facebook</button>
+                                <button class="btn-preset-chip btn-share-chip-email" style="background: rgba(244,196,48,0.15); border-color: #F4C430; color: #F4C430;"><i class="fa-solid fa-envelope"></i> Email Invite</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- DIRECT EMAIL INVITATION FORM -->
+                    <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); border-radius: 18px; padding: 24px; max-width: 680px;">
+                        <h3 style="color: #FFF; font-size: 1.1rem; font-weight: 700; margin: 0 0 6px 0;"><i class="fa-solid fa-paper-plane gold-icon"></i> Send Direct Email Invitation</h3>
+                        <p style="color: #94A3B8; font-size: 0.85rem; margin: 0 0 20px 0;">Enter your friend's details below to send an automated official email invitation from welcome@buffyinvestment.com with your referral link attached.</p>
+
+                        <form id="form-tell-friend-email">
+                            <div class="form-row-dep">
+                                <div class="form-group">
+                                    <label for="tell-friend-name">Friend's Full Name</label>
+                                    <input type="text" id="tell-friend-name" placeholder="e.g. Alex Morgan" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="tell-friend-email">Friend's Email Address</label>
+                                    <input type="email" id="tell-friend-email" placeholder="alex@example.com" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="tell-friend-message">Personal Invitation Note</label>
+                                <textarea id="tell-friend-message" rows="3" required style="background: rgba(0,0,0,0.4); color: #FFF; font-size: 0.9rem; border-radius: 10px; padding: 12px; line-height: 1.5;">Hey! I've been using Buffy.com for quantitative wealth management and capital execution. Thought you'd be interested in exploring their high-yield growth strategies. Check it out using my personal invitation link!</textarea>
+                            </div>
+
+                            <button type="submit" class="btn-primary btn-block"><i class="fa-solid fa-paper-plane"></i> Send Official Email Invitation &rarr;</button>
+                        </form>
                     </div>
                 </div>
             </main>
