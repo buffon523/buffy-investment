@@ -1155,6 +1155,30 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // Universal Delegated Auth Modal Click Controller
+    document.addEventListener('click', (e) => {
+        const btnLogin = e.target.closest('#btn-open-login') || e.target.closest('.btn-open-login') || e.target.closest('#switch-to-login');
+        if (btnLogin) {
+            e.preventDefault();
+            openAuthModal('modal-login');
+            return;
+        }
+
+        const btnSignup = e.target.closest('#btn-open-signup') || e.target.closest('.btn-open-signup') || e.target.closest('#hero-btn-start') || e.target.closest('#switch-to-signup');
+        if (btnSignup) {
+            e.preventDefault();
+            openAuthModal('modal-signup');
+            return;
+        }
+
+        const btnCloseModal = e.target.closest('.modal-close');
+        if (btnCloseModal) {
+            e.preventDefault();
+            closeAllModals();
+            return;
+        }
+    });
+
     // Close buttons & overlay click
     document.querySelectorAll('.modal-close').forEach(btn => {
         btn.addEventListener('click', closeAllModals);
