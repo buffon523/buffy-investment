@@ -2745,15 +2745,6 @@ input[type="range"] {
    fitted 100% on their screen without horizontal swiping, while allowing pinch-to-zoom.
    ========================================================================== */
 
-@media (max-width: 1199px) {
-    html, body {
-        width: 1200px !important;
-        zoom: calc(100vw / 1200) !important;
-        transform-origin: top left !important;
-        overflow-x: hidden !important;
-    }
-}
-
 #dashboard-view {
     overflow-x: hidden !important;
     width: 100% !important;
