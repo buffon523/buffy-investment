@@ -7,9 +7,17 @@
     <script>
         (function() {
             try {
-                var saved = localStorage.getItem('buffy_active_session');
                 var params = new URLSearchParams(window.location.search);
-                if (saved || params.get('dashboard') === 'true') {
+                var saved = localStorage.getItem('buffy_active_session');
+                var isDashboardParam = params.get('dashboard') === 'true';
+                var isLoggedIn = false;
+                if (saved) {
+                    var parsed = JSON.parse(saved);
+                    if (parsed && parsed.loggedIn) {
+                        isLoggedIn = true;
+                    }
+                }
+                if (isLoggedIn || isDashboardParam) {
                     document.documentElement.classList.add('is-dashboard-active');
                 }
             } catch(e) {}
