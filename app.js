@@ -2176,20 +2176,18 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Auto-fit laptop dashboard view to fit 100% on phone screens without swiping
-    function fitDashboardToMobileScreen() {
-        const dashView = document.getElementById('dashboard-view');
-        if (!dashView) return;
+    // Auto-fit laptop view to fit 100% on phone screens without swiping (Home Page & Dashboard)
+    function autoFitPageToMobileScreen() {
         const screenW = window.innerWidth;
-        if (screenW < 1100) {
-            const scale = screenW / 1100;
-            dashView.style.zoom = scale;
+        if (screenW < 1200) {
+            const scale = screenW / 1200;
+            document.body.style.zoom = scale;
         } else {
-            dashView.style.zoom = '1';
+            document.body.style.zoom = '1';
         }
     }
 
-    window.addEventListener('resize', fitDashboardToMobileScreen);
-    window.addEventListener('orientationchange', fitDashboardToMobileScreen);
-    fitDashboardToMobileScreen();
+    window.addEventListener('resize', autoFitPageToMobileScreen);
+    window.addEventListener('orientationchange', autoFitPageToMobileScreen);
+    autoFitPageToMobileScreen();
 });
