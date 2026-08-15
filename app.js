@@ -1100,6 +1100,7 @@ document.addEventListener('DOMContentLoaded', () => {
             allPanels.forEach(p => {
                 p.classList.add('hidden');
                 p.classList.remove('active');
+                p.style.setProperty('display', 'none', 'important');
             });
 
             let panelId = `panel-${tabKey}`;
@@ -1116,12 +1117,14 @@ document.addEventListener('DOMContentLoaded', () => {
             if (targetPanel) {
                 targetPanel.classList.remove('hidden');
                 targetPanel.classList.add('active');
+                targetPanel.style.setProperty('display', 'block', 'important');
             } else {
                 // Default fallback to panel-account if panel is coming soon
                 const accountPanel = document.getElementById('panel-account');
                 if (accountPanel) {
                     accountPanel.classList.remove('hidden');
                     accountPanel.classList.add('active');
+                    accountPanel.style.setProperty('display', 'block', 'important');
                 }
                 showToast(`Section "${tabKey.toUpperCase().replace('-', ' ')}" loaded.`, 'info');
             }
@@ -2023,9 +2026,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (box.id === `set-box-${targetTab}`) {
                     box.classList.remove('hidden');
                     box.classList.add('active');
+                    box.style.setProperty('display', 'block', 'important');
                 } else {
                     box.classList.add('hidden');
                     box.classList.remove('active');
+                    box.style.setProperty('display', 'none', 'important');
                 }
             });
         });
