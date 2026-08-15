@@ -229,6 +229,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const activeUserEmail = email || (currentUser ? currentUser.email : null);
         recalculateUserBalances(activeUserEmail);
         loadAccountReferrals(activeUserEmail);
+        loadAccountHistory(activeUserEmail);
     }
 
     // ------------------------------------------------------------------
@@ -323,6 +324,193 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
     }
+
+    // ------------------------------------------------------------------
+    // ACCOUNT-SPECIFIC REAL-TIME TRANSACTION HISTORY & LEDGER ENGINE
+    // ------------------------------------------------------------------
+    let currentHistoryFilter = 'all';
+    let currentHistorySearch = '';
+    let currentTxList = [];
+
+    async function loadAccountHistory(userEmail, filterType = currentHistoryFilter, searchQuery = currentHistorySearch) {
+        const targetEmail = userEmail || (currentUser ? currentUser.email : null);
+        currentHistoryFilter = filterType;
+        currentHistorySearch = searchQuery;
+        let txList = [];
+
+        // 1. Fetch from localStorage for active user
+        if (targetEmail) {
+            const localKey = `buffy_user_txs_${targetEmail.toLowerCase()}`;
+            const saved = localStorage.getItem(localKey);
+            if (saved) {
+                try {
+                    txList = JSON.parse(saved);
+                } catch (e) {}
+            }
+        }
+
+        // 2. Fetch from Supabase user_transactions table if available
+        if (supabaseClient && targetEmail) {
+            try {
+                const { data } = await supabaseClient
+                    .from('user_transactions')
+                    .select('*')
+                    .eq('user_email', targetEmail)
+                    .order('created_at', { ascending: false });
+
+                if (data && data.length > 0) {
+                    txList = data;
+                }
+            } catch (err) {
+                console.log('Transactions fetch note:', err);
+            }
+        }
+
+        // Default seed data for main demo investor account (investor@buffyinvestment.com or Angel)
+        if ((!targetEmail || targetEmail === 'investor@buffyinvestment.com') && txList.length === 0) {
+            txList = [
+                { tx_id: '#TXN-894201', type: 'Deposit', method: 'USDT TRC20 Custody', amount: 14499.00, created_at: new Date(Date.now() - 86400000 * 2).toISOString(), status: 'Completed / Verified' },
+                { tx_id: '#TXN-894198', type: 'Referral Bonus', method: 'Affiliate Payout (Marcus Vance)', amount: 500.00, created_at: new Date(Date.now() - 86400000 * 4).toISOString(), status: 'Completed / Credited' },
+                { tx_id: '#TXN-894195', type: 'Referral Bonus', method: 'Affiliate Payout (Elena Rostova)', amount: 750.00, created_at: new Date(Date.now() - 86400000 * 6).toISOString(), status: 'Completed / Credited' },
+                { tx_id: '#TXN-894190', type: 'Referral Bonus', method: 'Affiliate Payout (David Chen)', amount: 200.00, created_at: new Date(Date.now() - 86400000 * 8).toISOString(), status: 'Completed / Credited' }
+            ];
+            if (targetEmail) {
+                localStorage.setItem(`buffy_user_txs_${targetEmail.toLowerCase()}`, JSON.stringify(txList));
+            }
+        }
+
+        currentTxList = txList;
+        renderAccountHistoryUI(txList, filterType, searchQuery);
+    }
+
+    function renderAccountHistoryUI(txList, filterType = 'all', searchQuery = '') {
+        const histTotalDep = document.getElementById('hist-total-dep');
+        const histTotalWith = document.getElementById('hist-total-with');
+        const histTotalCount = document.getElementById('hist-total-count');
+        const histTableBody = document.querySelector('#history-table tbody');
+
+        let totalDep = 0;
+        let totalWith = 0;
+
+        txList.forEach(t => {
+            const amt = parseFloat(t.amount || 0);
+            if ((t.type || '').toLowerCase().includes('deposit') || (t.type || '').toLowerCase().includes('referral')) {
+                totalDep += amt;
+            } else if ((t.type || '').toLowerCase().includes('withdraw')) {
+                totalWith += amt;
+            }
+        });
+
+        if (histTotalDep) histTotalDep.textContent = `$ ${totalDep.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        if (histTotalWith) histTotalWith.textContent = `$ ${totalWith.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        if (histTotalCount) histTotalCount.textContent = `${txList.length} Recorded`;
+
+        if (histTableBody) {
+            histTableBody.innerHTML = '';
+
+            let filtered = txList.filter(t => {
+                if (filterType === 'deposit') return (t.type || '').toLowerCase().includes('deposit');
+                if (filterType === 'withdrawal') return (t.type || '').toLowerCase().includes('withdraw');
+                if (filterType === 'referral') return (t.type || '').toLowerCase().includes('referral');
+                return true;
+            });
+
+            if (searchQuery) {
+                const q = searchQuery.toLowerCase();
+                filtered = filtered.filter(t => 
+                    (t.tx_id || '').toLowerCase().includes(q) ||
+                    (t.type || '').toLowerCase().includes(q) ||
+                    (t.method || '').toLowerCase().includes(q)
+                );
+            }
+
+            if (filtered.length === 0) {
+                histTableBody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #94A3B8; padding: 25px;">No transactions recorded for this filter view.</td></tr>`;
+                return;
+            }
+
+            filtered.forEach(t => {
+                const dateObj = t.created_at ? new Date(t.created_at) : new Date();
+                const dateStr = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                const timeStr = dateObj.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                const isDeposit = (t.type || '').toLowerCase().includes('deposit') || (t.type || '').toLowerCase().includes('referral');
+                const isWithdrawal = (t.type || '').toLowerCase().includes('withdraw');
+
+                const tr = document.createElement('tr');
+                tr.style.borderBottom = '1px solid rgba(255,255,255,0.04)';
+                tr.innerHTML = `
+                    <td style="padding: 14px;"><strong style="color: #F4C430; font-family: monospace; font-size: 0.92rem;">${t.tx_id || '#TXN-' + Math.floor(100000 + Math.random() * 900000)}</strong></td>
+                    <td style="padding: 14px;">
+                        <span class="w-badge ${isDeposit ? 'usdt' : 'payeer'}">${t.type || 'Transaction'}</span><br>
+                        <span style="color: #94A3B8; font-size: 0.78rem;">${t.method || 'Standard Wire/Crypto'}</span>
+                    </td>
+                    <td style="padding: 14px; color: #CBD5E1; font-size: 0.84rem;">${dateStr}<br><span style="color: #94A3B8; font-size: 0.75rem;">${timeStr}</span></td>
+                    <td style="padding: 14px; color: ${isDeposit ? '#10B981' : '#FFF'}; font-weight: 700; font-size: 0.98rem;">${isDeposit ? '+' : '-'}$ ${parseFloat(t.amount || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                    <td style="padding: 14px;"><span class="status-pill ${isWithdrawal ? 'warning' : 'success'}"><i class="fa-solid ${isWithdrawal ? 'fa-hourglass-half' : 'fa-circle-check'}"></i> ${t.status || 'Completed'}</span></td>
+                `;
+                histTableBody.appendChild(tr);
+            });
+        }
+    }
+
+    // Helper to append a new transaction to the active account
+    async function addAccountTransaction(type, method, amount, status = 'Completed / Verified') {
+        const targetEmail = currentUser ? currentUser.email : 'investor@buffyinvestment.com';
+        const newTx = {
+            tx_id: '#TXN-' + Math.floor(100000 + Math.random() * 900000),
+            type: type,
+            method: method,
+            amount: parseFloat(amount),
+            created_at: new Date().toISOString(),
+            status: status
+        };
+
+        const localKey = `buffy_user_txs_${targetEmail.toLowerCase()}`;
+        let txs = [];
+        try {
+            txs = JSON.parse(localStorage.getItem(localKey) || '[]');
+        } catch (e) {}
+
+        txs.unshift(newTx);
+        localStorage.setItem(localKey, JSON.stringify(txs));
+
+        if (supabaseClient) {
+            try {
+                await supabaseClient.from('user_transactions').insert([{
+                    user_email: targetEmail,
+                    tx_id: newTx.tx_id,
+                    type: newTx.type,
+                    method: newTx.method,
+                    amount: newTx.amount,
+                    status: newTx.status,
+                    created_at: newTx.created_at
+                }]);
+            } catch (err) {
+                console.log('Supabase transaction insert note:', err);
+            }
+        }
+
+        loadAccountHistory(targetEmail);
+    }
+
+    // Filter Buttons Event Delegation
+    document.addEventListener('click', (e) => {
+        const filterBtn = e.target.closest('.btn-hist-filter');
+        if (filterBtn) {
+            document.querySelectorAll('.btn-hist-filter').forEach(b => b.classList.remove('active'));
+            filterBtn.classList.add('active');
+            const fType = filterBtn.getAttribute('data-filter') || 'all';
+            loadAccountHistory(currentUser ? currentUser.email : null, fType, currentHistorySearch);
+        }
+    });
+
+    // Search Input Listener
+    document.addEventListener('input', (e) => {
+        if (e.target && e.target.id === 'hist-search-input') {
+            currentHistorySearch = e.target.value;
+            renderAccountHistoryUI(currentTxList, currentHistoryFilter, currentHistorySearch);
+        }
+    });
 
     // Live Server Clock Widget
     function startClock() {
@@ -829,6 +1017,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (tabKey === 'account') panelId = 'panel-account';
             if (tabKey === 'make-deposit') panelId = 'panel-make-deposit';
             if (tabKey === 'withdrawal') panelId = 'panel-withdrawal';
+            if (tabKey === 'history' || tabKey === 'deposits-list') panelId = 'panel-history';
             if (tabKey === 'settings') panelId = 'panel-settings';
             if (tabKey === 'referrals') panelId = 'panel-referrals';
             if (tabKey === 'banners' || tabKey === 'banner-links') panelId = 'panel-banners';
@@ -1262,6 +1451,8 @@ document.addEventListener('DOMContentLoaded', () => {
             userTransactionsList.unshift(newDepTx);
             renderTransactionsTable(userTransactionsList);
 
+            await addAccountTransaction('Deposit', `${gateway} (${currency})`, amount, 'Completed / Verified');
+
             if (supabaseClient && amount > 0) {
                 try {
                     await supabaseClient.from('user_transactions').insert([
@@ -1292,6 +1483,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const address = document.getElementById('with-address-input')?.value;
             const userEmail = currentUser ? currentUser.email : 'investor@buffyinvestment.com';
 
+            await addAccountTransaction('Withdrawal', address ? `Payout to ${address}` : 'Standard Wire Payout', amount, 'Processing / Pending');
+
             if (supabaseClient && amount > 0) {
                 try {
                     await supabaseClient.from('user_transactions').insert([
@@ -1304,7 +1497,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             await recalculateUserBalances(userEmail);
             loadUserTransactionsFromSupabase();
-            showToast(`Withdrawal request of $${amount.toLocaleString()} submitted for processing.`, 'success');
+            showToast(`Withdrawal request of $${amount.toLocaleString()} submitted for processing. History ledger updated!`, 'success');
         });
     }
 
