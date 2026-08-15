@@ -1271,8 +1271,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const heroBtnStart = document.getElementById('hero-btn-start');
     const planBtns = document.querySelectorAll('.btn-plan');
 
-    if (btnOpenLogin) btnOpenLogin.addEventListener('click', () => openAuthModal('modal-login'));
-    if (btnOpenSignup) btnOpenSignup.addEventListener('click', () => openAuthModal('modal-signup'));
+    // Modal Trigger buttons
     if (heroBtnStart) heroBtnStart.addEventListener('click', () => openAuthModal('modal-signup'));
 
     planBtns.forEach(btn => {
@@ -1284,20 +1283,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Universal Delegated Auth Modal Click Controller
     document.addEventListener('click', (e) => {
-        const btnLogin = e.target.closest('#btn-open-login') || e.target.closest('.btn-open-login') || e.target.closest('#switch-to-login');
-        if (btnLogin) {
-            e.preventDefault();
-            openAuthModal('modal-login');
-            return;
-        }
-
-        const btnSignup = e.target.closest('#btn-open-signup') || e.target.closest('.btn-open-signup') || e.target.closest('#hero-btn-start') || e.target.closest('#switch-to-signup');
-        if (btnSignup) {
-            e.preventDefault();
-            openAuthModal('modal-signup');
-            return;
-        }
-
         const btnCloseModal = e.target.closest('.modal-close');
         if (btnCloseModal) {
             e.preventDefault();
