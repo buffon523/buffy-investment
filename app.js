@@ -143,9 +143,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     updateUserNavState(session.user, true);
                 } else if (localUser && localUser.loggedIn) {
                     updateUserNavState(localUser, true);
+                } else {
+                    document.documentElement.classList.remove('is-dashboard-active');
+                    switchView(false);
                 }
             } catch (e) {
-                if (localUser && localUser.loggedIn) updateUserNavState(localUser, true);
+                if (localUser && localUser.loggedIn) {
+                    updateUserNavState(localUser, true);
+                } else {
+                    document.documentElement.classList.remove('is-dashboard-active');
+                    switchView(false);
+                }
             }
 
             supabaseClient.auth.onAuthStateChange((_event, session) => {
@@ -155,6 +163,9 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         } else if (localUser && localUser.loggedIn) {
             updateUserNavState(localUser, true);
+        } else {
+            document.documentElement.classList.remove('is-dashboard-active');
+            switchView(false);
         }
     }
 
