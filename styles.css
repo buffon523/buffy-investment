@@ -2543,15 +2543,20 @@ input[type="range"] {
 
     /* Universal Desktop Matching Auth Modal Scale */
     .modal-overlay {
-        padding: 20px !important;
-        position: fixed !important;
-        inset: 0 !important;
-        width: 100% !important;
-        height: 100% !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        z-index: 10000 !important;
+        padding: 20px;
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+    }
+
+    .modal-overlay.hidden {
+        display: none !important;
+        pointer-events: none !important;
     }
 
     .auth-modal {
