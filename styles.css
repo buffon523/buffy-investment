@@ -2732,30 +2732,30 @@ input[type="range"] {
 }
 
 /* ==========================================================================
-   LAPTOP DESK-MATCHING DASHBOARD VIEW ON PHONES & MOBILE DEVICES
-   Enforces exact laptop desktop layout (240px vertical sidebar, 4-metric cards, 
-   2-column chart grid, desktop header widgets, 4-column payment methods) 
-   with horizontal touch scrolling on mobile.
+   LAPTOP DESK-MATCHING AUTO-FIT ZOOM ON PHONES & MOBILE DEVICES (HOME PAGE & DASHBOARD)
+   Enforces that mobile phone users see the ENTIRE laptop desktop home page & dashboard 
+   fitted 100% on their screen without horizontal swiping, while allowing pinch-to-zoom.
    ========================================================================== */
+
+@media (max-width: 1199px) {
+    html, body {
+        width: 1200px !important;
+        zoom: calc(100vw / 1200) !important;
+        transform-origin: top left !important;
+        overflow-x: hidden !important;
+    }
+}
 
 #dashboard-view {
     overflow-x: hidden !important;
     width: 100% !important;
 }
 
-@media (max-width: 1099px) {
-    #dashboard-view {
-        width: 1100px !important;
-        zoom: calc(100vw / 1100) !important;
-        transform-origin: top left !important;
-    }
-}
-
 #dashboard-view .dashboard-top-bar,
 #dashboard-view .wallet-ticker-bar,
 #dashboard-view .dash-layout {
-    width: 1100px !important;
-    min-width: 1100px !important;
+    width: 1200px !important;
+    min-width: 1200px !important;
     box-sizing: border-box !important;
 }
 
