@@ -1196,16 +1196,27 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Profile Settings & Logout Actions (Open Settings Hub)
+    // Profile Settings & Navigation (Open Settings Panel)
     const btnNavProfile = document.getElementById('btn-nav-profile');
     if (btnNavProfile) {
         btnNavProfile.addEventListener('click', () => {
-            const setMUsername = document.getElementById('set-m-username');
-            const hdrUsername = document.getElementById('hdr-username');
-            if (setMUsername && hdrUsername) {
-                setMUsername.textContent = hdrUsername.textContent;
+            switchView(true);
+            const sideNavLinks = document.querySelectorAll('.side-link[data-tab]');
+            sideNavLinks.forEach(l => l.classList.remove('active'));
+            const setLink = document.querySelector('.side-link[data-tab="settings"]');
+            if (setLink) setLink.classList.add('active');
+
+            const allPanels = document.querySelectorAll('.dash-tab-panel');
+            allPanels.forEach(p => {
+                p.classList.add('hidden');
+                p.classList.remove('active');
+            });
+
+            const targetPanel = document.getElementById('panel-settings');
+            if (targetPanel) {
+                targetPanel.classList.remove('hidden');
+                targetPanel.classList.add('active');
             }
-            openAuthModal('modal-settings-hub');
         });
     }
 
