@@ -847,16 +847,29 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Smooth active link highlight & mobile menu close
+    // Smooth active link highlight & Home view switcher
     const navLinks = document.querySelectorAll('.nav-link');
     navLinks.forEach(link => {
         link.addEventListener('click', (e) => {
             navLinks.forEach(l => l.classList.remove('active'));
             link.classList.add('active');
+
+            const href = link.getAttribute('href');
+            if (href === '#home' || link.textContent.trim() === 'Home' || (href && href.startsWith('#'))) {
+                switchView(false);
+            }
+
             if (window.innerWidth <= 768 && navMenu) {
                 navMenu.classList.remove('active');
                 navMenu.style.display = 'none';
             }
+        });
+    });
+
+    const brandLogos = document.querySelectorAll('.brand-logo');
+    brandLogos.forEach(logo => {
+        logo.addEventListener('click', () => {
+            switchView(false);
         });
     });
 
