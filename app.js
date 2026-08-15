@@ -40,29 +40,6 @@ window.openSignupModal = function() {
     }
 };
 
-window.openRegisteredMemberAccessModal = function() {
-    const overlay = document.getElementById('modal-overlay');
-    const target = document.getElementById('modal-member-access');
-    if (overlay && target) {
-        overlay.classList.remove('hidden');
-        overlay.style.setProperty('display', 'flex', 'important');
-        overlay.style.setProperty('pointer-events', 'auto', 'important');
-        document.querySelectorAll('.auth-modal').forEach(m => {
-            m.classList.add('hidden');
-            m.style.setProperty('display', 'none', 'important');
-        });
-        target.classList.remove('hidden');
-        target.style.setProperty('display', 'block', 'important');
-    }
-};
-
-window.syncMemberEmailInput = function(selectEl) {
-    const customGroup = document.getElementById('group-custom-member-email');
-    if (customGroup) {
-        customGroup.style.display = selectEl.value === 'custom' ? 'block' : 'none';
-    }
-};
-
 window.closeAllModals = function() {
     const overlay = document.getElementById('modal-overlay');
     if (overlay) {
@@ -1417,31 +1394,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             closeAllModals();
             showToast(`Registration Successful! Welcome ${displayName}. Portfolio active.`, 'success');
-        });
-    }
-
-    // Registered Member Account Access Form Handler
-    const formMemberAccess = document.getElementById('form-member-access');
-    if (formMemberAccess) {
-        formMemberAccess.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const selectVal = document.getElementById('member-select-email')?.value;
-            let targetEmail = selectVal;
-            if (selectVal === 'custom') {
-                targetEmail = document.getElementById('member-custom-email')?.value || 'investor@buffy.com';
-            }
-            const displayName = targetEmail.includes('@') ? targetEmail.split('@')[0] : targetEmail;
-            const userObj = { email: targetEmail, name: displayName, loggedIn: true };
-            localStorage.setItem('buffy_active_session', JSON.stringify(userObj));
-
-            updateUserNavState(userObj, true);
-            recalculateUserBalances(targetEmail);
-            loadAccountHistory(targetEmail);
-            initReferralsDashboard(targetEmail);
-
-            closeAllModals();
-            showToast(`Welcome back ${displayName}! Accessing your registered account.`, 'success');
-            switchView(true);
         });
     }
 
