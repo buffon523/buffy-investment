@@ -1273,21 +1273,46 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Trigger buttons
-    const btnOpenLogin = document.getElementById('btn-open-login');
-    const btnOpenSignup = document.getElementById('btn-open-signup');
+    // Universal CTA & Registration Button Handlers
+    function handleSignUpCTA(planName) {
+        const saved = localStorage.getItem('buffy_active_session');
+        let isLoggedIn = false;
+        if (saved) {
+            try {
+                const p = JSON.parse(saved);
+                if (p && p.loggedIn) isLoggedIn = true;
+            } catch(e){}
+        }
+        if (isLoggedIn) {
+            switchView(true);
+            if (planName) showToast(`Viewing active portfolio for ${planName} Plan.`, 'info');
+        } else {
+            window.location.href = 'signup.html' + (planName ? '?plan=' + encodeURIComponent(planName) : '');
+        }
+    }
+
     const heroBtnStart = document.getElementById('hero-btn-start');
+    if (heroBtnStart) heroBtnStart.addEventListener('click', () => handleSignUpCTA());
+
+    const calcBtnStart = document.getElementById('calc-btn-start');
+    if (calcBtnStart) calcBtnStart.addEventListener('click', () => handleSignUpCTA());
+
     const planBtns = document.querySelectorAll('.btn-plan');
-
-    // Modal Trigger buttons
-    if (heroBtnStart) heroBtnStart.addEventListener('click', () => openAuthModal('modal-signup'));
-
     planBtns.forEach(btn => {
         btn.addEventListener('click', () => {
-            openAuthModal('modal-signup');
-            showToast(`Fill in registration details & preferred payout wallet to start investing.`, 'info');
+            const planName = btn.getAttribute('data-plan') || 'Growth';
+            handleSignUpCTA(planName);
         });
     });
+
+    const btnNavProfile = document.getElementById('btn-nav-profile');
+    if (btnNavProfile) {
+        btnNavProfile.addEventListener('click', () => {
+            switchView(true);
+            const setLink = document.querySelector('.side-link[data-tab="settings"]');
+            if (setLink) setLink.click();
+        });
+    }
 
     // Universal Delegated Auth Modal Click Controller
     document.addEventListener('click', (e) => {
