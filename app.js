@@ -57,9 +57,26 @@ document.addEventListener('DOMContentLoaded', () => {
     // ------------------------------------------------------------------
     // SUPABASE BACKEND INTEGRATION & PRODUCTION ENGINE
     // ------------------------------------------------------------------
-    const SUPABASE_URL = 'https://ypuhbckmzatuzheavjec.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlwdWhiY2ttemF0dXpoZWF2amVjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ4OTE3MjEsImV4cCI6MjEwMDQ2NzcyMX0.WBfB0E6nDZtLQj96wU4dOmzCCkyeJ1y47k4fzlSlbXQ';
-    const supabaseClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+    const SUPABASE_URL = window.SUPABASE_URL || 'https://ypuhbckmzatuzheavjec.supabase.co';
+    const SUPABASE_ANON_KEY = window.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlwdWhiY2ttemF0dXpoZWF2amVjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ4OTE3MjEsImV4cCI6MjEwMDQ2NzcyMX0.WBfB0E6nDZtLQj96wU4dOmzCCkyeJ1y47k4fzlSlbXQ';
+
+    window.SUPABASE_URL = SUPABASE_URL;
+    window.SUPABASE_ANON_KEY = SUPABASE_ANON_KEY;
+
+    function getSupabaseClient() {
+        if (window.supabaseClient) return window.supabaseClient;
+        if (window.supabase && typeof window.supabase.createClient === 'function') {
+            try {
+                window.supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                return window.supabaseClient;
+            } catch (e) {
+                console.warn('Supabase client creation note:', e);
+            }
+        }
+        return null;
+    }
+
+    const supabaseClient = getSupabaseClient();
 
     let currentUser = null;
     let publicAllocationChart = null;
