@@ -1120,12 +1120,32 @@ document.addEventListener('DOMContentLoaded', () => {
                 dashboardView.style.setProperty('display', 'none', 'important');
             }
             if (publicSiteView) publicSiteView.style.setProperty('display', 'block', 'important');
+            if (window.history && window.history.pushState && window.location.search.includes('dashboard=true')) {
+                window.history.pushState({}, '', window.location.pathname);
+            }
             window.scrollTo(0, 0);
         }
     }
 
     if (btnToggleDashboard) btnToggleDashboard.addEventListener('click', () => switchView(true));
     if (btnCloseDashboard) btnCloseDashboard.addEventListener('click', () => switchView(false));
+
+    // Dashboard Referral Link Copy Handlers
+    document.querySelectorAll('#btn-copy-ref, #btn-copy-main-ref, .btn-copy-ref').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const input = document.getElementById('dash-ref-link') || document.getElementById('ref-link-main-input');
+            if (input) {
+                navigator.clipboard.writeText(input.value).then(() => {
+                    showToast('📋 Referral link copied to clipboard!', 'success');
+                }).catch(() => {
+                    input.select();
+                    document.execCommand('copy');
+                    showToast('📋 Referral link copied to clipboard!', 'success');
+                });
+            }
+        });
+    });
 
     // ------------------------------------------------------------------
     // DASHBOARD SIDEBAR MAIN TAB SWITCHER
