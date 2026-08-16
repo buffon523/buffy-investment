@@ -1304,7 +1304,7 @@ document.addEventListener('DOMContentLoaded', () => {
             switchView(true);
             if (planName) showToast(`Viewing active portfolio for ${planName} Plan.`, 'info');
         } else {
-            window.location.href = 'signup.html' + (planName ? '?plan=' + encodeURIComponent(planName) : '');
+            window.location.href = 'signup' + (planName ? '?plan=' + encodeURIComponent(planName) : '');
         }
     }
 
