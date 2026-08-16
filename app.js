@@ -90,20 +90,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const hash = window.location.hash;
     const savedSession = localStorage.getItem('buffy_active_session');
 
-    if (urlParams.get('dashboard') === 'true' || savedSession) {
+    if (urlParams.get('dashboard') === 'true') {
+        switchView(true);
+    } else if (savedSession) {
         let localUser = null;
-        if (savedSession) {
-            try { localUser = JSON.parse(savedSession); } catch(e){}
-        }
+        try { localUser = JSON.parse(savedSession); } catch(e){}
         if (localUser && localUser.loggedIn) {
             updateUserNavState(localUser, true);
         } else {
-            switchView(true);
+            document.documentElement.classList.remove('is-dashboard-active');
+            switchView(false);
         }
-    } else if (urlParams.get('auth') === 'login' || hash === '#login') {
-        window.openLoginModal();
-    } else if (urlParams.get('auth') === 'signup' || hash === '#signup' || urlParams.get('signup') === 'true') {
-        window.openSignupModal();
+    } else {
+        document.documentElement.classList.remove('is-dashboard-active');
+        switchView(false);
     }
 
     // ------------------------------------------------------------------
@@ -1044,27 +1044,31 @@ document.addEventListener('DOMContentLoaded', () => {
     // 7. PUBLIC ALLOCATION DONUT CHART
     // ------------------------------------------------------------------
     const ctxPublicAlloc = document.getElementById('publicAllocationChart');
-    if (ctxPublicAlloc) {
-        publicAllocationChart = new Chart(ctxPublicAlloc, {
-            type: 'doughnut',
-            data: {
-                labels: ['Stocks', 'ETFs', 'Real Estate', 'Bonds', 'Digital Assets'],
-                datasets: [{
-                    data: [40, 25, 15, 10, 10],
-                    backgroundColor: ['#3B82F6', '#F4C430', '#10B981', '#8B5CF6', '#06B6D4'],
-                    borderWidth: 0,
-                    hoverOffset: 6
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false }
+    if (ctxPublicAlloc && typeof Chart !== 'undefined') {
+        try {
+            publicAllocationChart = new Chart(ctxPublicAlloc, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Stocks', 'ETFs', 'Real Estate', 'Bonds', 'Digital Assets'],
+                    datasets: [{
+                        data: [40, 25, 15, 10, 10],
+                        backgroundColor: ['#3B82F6', '#F4C430', '#10B981', '#8B5CF6', '#06B6D4'],
+                        borderWidth: 0,
+                        hoverOffset: 6
+                    }]
                 },
-                cutout: '72%'
-            }
-        });
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    cutout: '72%'
+                }
+            });
+        } catch (err) {
+            console.log('Public chart init note:', err);
+        }
     }
 
     // ------------------------------------------------------------------
@@ -1173,63 +1177,69 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function initDashboardCharts() {
-        // Performance Chart
-        const ctxPerf = document.getElementById('dashboardPerformanceChart');
-        if (ctxPerf && !dashboardPerformanceChart) {
-            const gradient = ctxPerf.getContext('2d').createLinearGradient(0, 0, 0, 300);
-            gradient.addColorStop(0, 'rgba(212, 175, 55, 0.4)');
-            gradient.addColorStop(1, 'rgba(212, 175, 55, 0)');
+        if (typeof Chart === 'undefined') return;
 
-            dashboardPerformanceChart = new Chart(ctxPerf, {
-                type: 'line',
-                data: {
-                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                    datasets: [{
-                        label: 'Portfolio Value ($)',
-                        data: [100000, 102400, 101800, 106500, 112000, 110500, 115800, 119200, 122000, 124500, 126000, 128450],
-                        borderColor: '#F4C430',
-                        borderWidth: 3,
-                        backgroundColor: gradient,
-                        fill: true,
-                        tension: 0.4,
-                        pointBackgroundColor: '#F4C430',
-                        pointHoverRadius: 6
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false }
+        try {
+            // Performance Chart
+            const ctxPerf = document.getElementById('dashboardPerformanceChart');
+            if (ctxPerf && !dashboardPerformanceChart) {
+                const gradient = ctxPerf.getContext('2d').createLinearGradient(0, 0, 0, 300);
+                gradient.addColorStop(0, 'rgba(212, 175, 55, 0.4)');
+                gradient.addColorStop(1, 'rgba(212, 175, 55, 0)');
+
+                dashboardPerformanceChart = new Chart(ctxPerf, {
+                    type: 'line',
+                    data: {
+                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                        datasets: [{
+                            label: 'Portfolio Value ($)',
+                            data: [100000, 102400, 101800, 106500, 112000, 110500, 115800, 119200, 122000, 124500, 126000, 128450],
+                            borderColor: '#F4C430',
+                            borderWidth: 3,
+                            backgroundColor: gradient,
+                            fill: true,
+                            tension: 0.4,
+                            pointBackgroundColor: '#F4C430',
+                            pointHoverRadius: 6
+                        }]
                     },
-                    scales: {
-                        x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94A3B8' } },
-                        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94A3B8' } }
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false }
+                        },
+                        scales: {
+                            x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94A3B8' } },
+                            y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94A3B8' } }
+                        }
                     }
-                }
-            });
-        }
+                });
+            }
 
-        // Donut Chart
-        const ctxDashDonut = document.getElementById('dashboardDonutChart');
-        if (ctxDashDonut && !dashboardDonutChart) {
-            dashboardDonutChart = new Chart(ctxDashDonut, {
-                type: 'doughnut',
-                data: {
-                    labels: ['US Equities', 'Global ETFs', 'Real Estate REITs', 'Treasuries', 'Crypto Assets'],
-                    datasets: [{
-                        data: [45, 25, 15, 10, 5],
-                        backgroundColor: ['#3B82F6', '#F4C430', '#10B981', '#8B5CF6', '#06B6D4'],
-                        borderWidth: 0
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    cutout: '70%'
-                }
-            });
+            // Donut Chart
+            const ctxDashDonut = document.getElementById('dashboardDonutChart');
+            if (ctxDashDonut && !dashboardDonutChart) {
+                dashboardDonutChart = new Chart(ctxDashDonut, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['US Equities', 'Global ETFs', 'Real Estate REITs', 'Treasuries', 'Crypto Assets'],
+                        datasets: [{
+                            data: [45, 25, 15, 10, 5],
+                            backgroundColor: ['#3B82F6', '#F4C430', '#10B981', '#8B5CF6', '#06B6D4'],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        cutout: '70%'
+                    }
+                });
+            }
+        } catch(err) {
+            console.log('Dashboard chart init note:', err);
         }
     }
 
