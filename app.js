@@ -271,7 +271,7 @@ document.addEventListener('DOMContentLoaded', () => {
             userNameStr = email.split('@')[0];
         }
         if (!userNameStr) {
-            userNameStr = 'Angel';
+            userNameStr = 'Account';
         }
 
         const userPlanStr = plan || 'Growth';
