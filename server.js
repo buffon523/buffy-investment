@@ -72,7 +72,10 @@ const server = http.createServer((req, res) => {
         reqPath = '/index.html';
     }
 
-    const filePath = path.join(PUBLIC_DIR, path.normalize(reqPath));
+    let filePath = path.join(PUBLIC_DIR, path.normalize(reqPath));
+    if (!path.extname(filePath) && fs.existsSync(filePath + '.html')) {
+        filePath = filePath + '.html';
+    }
 
     // Security check against directory traversal
     if (!filePath.startsWith(PUBLIC_DIR)) {
