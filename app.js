@@ -1910,10 +1910,54 @@ document.addEventListener('DOMContentLoaded', () => {
     // Resource Downloads
     document.querySelectorAll('.btn-download-res').forEach(btn => {
         btn.addEventListener('click', () => {
-            const resName = btn.getAttribute('data-res');
+            const resName = btn.getAttribute('data-res') || 'Report';
             showToast(`Generating document download for ${resName}...`, 'success');
         });
     });
+
+    // Blog Article Read Insights Handlers
+    document.querySelectorAll('.btn-read-more').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const card = btn.closest('.blog-card');
+            const title = card ? card.querySelector('h3')?.textContent : 'Market Insights Report';
+            showToast(`Opening "${title}" analysis report...`, 'info');
+        });
+    });
+
+    // FAQ Accordions Toggle Handler
+    document.querySelectorAll('.faq-question').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const item = btn.closest('.faq-item');
+            if (item) {
+                const isOpen = item.classList.contains('active');
+                document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
+                if (!isOpen) item.classList.add('active');
+            }
+        });
+    });
+
+    // FAQ Live Search Filter Handler
+    const faqSearch = document.getElementById('faq-search');
+    if (faqSearch) {
+        faqSearch.addEventListener('input', (e) => {
+            const q = e.target.value.toLowerCase();
+            document.querySelectorAll('.faq-item').forEach(item => {
+                const text = item.textContent.toLowerCase();
+                item.style.display = text.includes(q) ? 'block' : 'none';
+            });
+        });
+    }
+
+    // Contact Form Submit Handler
+    const formContact = document.getElementById('form-contact');
+    if (formContact) {
+        formContact.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('contact-name')?.value || 'Valued Investor';
+            showToast(`Thank you ${name}! Your inquiry was received and assigned to a Wealth Specialist.`, 'success');
+            formContact.reset();
+        });
+    }
 
     // CSV Export Button
     const btnExportCSV = document.querySelector('.dash-table-card .btn-text');
