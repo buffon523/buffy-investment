@@ -213,7 +213,7 @@
                 <div class="form-group">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                         <label for="login-password" style="margin-bottom: 0;">Password</label>
-                        <a href="index.html#contact" style="color: #F4C430; font-size: 0.8rem; text-decoration: none;">Forgot Password?</a>
+                        <a href="/#contact" style="color: #F4C430; font-size: 0.8rem; text-decoration: none;">Forgot Password?</a>
                     </div>
                     <div class="password-input-wrapper">
                         <input type="password" id="login-password" placeholder="••••••••••••" required>
@@ -227,7 +227,7 @@
 
 
             <div class="auth-footer-links">
-                Don't have an account? <a href="signup.html">Create Account</a>
+                Don't have an account? <a href="signup">Create Account</a>
             </div>
         </div>
     </div>
@@ -255,7 +255,7 @@
         function quickLogin(email, name) {
             const userObj = { email: email, name: name, loggedIn: true };
             localStorage.setItem('buffy_active_session', JSON.stringify(userObj));
-            window.location.href = 'index.html?dashboard=true';
+            window.location.href = '/?dashboard=true';
         }
 
         document.getElementById('form-standalone-login')?.addEventListener('submit', (e) => {
@@ -264,7 +264,7 @@
             const name = email.includes('@') ? email.split('@')[0] : email;
             const userObj = { email: email, name: name, loggedIn: true };
             localStorage.setItem('buffy_active_session', JSON.stringify(userObj));
-            window.location.href = 'index.html?dashboard=true';
+            window.location.href = '/?dashboard=true';
         });
     </script>
     <script src="app.js"></script>
