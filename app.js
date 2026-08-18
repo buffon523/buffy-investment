@@ -1995,14 +1995,48 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Contact Form Submit Handler
-    const formContact = document.getElementById('form-contact');
-    if (formContact) {
-        formContact.addEventListener('submit', (e) => {
+    // Contact Form Submit Handler (matches #contact-form and #form-contact)
+    const contactForm = document.getElementById('contact-form') || document.getElementById('form-contact');
+    if (contactForm) {
+        contactForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            const name = document.getElementById('contact-name')?.value || 'Valued Investor';
+            const nameInput = document.getElementById('c-name') || document.getElementById('contact-name');
+            const name = nameInput ? nameInput.value : 'Valued Investor';
             showToast(`Thank you ${name}! Your inquiry was received and assigned to a Wealth Specialist.`, 'success');
-            formContact.reset();
+            contactForm.reset();
+        });
+    }
+
+    // Newsletter Subscription Form Handler (#newsletter-form)
+    const newsletterForm = document.getElementById('newsletter-form');
+    if (newsletterForm) {
+        newsletterForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const emailInput = newsletterForm.querySelector('input[type="email"]');
+            const email = emailInput ? emailInput.value : '';
+            showToast(`🎉 Thank you! ${email || 'Your email'} has been subscribed to Buffy Market Intelligence.`, 'success');
+            newsletterForm.reset();
+        });
+    }
+
+    // Careers & Help Center Footer Link Handlers
+    const linkCareers = document.getElementById('link-careers');
+    if (linkCareers) {
+        linkCareers.addEventListener('click', (e) => {
+            e.preventDefault();
+            showToast('Briefing PDF for Buffy Careers & Open Wealth Advisor Positions loaded.', 'info');
+        });
+    }
+
+    const linkHelp = document.getElementById('link-help');
+    if (linkHelp) {
+        linkHelp.addEventListener('click', (e) => {
+            e.preventDefault();
+            const faqSection = document.getElementById('faq');
+            if (faqSection) {
+                switchView(false);
+                faqSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
         });
     }
 
