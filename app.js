@@ -96,7 +96,8 @@ document.addEventListener('DOMContentLoaded', () => {
         let localUser = null;
         try { localUser = JSON.parse(savedSession); } catch(e){}
         if (localUser && localUser.loggedIn) {
-            updateUserNavState(localUser, true);
+            updateUserNavState(localUser, false);
+            switchView(false);
         } else {
             document.documentElement.classList.remove('is-dashboard-active');
             switchView(false);
@@ -157,16 +158,16 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 const { data: { session } } = await supabaseClient.auth.getSession();
                 if (session?.user) {
-                    updateUserNavState(session.user, true);
+                    updateUserNavState(session.user, false);
                 } else if (localUser && localUser.loggedIn) {
-                    updateUserNavState(localUser, true);
+                    updateUserNavState(localUser, false);
                 } else {
                     document.documentElement.classList.remove('is-dashboard-active');
                     switchView(false);
                 }
             } catch (e) {
                 if (localUser && localUser.loggedIn) {
-                    updateUserNavState(localUser, true);
+                    updateUserNavState(localUser, false);
                 } else {
                     document.documentElement.classList.remove('is-dashboard-active');
                     switchView(false);
@@ -179,7 +180,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
         } else if (localUser && localUser.loggedIn) {
-            updateUserNavState(localUser, true);
+            updateUserNavState(localUser, false);
         } else {
             document.documentElement.classList.remove('is-dashboard-active');
             switchView(false);
