@@ -2283,7 +2283,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (formSetProfile) {
         formSetProfile.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const fullNameVal = document.getElementById('setting-fullname')?.value || 'Angel';
+            const fullNameVal = document.getElementById('setting-fullname')?.value || 'Investor';
             const userEmail = currentUser ? currentUser.email : 'investor@buffyinvestment.com';
 
             setDashboardUserInfo(fullNameVal, 'Growth Strategy Plan', userEmail);
@@ -2456,7 +2456,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const btnRefLinkAction = e.target.closest('.btn-copy-banner-link-action');
         if (btnRefLinkAction) {
             const refInput = document.getElementById('ref-link-main-input') || document.getElementById('dash-ref-link');
-            const targetVal = refInput ? refInput.value : 'https://buffyinvestment.com/?ref=Angel';
+            const targetVal = refInput ? refInput.value : 'https://buffyinvestment.com/?ref=Investor';
             if (navigator.clipboard) {
                 navigator.clipboard.writeText(targetVal).then(() => {
                     showToast('📋 Referral link copied to clipboard!', 'success');
@@ -2479,7 +2479,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const btnShareBanner = e.target.closest('.btn-share-banner-asset');
         if (btnShareBanner) {
             const refInput = document.getElementById('ref-link-main-input') || document.getElementById('dash-ref-link');
-            const targetVal = refInput ? refInput.value : 'https://buffyinvestment.com/?ref=Angel';
+            const targetVal = refInput ? refInput.value : 'https://buffyinvestment.com/?ref=Investor';
             if (navigator.share) {
                 navigator.share({
                     title: 'Buffy.com Promotional Banner',
@@ -2516,7 +2516,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const btnTellShare = e.target.closest('#btn-tell-share-link');
         if (btnTellShare) {
             const tellInput = document.getElementById('tell-friend-link-input');
-            const targetUrl = tellInput ? tellInput.value : 'https://buffyinvestment.com/?ref=Angel';
+            const targetUrl = tellInput ? tellInput.value : 'https://buffyinvestment.com/?ref=Investor';
             if (navigator.share) {
                 navigator.share({
                     title: 'Join me on Buffy.com',
@@ -2539,7 +2539,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (chipWA || chipTG || chipTW || chipFB || chipEM) {
             const tellInput = document.getElementById('tell-friend-link-input');
-            const refUrl = encodeURIComponent(tellInput ? tellInput.value : 'https://buffyinvestment.com/?ref=Angel');
+            const refUrl = encodeURIComponent(tellInput ? tellInput.value : 'https://buffyinvestment.com/?ref=Investor');
             const msg = encodeURIComponent('Hey! Check out Buffy.com for quantitative wealth management and high-yield growth strategies: ');
 
             if (chipWA) window.open(`https://api.whatsapp.com/send?text=${msg}${refUrl}`, '_blank');
