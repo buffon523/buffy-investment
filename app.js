@@ -1776,21 +1776,43 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    const handleLogoutAction = async () => {
+    window.handleLogoutAction = async function(e) {
+        if (e && e.preventDefault) e.preventDefault();
+
+        // 1. Sign out from Supabase Auth
         if (supabaseClient) {
-            try { await supabaseClient.auth.signOut(); } catch (e) {}
+            try { await supabaseClient.auth.signOut(); } catch (err) {}
         }
+
+        // 2. Clear all local session data
         localStorage.removeItem('buffy_active_session');
+        sessionStorage.clear();
         currentUser = null;
-        updateUserNavState(null);
+
+        // 3. Clean address bar query parameters (remove ?dashboard=true)
+        if (window.history && window.history.pushState) {
+            window.history.pushState({}, '', window.location.pathname);
+        }
+
+        // 4. Update UI navigation state to Guest Mode & restore public site view
+        updateUserNavState(null, false);
         switchView(false);
-        showToast('Signed out of Buffy.com session.', 'info');
+
+        // 5. Toast Feedback
+        showToast('🔒 Signed out of Buffy.com session successfully.', 'success');
+
+        if (window.location.pathname.includes('login') || window.location.pathname.includes('signup')) {
+            window.location.href = 'index.html';
+        }
     };
 
-    const btnLogout = document.getElementById('btn-logout');
-    const sideLogoutBtn = document.getElementById('side-logout-btn');
-    if (btnLogout) btnLogout.addEventListener('click', handleLogoutAction);
-    if (sideLogoutBtn) sideLogoutBtn.addEventListener('click', handleLogoutAction);
+    document.addEventListener('click', (e) => {
+        const logoutTrigger = e.target.closest('#btn-logout, #side-logout-btn, .btn-logout, .side-link.logout, [data-action="logout"]');
+        if (logoutTrigger) {
+            e.preventDefault();
+            window.handleLogoutAction(e);
+        }
+    });
 
     // ------------------------------------------------------------------
     // 10. FAQ ACCORDION & SEARCH FILTER
