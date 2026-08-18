@@ -238,12 +238,37 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function recalculateUserBalances(userEmail) {
-        const targetEmail = userEmail || (currentUser ? currentUser.email : null);
+        let sessionEmail = null;
+        try { sessionEmail = JSON.parse(localStorage.getItem('buffy_active_session'))?.email; } catch(err){}
+        const targetEmail = userEmail || (currentUser ? currentUser.email : sessionEmail);
+
         if (!targetEmail) {
+            userBalanceState = {
+                total_balance: 0.00,
+                last_deposit: 0.00,
+                active_deposits: 0.00,
+                total_deposits: 0.00,
+                earned_total: 0.00,
+                pending_withdrawals: 0.00,
+                total_withdrawals: 0.00
+            };
             updateDashboardBalanceUI();
             return;
         }
 
+        let allTxs = [];
+
+        // 1. Check localStorage for account-specific transactions
+        const localKey = `buffy_user_txs_${targetEmail.toLowerCase()}`;
+        const savedLocalTxs = localStorage.getItem(localKey);
+        if (savedLocalTxs) {
+            try {
+                const parsed = JSON.parse(savedLocalTxs);
+                if (Array.isArray(parsed)) allTxs = parsed;
+            } catch (e) {}
+        }
+
+        // 2. Fetch from Supabase user_transactions table if available
         if (supabaseClient) {
             try {
                 const { data } = await supabaseClient
@@ -252,41 +277,47 @@ document.addEventListener('DOMContentLoaded', () => {
                     .eq('user_email', targetEmail);
 
                 if (data && data.length > 0) {
-                    let totalDep = 0;
-                    let lastDep = 0;
-                    let totalWith = 0;
-
-                    data.forEach(tx => {
-                        const amt = parseFloat(tx.amount) || 0;
-                        if (tx.tx_type === 'Deposit') {
-                            totalDep += amt;
-                            lastDep = amt;
-                        } else if (tx.tx_type === 'Withdrawal') {
-                            totalWith += amt;
-                        }
-                    });
-
-                    userBalanceState.total_deposits = totalDep;
-                    userBalanceState.active_deposits = totalDep;
-                    userBalanceState.last_deposit = lastDep;
-                    userBalanceState.total_withdrawals = totalWith;
-                    userBalanceState.earned_total = totalDep > 0 ? parseFloat((totalDep * 0.10).toFixed(2)) : 0.00;
-                    userBalanceState.total_balance = Math.max(0, (totalDep + userBalanceState.earned_total) - totalWith);
-                } else {
-                    userBalanceState = {
-                        total_balance: 0.00,
-                        last_deposit: 0.00,
-                        active_deposits: 0.00,
-                        total_deposits: 0.00,
-                        earned_total: 0.00,
-                        pending_withdrawals: 0.00,
-                        total_withdrawals: 0.00
-                    };
+                    allTxs = data;
                 }
             } catch (err) {
                 console.log('Balance calculation note:', err);
             }
         }
+
+        if (allTxs.length > 0) {
+            let totalDep = 0;
+            let lastDep = 0;
+            let totalWith = 0;
+
+            allTxs.forEach(tx => {
+                const amt = parseFloat(tx.amount) || 0;
+                const typeStr = (tx.tx_type || tx.type || '').toLowerCase();
+                if (typeStr.includes('deposit') || typeStr.includes('referral')) {
+                    totalDep += amt;
+                    if (typeStr.includes('deposit')) lastDep = amt;
+                } else if (typeStr.includes('withdraw')) {
+                    totalWith += amt;
+                }
+            });
+
+            userBalanceState.total_deposits = totalDep;
+            userBalanceState.active_deposits = totalDep;
+            userBalanceState.last_deposit = lastDep;
+            userBalanceState.total_withdrawals = totalWith;
+            userBalanceState.earned_total = totalDep > 0 ? parseFloat((totalDep * 0.10).toFixed(2)) : 0.00;
+            userBalanceState.total_balance = Math.max(0, (totalDep + userBalanceState.earned_total) - totalWith);
+        } else {
+            userBalanceState = {
+                total_balance: 0.00,
+                last_deposit: 0.00,
+                active_deposits: 0.00,
+                total_deposits: 0.00,
+                earned_total: 0.00,
+                pending_withdrawals: 0.00,
+                total_withdrawals: 0.00
+            };
+        }
+
         updateDashboardBalanceUI();
     }
 
@@ -475,19 +506,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             } catch (err) {
                 console.log('Transactions fetch note:', err);
-            }
-        }
-
-        // Default seed data for main demo investor account (investor@buffyinvestment.com or Angel)
-        if ((!targetEmail || targetEmail === 'investor@buffyinvestment.com') && txList.length === 0) {
-            txList = [
-                { tx_id: '#TXN-894201', type: 'Deposit', method: 'USDT TRC20 Custody', amount: 14499.00, created_at: new Date(Date.now() - 86400000 * 2).toISOString(), status: 'Completed / Verified' },
-                { tx_id: '#TXN-894198', type: 'Referral Bonus', method: 'Affiliate Payout (Marcus Vance)', amount: 500.00, created_at: new Date(Date.now() - 86400000 * 4).toISOString(), status: 'Completed / Credited' },
-                { tx_id: '#TXN-894195', type: 'Referral Bonus', method: 'Affiliate Payout (Elena Rostova)', amount: 750.00, created_at: new Date(Date.now() - 86400000 * 6).toISOString(), status: 'Completed / Credited' },
-                { tx_id: '#TXN-894190', type: 'Referral Bonus', method: 'Affiliate Payout (David Chen)', amount: 200.00, created_at: new Date(Date.now() - 86400000 * 8).toISOString(), status: 'Completed / Credited' }
-            ];
-            if (targetEmail) {
-                localStorage.setItem(`buffy_user_txs_${targetEmail.toLowerCase()}`, JSON.stringify(txList));
             }
         }
 
