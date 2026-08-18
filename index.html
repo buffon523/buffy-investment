@@ -18,7 +18,7 @@
                         isLoggedIn = true;
                     }
                 }
-                if ((isLoggedIn || isDashboardParam) && params.get('view') !== 'public') {
+                if (isDashboardParam && params.get('view') !== 'public') {
                     document.documentElement.classList.add('is-dashboard-active');
                 }
             } catch(e) {}
