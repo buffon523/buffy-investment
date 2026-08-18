@@ -85,22 +85,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-    // Auto-open auth modal or dashboard based on URL parameters, hash, or active session
+    // Synchronous User Session Restore (Instant User Profile Binding)
     const urlParams = new URLSearchParams(window.location.search);
     const hash = window.location.hash;
     const savedSession = localStorage.getItem('buffy_active_session');
 
+    let activeUser = null;
+    if (savedSession) {
+        try { activeUser = JSON.parse(savedSession); } catch(e){}
+    }
+
+    if (activeUser && activeUser.loggedIn) {
+        currentUser = activeUser;
+        setDashboardUserInfo(activeUser.name, activeUser.plan, activeUser.email);
+        updateUserNavState(activeUser, false);
+    }
+
     if (urlParams.get('dashboard') === 'true') {
         switchView(true);
-    } else if (savedSession) {
-        let localUser = null;
-        try { localUser = JSON.parse(savedSession); } catch(e){}
-        if (localUser && localUser.loggedIn) {
-            updateUserNavState(localUser, false);
-            switchView(false);
-        } else {
-            document.documentElement.classList.remove('is-dashboard-active');
-            switchView(false);
+        if (activeUser && activeUser.loggedIn) {
+            setDashboardUserInfo(activeUser.name, activeUser.plan, activeUser.email);
+            recalculateUserBalances(activeUser.email);
+            loadAccountHistory(activeUser.email);
+            loadAccountReferrals(activeUser.email);
         }
     } else {
         document.documentElement.classList.remove('is-dashboard-active');
