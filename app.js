@@ -796,10 +796,6 @@ document.addEventListener('DOMContentLoaded', () => {
         { name: 'Ethereum Reserve', symbol: 'ETH', category: 'crypto', price: '$3,540', change: '+2.15%', positive: true, icon: 'Ξ' }
     ];
 
-    let dashboardPerformanceChart = null;
-    let dashboardDonutChart = null;
-    let publicAllocationChart = null;
-
     // ------------------------------------------------------------------
     // 2. TOAST NOTIFICATION ENGINE
     // ------------------------------------------------------------------
@@ -982,14 +978,6 @@ document.addEventListener('DOMContentLoaded', () => {
         sliderYears.addEventListener('input', calculateWealth);
         selectStrategy.addEventListener('change', calculateWealth);
         calculateWealth(); // Initial run
-    }
-
-    const calcBtnStart = document.getElementById('calc-btn-start');
-    if (calcBtnStart) {
-        calcBtnStart.addEventListener('click', () => {
-            openAuthModal('modal-signup');
-            showToast('Starting custom plan setup based on your growth forecast.', 'info');
-        });
     }
 
     // ------------------------------------------------------------------
@@ -1741,8 +1729,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Profile Settings & Navigation (Open Settings Panel)
-    const btnNavProfile = document.getElementById('btn-nav-profile');
-    if (btnNavProfile) {
+    const navProfBtn = document.getElementById('btn-nav-profile');
+    if (navProfBtn) {
         btnNavProfile.addEventListener('click', () => {
             switchView(true);
             const sideNavLinks = document.querySelectorAll('.side-link[data-tab]');
@@ -1984,9 +1972,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // FAQ Live Search Filter Handler
-    const faqSearch = document.getElementById('faq-search');
-    if (faqSearch) {
-        faqSearch.addEventListener('input', (e) => {
+    const faqSearchInput = document.getElementById('faq-search');
+    if (faqSearchInput) {
+        faqSearchInput.addEventListener('input', (e) => {
             const q = e.target.value.toLowerCase();
             document.querySelectorAll('.faq-item').forEach(item => {
                 const text = item.textContent.toLowerCase();
@@ -1996,26 +1984,26 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Contact Form Submit Handler (matches #contact-form and #form-contact)
-    const contactForm = document.getElementById('contact-form') || document.getElementById('form-contact');
-    if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
+    const mainContactForm = document.getElementById('contact-form') || document.getElementById('form-contact');
+    if (mainContactForm) {
+        mainContactForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const nameInput = document.getElementById('c-name') || document.getElementById('contact-name');
             const name = nameInput ? nameInput.value : 'Valued Investor';
             showToast(`Thank you ${name}! Your inquiry was received and assigned to a Wealth Specialist.`, 'success');
-            contactForm.reset();
+            mainContactForm.reset();
         });
     }
 
     // Newsletter Subscription Form Handler (#newsletter-form)
-    const newsletterForm = document.getElementById('newsletter-form');
-    if (newsletterForm) {
-        newsletterForm.addEventListener('submit', (e) => {
+    const subNewsletterForm = document.getElementById('newsletter-form');
+    if (subNewsletterForm) {
+        subNewsletterForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            const emailInput = newsletterForm.querySelector('input[type="email"]');
+            const emailInput = subNewsletterForm.querySelector('input[type="email"]');
             const email = emailInput ? emailInput.value : '';
             showToast(`🎉 Thank you! ${email || 'Your email'} has been subscribed to Buffy Market Intelligence.`, 'success');
-            newsletterForm.reset();
+            subNewsletterForm.reset();
         });
     }
 
@@ -2494,5 +2482,4 @@ document.addEventListener('DOMContentLoaded', () => {
             formTellEmail.reset();
         });
     }
-});
 });
