@@ -2144,32 +2144,53 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Standalone Deposit Form Handler
-    const standaloneDepositForm = document.getElementById('standalone-deposit-form');
-    if (standaloneDepositForm) {
-        standaloneDepositForm.addEventListener('submit', async (e) => {
+    // Quick Preset Chips Handler
+    document.querySelectorAll('.btn-preset-chip[data-preset]').forEach(chip => {
+        chip.addEventListener('click', () => {
+            const val = chip.getAttribute('data-preset');
+            const depInput = document.getElementById('dep-amount-input') || document.getElementById('dep-amount');
+            if (depInput && val) {
+                depInput.value = val;
+                document.querySelectorAll('.btn-preset-chip').forEach(c => c.classList.remove('active'));
+                chip.classList.add('active');
+                updateDepositLiveSummary();
+            }
+        });
+    });
+
+    // Embedded Dashboard & Standalone Deposit Form Handler (#form-dash-deposit & #standalone-deposit-form)
+    const dashDepositForm = document.getElementById('form-dash-deposit') || document.getElementById('standalone-deposit-form');
+    if (dashDepositForm) {
+        dashDepositForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const amt = parseFloat(document.getElementById('dep-amount')?.value || 0);
-            const curr = document.getElementById('dep-currency')?.value || 'USD';
-            const method = document.getElementById('dep-selected-method')?.value || 'Bank Transfer';
-            const tier = document.getElementById('dep-account-tier')?.value || 'Growth';
-            const userEmail = currentUser ? currentUser.email : 'investor@buffyinvestment.com';
+            const amtInput = document.getElementById('dep-amount-input') || document.getElementById('dep-amount');
+            const currSelect = document.getElementById('dep-currency-input') || document.getElementById('dep-currency');
+            const methodSelect = document.getElementById('dep-gateway-select') || document.getElementById('dep-selected-method');
+            const planSelect = document.getElementById('dep-plan-select') || document.getElementById('dep-account-tier');
+
+            const amt = parseFloat(amtInput?.value || 1000);
+            const curr = currSelect?.value || 'USD';
+            const method = methodSelect?.value || 'Bank Transfer';
+            const plan = planSelect?.value || 'Growth Strategy Plan';
+            let sessionEmail = null;
+            try { sessionEmail = JSON.parse(localStorage.getItem('buffy_active_session'))?.email; } catch(err){}
+            const userEmail = currentUser ? currentUser.email : (sessionEmail || 'investor@buffyinvestment.com');
 
             if (amt <= 0) {
                 showToast('Please enter a valid deposit amount greater than 0.', 'error');
                 return;
             }
 
-            const btnSubmit = document.getElementById('btn-continue-deposit');
+            const btnSubmit = document.getElementById('btn-deposit-now') || document.getElementById('btn-continue-deposit');
             if (btnSubmit) {
                 btnSubmit.disabled = true;
-                btnSubmit.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing Payment Securely...';
+                btnSubmit.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing Deposit & Crediting Account...';
             }
 
             if (supabaseClient) {
                 try {
                     await supabaseClient.from('user_transactions').insert([
-                        { user_email: userEmail, tx_type: 'Deposit', asset_class: `${tier} Strategy (${method} - ${curr})`, amount: amt, status: 'Completed' }
+                        { user_email: userEmail, tx_type: 'Deposit', asset_class: `${plan} (${method} - ${curr})`, amount: amt, status: 'Completed' }
                     ]);
                 } catch (err) {
                     console.log('Deposit submission note:', err);
@@ -2181,10 +2202,46 @@ document.addEventListener('DOMContentLoaded', () => {
                 loadUserTransactionsFromSupabase();
                 if (btnSubmit) {
                     btnSubmit.disabled = false;
-                    btnSubmit.innerHTML = 'Continue Deposit <i class="fa-solid fa-arrow-right"></i>';
+                    btnSubmit.innerHTML = 'Deposit Now & Credit Account <i class="fa-solid fa-arrow-right"></i>';
                 }
-                showToast(`🎉 Deposit Request Successful! $${amt.toLocaleString()} credited via ${method}. Portfolio balance updated.`, 'success');
-            }, 1200);
+                showToast(`🎉 Deposit Successful! $${amt.toLocaleString()} credited via ${method}. Portfolio balance updated.`, 'success');
+            }, 1000);
+        });
+    }
+
+    // Embedded Dashboard Withdrawal Form Handler (#form-dash-withdraw)
+    const dashWithdrawForm = document.getElementById('form-dash-withdraw');
+    if (dashWithdrawForm) {
+        dashWithdrawForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const amtInput = document.getElementById('with-amount-input');
+            const destInput = document.getElementById('with-address-input');
+
+            const amt = parseFloat(amtInput?.value || 0);
+            const dest = destInput?.value || 'Bank Wire Transfer';
+            let sessionEmail = null;
+            try { sessionEmail = JSON.parse(localStorage.getItem('buffy_active_session'))?.email; } catch(err){}
+            const userEmail = currentUser ? currentUser.email : (sessionEmail || 'investor@buffyinvestment.com');
+
+            if (amt <= 0) {
+                showToast('Please enter a valid withdrawal amount.', 'error');
+                return;
+            }
+
+            if (supabaseClient) {
+                try {
+                    await supabaseClient.from('user_transactions').insert([
+                        { user_email: userEmail, tx_type: 'Withdrawal', asset_class: `USD Cash (${dest})`, amount: amt, status: 'Pending Approval' }
+                    ]);
+                } catch (err) {
+                    console.log('Withdrawal insert note:', err);
+                }
+            }
+
+            await recalculateUserBalances(userEmail);
+            loadUserTransactionsFromSupabase();
+            dashWithdrawForm.reset();
+            showToast(`💸 Withdrawal Request of $${amt.toLocaleString()} submitted for execution. Payout queued for ${dest}.`, 'success');
         });
     }
 
